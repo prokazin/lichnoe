@@ -38,7 +38,7 @@
     <!-- ===== HERO ===== -->
     <section class="hero" id="hero">
         <div class="container hero-content">
-            <div class="hero-badge">🔥 Работаю с 2025</div>
+            <div class="hero-badge">🚀 Работаю с 2025</div>
             <h1 class="hero-title">
                 Создаю сайты на<br>
                 <span class="hero-highlight">GitHub</span> для блогеров,<br>
@@ -74,9 +74,7 @@
         <div class="container">
             <div class="section-label">Что я делаю</div>
             <h2 class="section-title">Мои <span class="highlight">услуги</span></h2>
-            <div class="services-grid" id="servicesGrid">
-                <!-- Загружаются из localStorage -->
-            </div>
+            <div class="services-grid" id="servicesGrid"></div>
         </div>
     </section>
 
@@ -85,9 +83,7 @@
         <div class="container">
             <div class="section-label">Мои работы</div>
             <h2 class="section-title">Примеры <span class="highlight">сайтов</span></h2>
-            <div class="portfolio-grid" id="portfolioGrid">
-                <!-- Загружаются из localStorage -->
-            </div>
+            <div class="portfolio-grid" id="portfolioGrid"></div>
         </div>
     </section>
 
@@ -96,9 +92,7 @@
         <div class="container">
             <div class="section-label">Стоимость</div>
             <h2 class="section-title">Выберите свой <span class="highlight">тариф</span></h2>
-            <div class="pricing-grid" id="pricingGrid">
-                <!-- Загружаются из localStorage -->
-            </div>
+            <div class="pricing-grid" id="pricingGrid"></div>
         </div>
     </section>
 
@@ -107,28 +101,24 @@
         <div class="container">
             <div class="about-grid">
                 <div class="about-image">
-                    <div class="about-avatar" id="aboutAvatar">🧑‍💻</div>
+                    <div class="about-avatar">🧑‍💻</div>
                 </div>
                 <div class="about-content">
                     <div class="section-label">Обо мне</div>
                     <h2 class="section-title">Почему стоит <span class="highlight">выбрать меня</span></h2>
                     <p id="aboutText">Я создаю сайты на GitHub с 2025 года. Моя цель — сделать качественный продукт, который будет работать, приносить результат и радовать глаз.</p>
-                    <div class="about-features" id="aboutFeatures">
-                        <!-- Загружаются из localStorage -->
-                    </div>
+                    <div class="about-features" id="aboutFeatures"></div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ===== ЭТАПЫ ===== -->
-    <section class="steps">
+    <section class="steps" id="steps">
         <div class="container">
             <div class="section-label">Как я работаю</div>
             <h2 class="section-title">Этапы <span class="highlight">сотрудничества</span></h2>
-            <div class="steps-grid" id="stepsGrid">
-                <!-- Загружаются из localStorage -->
-            </div>
+            <div class="steps-grid" id="stepsGrid"></div>
         </div>
     </section>
 
@@ -137,9 +127,7 @@
         <div class="container">
             <div class="section-label">Вопросы и ответы</div>
             <h2 class="section-title">Часто задаваемые <span class="highlight">вопросы</span></h2>
-            <div class="faq-grid" id="faqGrid">
-                <!-- Загружаются из localStorage -->
-            </div>
+            <div class="faq-grid" id="faqGrid"></div>
         </div>
     </section>
 
@@ -151,9 +139,7 @@
                     <div class="section-label">Свяжитесь со мной</div>
                     <h2 class="section-title">Давайте <span class="highlight">обсудим</span> ваш проект</h2>
                     <p id="contactsText">Напишите мне в Telegram или Instagram — я отвечу в течение часа.</p>
-                    <div class="contacts-social" id="contactsSocial">
-                        <!-- Загружаются из localStorage -->
-                    </div>
+                    <div class="contacts-social" id="contactsSocial"></div>
                 </div>
                 <div class="contacts-form">
                     <h3>Оставьте заявку</h3>
@@ -182,9 +168,7 @@
                     <a href="#pricing">Цены</a>
                     <a href="#contacts">Контакты</a>
                 </div>
-                <div class="footer-social" id="footerSocial">
-                    <!-- Загружаются из localStorage -->
-                </div>
+                <div class="footer-social" id="footerSocial"></div>
             </div>
             <div class="footer-bottom">
                 <p id="footerCopyright">© 2025 WebMaster. Все права защищены.</p>
@@ -192,98 +176,8 @@
         </div>
     </footer>
 
-    <!-- ===== АДМИН-ПАНЕЛЬ (кнопка входа) ===== -->
-    <button class="admin-toggle" onclick="openAdmin()">⚙️</button>
-
-    <!-- ===== АДМИН-МОДАЛКА ===== -->
-    <div class="admin-modal" id="adminModal">
-        <div class="admin-overlay" onclick="closeAdmin()"></div>
-        <div class="admin-content">
-            <button class="admin-close" onclick="closeAdmin()">✕</button>
-            <h2>⚙️ Админ-панель</h2>
-            
-            <div id="adminLogin">
-                <input type="password" id="adminPassword" placeholder="Введите пароль" class="admin-input">
-                <button onclick="checkAdminPassword()" class="btn btn-primary">Войти</button>
-            </div>
-
-            <div id="adminPanel" style="display:none;">
-                <!-- Управление секциями -->
-                <div class="admin-section">
-                    <h3>📄 Текст на сайте</h3>
-                    <div class="admin-row">
-                        <input type="text" id="editHeroDesc" placeholder="Текст в Hero" class="admin-input">
-                        <input type="text" id="editAboutText" placeholder="Текст 'Обо мне'" class="admin-input">
-                        <input type="text" id="editContactsText" placeholder="Текст в контактах" class="admin-input">
-                        <input type="text" id="editFooterText" placeholder="Текст в футере" class="admin-input">
-                        <input type="text" id="editFooterCopyright" placeholder="Копирайт" class="admin-input">
-                    </div>
-                    <button onclick="saveTexts()" class="btn btn-primary">💾 Сохранить тексты</button>
-                </div>
-
-                <div class="admin-section">
-                    <h3>🛠️ Услуги</h3>
-                    <div id="adminServices"></div>
-                    <button onclick="addService()" class="btn btn-secondary">➕ Добавить услугу</button>
-                </div>
-
-                <div class="admin-section">
-                    <h3>📂 Портфолио</h3>
-                    <div id="adminPortfolio"></div>
-                    <button onclick="addPortfolio()" class="btn btn-secondary">➕ Добавить проект</button>
-                </div>
-
-                <div class="admin-section">
-                    <h3>💰 Тарифы</h3>
-                    <div id="adminPricing"></div>
-                    <button onclick="addPricing()" class="btn btn-secondary">➕ Добавить тариф</button>
-                </div>
-
-                <div class="admin-section">
-                    <h3>📋 Особенности (Обо мне)</h3>
-                    <div id="adminFeatures"></div>
-                    <button onclick="addFeature()" class="btn btn-secondary">➕ Добавить особенность</button>
-                </div>
-
-                <div class="admin-section">
-                    <h3>📌 Этапы работы</h3>
-                    <div id="adminSteps"></div>
-                    <button onclick="addStep()" class="btn btn-secondary">➕ Добавить этап</button>
-                </div>
-
-                <div class="admin-section">
-                    <h3>❓ FAQ</h3>
-                    <div id="adminFaq"></div>
-                    <button onclick="addFaq()" class="btn btn-secondary">➕ Добавить вопрос</button>
-                </div>
-
-                <div class="admin-section">
-                    <h3>🔗 Контакты (соцсети)</h3>
-                    <div id="adminSocial"></div>
-                    <button onclick="addSocial()" class="btn btn-secondary">➕ Добавить контакт</button>
-                </div>
-
-                <div class="admin-section">
-                    <h3>📊 Статистика</h3>
-                    <div class="admin-row">
-                        <input type="number" id="editStatProjects" placeholder="Проектов" class="admin-input">
-                        <input type="number" id="editStatClients" placeholder="Клиентов" class="admin-input">
-                        <input type="number" id="editStatHappy" placeholder="Довольных %" class="admin-input">
-                    </div>
-                    <button onclick="saveStats()" class="btn btn-primary">💾 Сохранить статистику</button>
-                </div>
-
-                <div class="admin-section">
-                    <h3>📤 Экспорт / Импорт</h3>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                        <button onclick="exportData()" class="btn btn-secondary">📤 Экспорт</button>
-                        <button onclick="document.getElementById('importFile').click()" class="btn btn-secondary">📥 Импорт</button>
-                        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- ===== ССЫЛКА НА АДМИН-ПАНЕЛЬ ===== -->
+    <a href="admin.html" class="admin-link" target="_blank">⚙️</a>
 
     <script src="script.js"></script>
 </body>
