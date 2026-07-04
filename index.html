@@ -8,9 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- ===== ОСНОВНОЙ КОНТЕНТ (без фонового видео) ===== -->
     <div class="main-content">
-        <!-- ===== НАВИГАЦИЯ ===== -->
         <nav class="navbar">
             <div class="nav-container">
                 <a href="#" class="nav-logo">⚡ WebMaster</a>
@@ -29,7 +27,6 @@
             </div>
         </nav>
 
-        <!-- ===== HERO ===== -->
         <section class="hero" id="hero">
             <div class="container hero-content">
                 <div class="hero-badge">🚀 Работаю с 2025</div>
@@ -38,32 +35,19 @@
                     <span class="hero-highlight">GitHub</span> для блогеров,<br>
                     стартапов и бизнеса
                 </h1>
-                <p class="hero-desc" id="heroDesc">
-                    Быстро, красиво, дёшево. Полный цикл — от идеи до запуска.
-                    Бесплатный хостинг, адаптив, админ-панель.
-                </p>
+                <p class="hero-desc" id="heroDesc">Быстро, красиво, дёшево. Полный цикл — от идеи до запуска. Бесплатный хостинг, адаптив, админ-панель.</p>
                 <div class="hero-buttons">
                     <a href="#contacts" class="btn btn-primary">Заказать сайт</a>
                     <a href="#portfolio" class="btn btn-secondary">Смотреть портфолио</a>
                 </div>
                 <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number" id="statProjects">0</span>
-                        <span class="stat-label">проектов</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="statClients">0</span>
-                        <span class="stat-label">клиентов</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="statHappy">0%</span>
-                        <span class="stat-label">довольных</span>
-                    </div>
+                    <div class="stat-item"><span class="stat-number" id="statProjects">0</span><span class="stat-label">проектов</span></div>
+                    <div class="stat-item"><span class="stat-number" id="statClients">0</span><span class="stat-label">клиентов</span></div>
+                    <div class="stat-item"><span class="stat-number" id="statHappy">0%</span><span class="stat-label">довольных</span></div>
                 </div>
             </div>
         </section>
 
-        <!-- ===== УСЛУГИ ===== -->
         <section class="services" id="services">
             <div class="container">
                 <div class="section-label">Что я делаю</div>
@@ -72,7 +56,6 @@
             </div>
         </section>
 
-        <!-- ===== ПОРТФОЛИО ===== -->
         <section class="portfolio" id="portfolio">
             <div class="container">
                 <div class="section-label">Мои работы</div>
@@ -81,7 +64,6 @@
             </div>
         </section>
 
-        <!-- ===== ЦЕНЫ ===== -->
         <section class="pricing" id="pricing">
             <div class="container">
                 <div class="section-label">Стоимость</div>
@@ -90,13 +72,10 @@
             </div>
         </section>
 
-        <!-- ===== ОБО МНЕ ===== -->
         <section class="about" id="about">
             <div class="container">
                 <div class="about-grid">
-                    <div class="about-image">
-                        <div class="about-avatar">🧑‍💻</div>
-                    </div>
+                    <div class="about-image"><div class="about-avatar">🧑‍💻</div></div>
                     <div class="about-content">
                         <div class="section-label">Обо мне</div>
                         <h2 class="section-title">Почему стоит <span class="highlight">выбрать меня</span></h2>
@@ -107,7 +86,6 @@
             </div>
         </section>
 
-        <!-- ===== ЭТАПЫ ===== -->
         <section class="steps" id="steps">
             <div class="container">
                 <div class="section-label">Как я работаю</div>
@@ -116,7 +94,6 @@
             </div>
         </section>
 
-        <!-- ===== FAQ ===== -->
         <section class="faq" id="faq">
             <div class="container">
                 <div class="section-label">Вопросы и ответы</div>
@@ -125,7 +102,6 @@
             </div>
         </section>
 
-        <!-- ===== КОНТАКТЫ ===== -->
         <section class="contacts" id="contacts">
             <div class="container">
                 <div class="contacts-content">
@@ -148,7 +124,6 @@
             </div>
         </section>
 
-        <!-- ===== FOOTER ===== -->
         <footer class="footer">
             <div class="container">
                 <div class="footer-content">
@@ -171,14 +146,12 @@
         </footer>
     </div>
 
-    <!-- EmailJS для отправки заявок -->
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
         (function() {
             emailjs.init("abc123def456..."); // 🔥 ЗАМЕНИТЕ НА ВАШ Public Key
         })();
     </script>
-
     <script src="script.js"></script>
 </body>
 </html>
