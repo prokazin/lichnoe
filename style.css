@@ -1,4 +1,3 @@
-/* ===== ОСНОВНЫЕ СТИЛИ ===== */
 * {
     margin: 0;
     padding: 0;
@@ -24,7 +23,6 @@ body {
     padding: 0 20px;
 }
 
-/* ===== ТЕКСТ ===== */
 .section-label {
     font-size: 13px;
     font-weight: 600;
@@ -50,7 +48,6 @@ p {
     color: #b0b0b8;
 }
 
-/* ===== НАВИГАЦИЯ ===== */
 .navbar {
     position: fixed;
     top: 0;
@@ -127,12 +124,10 @@ p {
     transition: 0.3s;
 }
 
-/* ===== СЕКЦИИ ===== */
 section {
     padding: 80px 0;
 }
 
-/* ===== HERO ===== */
 .hero {
     min-height: 100vh;
     display: flex;
@@ -249,7 +244,6 @@ section {
     color: #6a6a72;
 }
 
-/* ===== КАРТОЧКИ ===== */
 .service-card,
 .portfolio-card,
 .pricing-card,
@@ -301,7 +295,6 @@ section {
     font-weight: 600;
 }
 
-/* ===== СЕТКИ ===== */
 .services-grid,
 .portfolio-grid,
 .pricing-grid,
@@ -327,7 +320,6 @@ section {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-/* ===== ПОРТФОЛИО ===== */
 .portfolio-card .portfolio-image {
     height: 200px;
     display: flex;
@@ -362,7 +354,6 @@ section {
     color: #6a6a72;
 }
 
-/* ===== ЦЕНЫ ===== */
 .pricing-card.popular {
     border: 1px solid #007aff;
     transform: scale(1.02);
@@ -406,7 +397,6 @@ section {
     width: 100%;
 }
 
-/* ===== ОБО МНЕ ===== */
 .about-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -460,7 +450,6 @@ section {
     margin: 0;
 }
 
-/* ===== ЭТАПЫ ===== */
 .step-card {
     text-align: center;
 }
@@ -472,7 +461,6 @@ section {
     margin-bottom: 8px;
 }
 
-/* ===== FAQ ===== */
 .faq-grid {
     max-width: 700px;
     margin: 40px auto 0;
@@ -526,7 +514,6 @@ section {
     color: #b0b0b8;
 }
 
-/* ===== КОНТАКТЫ ===== */
 .contacts-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -628,7 +615,6 @@ section {
     width: 100%;
 }
 
-/* ===== FOOTER ===== */
 .footer {
     padding: 40px 0 20px;
     background: rgba(10, 10, 15, 0.8);
@@ -720,7 +706,6 @@ section {
     color: #4a4a52;
 }
 
-/* ===== АДАПТИВ ===== */
 @media (max-width: 1024px) {
     .hero-title {
         font-size: 44px;
