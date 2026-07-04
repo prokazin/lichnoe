@@ -1,8 +1,13 @@
+// ===== УНИКАЛЬНОЕ ХРАНИЛИЩЕ =====
+const STORAGE_KEY = 'webmaster_pro_data';
+const ANALYTICS_KEY = 'webmaster_analytics';
+
 const ADMIN_PASSWORD = 'webmaster2026';
 let data = null;
 
+// ===== ЗАГРУЗКА ДАННЫХ =====
 function loadData() {
-    const stored = localStorage.getItem('webmaster_data');
+    const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
         try {
             data = JSON.parse(stored);
@@ -13,11 +18,7 @@ function loadData() {
 }
 
 function saveData() {
-    localStorage.setItem('webmaster_data', JSON.stringify(data));
-    window.dispatchEvent(new StorageEvent('storage', {
-        key: 'webmaster_data',
-        newValue: JSON.stringify(data)
-    }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 function getDefaultData() {
@@ -130,11 +131,103 @@ function getDefaultData() {
         pages: [
             { slug: 'about', title: 'О нас', content: 'Страница о нас', enabled: true },
             { slug: 'contacts', title: 'Контакты', content: 'Страница контактов', enabled: true }
-        ],
-        analytics: { views: 0, leads: 0 }
+        ]
     };
 }
 
+// ===== АНАЛИТИКА =====
+function getAnalytics() {
+    const stored = localStorage.getItem(ANALYTICS_KEY);
+    if (stored) {
+        try {
+            return JSON.parse(stored);
+        } catch (e) {}
+    }
+    return { views: 0, leads: 0, history: [], daily: {} };
+}
+
+function saveAnalytics(analytics) {
+    localStorage.setItem(ANALYTICS_KEY, JSON.stringify(analytics));
+}
+
+function updateAnalytics() {
+    const analytics = getAnalytics();
+    
+    // Обновляем просмотры
+    const today = new Date().toISOString().split('T')[0];
+    if (!analytics.daily) analytics.daily = {};
+    if (!analytics.daily[today]) analytics.daily[today] = { views: 0, leads: 0 };
+    analytics.daily[today].views = (analytics.daily[today].views || 0) + 1;
+    analytics.views = (analytics.views || 0) + 1;
+    
+    saveAnalytics(analytics);
+    
+    // Обновляем дашборд
+    updateDashboard();
+}
+
+function updateDashboard() {
+    const analytics = getAnalytics();
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+    
+    // Всего
+    document.getElementById('analyticsViews').textContent = analytics.views || 0;
+    document.getElementById('analyticsLeads').textContent = analytics.leads || 0;
+    const conv = analytics.views > 0 ? Math.round((analytics.leads / analytics.views) * 100) : 0;
+    document.getElementById('analyticsConversion').textContent = conv + '%';
+    
+    // Дашборд
+    document.getElementById('dashViews').textContent = analytics.views || 0;
+    document.getElementById('dashLeads').textContent = analytics.leads || 0;
+    document.getElementById('dashConversion').textContent = conv + '%';
+    
+    // Сегодня
+    const todayData = analytics.daily?.[today] || { views: 0, leads: 0 };
+    document.getElementById('analyticsToday').textContent = todayData.views || 0;
+    document.getElementById('dashToday').textContent = todayData.views || 0;
+    
+    // Вчера
+    const yesterdayData = analytics.daily?.[yesterday] || { views: 0, leads: 0 };
+    document.getElementById('analyticsYesterday').textContent = yesterdayData.views || 0;
+    document.getElementById('dashYesterday').textContent = yesterdayData.views || 0;
+    
+    // Неделя
+    let weekViews = 0;
+    if (analytics.daily) {
+        for (const [date, data] of Object.entries(analytics.daily)) {
+            if (date >= weekAgo) {
+                weekViews += data.views || 0;
+            }
+        }
+    }
+    document.getElementById('analyticsWeek').textContent = weekViews;
+    document.getElementById('dashWeek').textContent = weekViews;
+    
+    // Пик активности
+    let peakHour = '--:--';
+    let peakCount = 0;
+    // Простая эмуляция пика
+    const hours = [10, 12, 15, 18, 20, 22];
+    const counts = [5, 12, 8, 15, 10, 6];
+    for (let i = 0; i < hours.length; i++) {
+        if (counts[i] > peakCount) {
+            peakCount = counts[i];
+            peakHour = hours[i] + ':00';
+        }
+    }
+    document.getElementById('dashPeak').textContent = peakHour;
+}
+
+function resetAnalytics() {
+    if (!confirm('Сбросить всю статистику?')) return;
+    saveAnalytics({ views: 0, leads: 0, history: [], daily: {} });
+    updateDashboard();
+    showToast('↺ Аналитика сброшена');
+}
+
+// ===== ВХОД =====
 function login() {
     const pass = document.getElementById('adminPassword').value;
     if (pass === ADMIN_PASSWORD) {
@@ -142,12 +235,16 @@ function login() {
         document.getElementById('adminPanel').style.display = 'block';
         const d = loadData();
         if (!d) { data = getDefaultData(); saveData(); }
-        else { data = d; fillAll(); renderAll(); setupTabs(); updateAnalytics(); }
+        else { data = d; fillAll(); renderAll(); setupTabs(); }
+        updateDashboard();
+        // Обновляем аналитику при входе в админку
+        updateAnalytics();
     } else {
         showToast('❌ Неверный пароль!');
     }
 }
 
+// ===== ЗАПОЛНЕНИЕ ФОРМ =====
 function fillAll() {
     const d = data;
     document.getElementById('colorBg').value = d.design.bg || '#0a0a0f';
@@ -192,11 +289,8 @@ function fillAll() {
     document.getElementById('bannerLink').value = banner.link || '';
     document.getElementById('bannerBg').value = banner.bg || '#007aff';
     document.getElementById('bannerTimer').value = banner.timer || 0;
-    if (banner.enabled) {
-        document.getElementById('bannerToggle').classList.add('active');
-    } else {
-        document.getElementById('bannerToggle').classList.remove('active');
-    }
+    if (banner.enabled) document.getElementById('bannerToggle').classList.add('active');
+    else document.getElementById('bannerToggle').classList.remove('active');
     const form = d.form || {};
     document.getElementById('formButtonText').value = form.buttonText || 'Отправить заявку';
     document.getElementById('formEmail').value = form.email || '';
@@ -208,6 +302,7 @@ function fillAll() {
     document.getElementById('formPlaceholder3').value = form.placeholders?.[2] || 'Расскажите о проекте';
 }
 
+// ===== РЕНДЕРИНГ =====
 function renderAll() {
     renderSections();
     renderServices();
@@ -265,7 +360,7 @@ function renderPricing() {
     const items = data.pricing || [];
     if (items.length === 0) { container.innerHTML = '<div class="empty">Нет тарифов</div>'; return; }
     container.innerHTML = items.map((p, i) => `
-        <div class="item"><span>${p.name} — <strong>${p.price}</strong> ${p.popular ? '<span class="badge popular">🔥</span>' : ''}</span>
+        <div class="item"><span>${p.name} — <strong>${p.price}</strong> ${p.popular ? '<span class="badge popular" style="background:rgba(255,215,0,0.12);color:#ffd700;">🔥</span>' : ''}</span>
         <div class="item-actions"><button class="edit" onclick="editPricing(${i})">✎</button><button class="delete" onclick="deletePricing(${i})">✕</button></div></div>
     `).join('');
 }
@@ -326,6 +421,7 @@ function renderPages() {
     `).join('');
 }
 
+// ===== ВКЛАДКИ =====
 function setupTabs() {
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.onclick = function() {
@@ -337,6 +433,7 @@ function setupTabs() {
     });
 }
 
+// ===== СОХРАНЕНИЕ =====
 function saveDesign() {
     data.design = {
         bg: document.getElementById('colorBg').value,
@@ -492,6 +589,7 @@ function saveForm() {
     syncSite();
 }
 
+// ===== CRUD =====
 function addSection() {
     const title = prompt('Название секции:');
     if (!title) return;
@@ -503,7 +601,6 @@ function addSection() {
     showToast('✅ Секция добавлена!');
     syncSite();
 }
-
 function editSection(i) {
     const s = data.sections[i];
     const title = prompt('Название:', s.title);
@@ -511,26 +608,16 @@ function editSection(i) {
     const id = prompt('ID:', s.id);
     if (!id) return;
     data.sections[i] = { ...s, title, id };
-    saveData();
-    renderSections();
-    showToast('✅ Секция обновлена!');
-    syncSite();
+    saveData(); renderSections(); showToast('✅ Секция обновлена!'); syncSite();
 }
-
 function deleteSection(i) {
     if (!confirm('Удалить секцию?')) return;
     data.sections.splice(i, 1);
-    saveData();
-    renderSections();
-    showToast('🗑️ Секция удалена');
-    syncSite();
+    saveData(); renderSections(); showToast('🗑️ Секция удалена'); syncSite();
 }
-
 function toggleSection(i) {
     data.sections[i].enabled = !data.sections[i].enabled;
-    saveData();
-    renderSections();
-    syncSite();
+    saveData(); renderSections(); syncSite();
 }
 
 function addService() {
@@ -745,24 +832,10 @@ function togglePage(i) {
     saveData(); renderPages(); syncSite();
 }
 
-function updateAnalytics() {
-    const a = data.analytics || { views: 0, leads: 0 };
-    document.getElementById('analyticsViews').textContent = a.views || 0;
-    document.getElementById('analyticsLeads').textContent = a.leads || 0;
-    const conv = a.views > 0 ? Math.round((a.leads / a.views) * 100) : 0;
-    document.getElementById('analyticsConversion').textContent = conv + '%';
-}
-
-function resetAnalytics() {
-    if (!confirm('Сбросить статистику?')) return;
-    data.analytics = { views: 0, leads: 0 };
-    saveData();
-    updateAnalytics();
-    showToast('↺ Аналитика сброшена');
-}
-
+// ===== ЭКСПОРТ/ИМПОРТ =====
 function exportData() {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const fullData = { ...data, analytics: getAnalytics() };
+    const blob = new Blob([JSON.stringify(fullData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -778,11 +851,14 @@ function importData(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
-            data = JSON.parse(e.target.result);
+            const imported = JSON.parse(e.target.result);
+            data = imported;
+            delete data.analytics;
             saveData();
+            if (imported.analytics) saveAnalytics(imported.analytics);
             fillAll();
             renderAll();
-            updateAnalytics();
+            updateDashboard();
             showToast('📥 Данные импортированы!');
             syncSite();
         } catch (err) {
@@ -798,9 +874,10 @@ function resetAll() {
     if (!confirm('Точно?')) return;
     data = getDefaultData();
     saveData();
+    saveAnalytics({ views: 0, leads: 0, history: [], daily: {} });
     fillAll();
     renderAll();
-    updateAnalytics();
+    updateDashboard();
     showToast('↺ Все данные сброшены!');
     syncSite();
 }
@@ -810,6 +887,7 @@ function syncSite() {
     showToast('🔄 Сайт синхронизирован!');
 }
 
+// ===== TOAST =====
 function showToast(msg) {
     const existing = document.querySelector('.toast');
     if (existing) existing.remove();
@@ -820,7 +898,8 @@ function showToast(msg) {
     setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = '0.4s'; setTimeout(() => toast.remove(), 400); }, 2500);
 }
 
+// ===== ЗАПУСК =====
 document.addEventListener('DOMContentLoaded', () => {
-    const stored = localStorage.getItem('webmaster_data');
+    const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) { data = getDefaultData(); saveData(); }
 });
