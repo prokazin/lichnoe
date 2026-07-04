@@ -48,10 +48,18 @@ const defaultData = {
     ],
     
     social: [
-        { icon: '📱', name: 'Telegram', link: '#' },
-        { icon: '📷', name: 'Instagram', link: '#' },
-        { icon: '✉️', name: 'Email', link: '#' }
+        { icon: 'telegram', name: 'Telegram', link: '#' },
+        { icon: 'instagram', name: 'Instagram', link: '#' },
+        { icon: 'email', name: 'Email', link: '#' }
     ]
+};
+
+// ===== ИКОНКИ ДЛЯ СОЦСЕТЕЙ (SVG) =====
+const socialIcons = {
+    telegram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 4.5L2.5 10.5L9.5 14.5L13.5 21.5L21.5 4.5Z"/><path d="M9.5 14.5L13.5 9.5"/></svg>`,
+    instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+    email: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+    default: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`
 };
 
 // ===== ЗАГРУЗКА ДАННЫХ =====
@@ -135,14 +143,18 @@ function renderSite() {
         </div>
     `).join('');
     
+    // ===== СОЦСЕТИ С ОРИГИНАЛЬНЫМИ ИКОНКАМИ =====
     document.getElementById('contactsSocial').innerHTML = data.social.map(s => `
         <a href="${s.link}" class="contact-link" target="_blank">
-            <span class="contact-icon">${s.icon}</span> ${s.name}
+            <span class="contact-icon">${socialIcons[s.icon] || socialIcons.default}</span>
+            ${s.name}
         </a>
     `).join('');
     
     document.getElementById('footerSocial').innerHTML = data.social.map(s => `
-        <a href="${s.link}" target="_blank">${s.icon}</a>
+        <a href="${s.link}" target="_blank">
+            <span class="footer-icon">${socialIcons[s.icon] || socialIcons.default}</span>
+        </a>
     `).join('');
 }
 
