@@ -64,39 +64,24 @@ function loadData() {
             return JSON.parse(JSON.stringify(defaultData));
         }
     }
-    // Если данных нет — сохраняем дефолтные
     localStorage.setItem('webmaster_data', JSON.stringify(defaultData));
     return JSON.parse(JSON.stringify(defaultData));
 }
 
-function saveData(data) {
-    localStorage.setItem('webmaster_data', JSON.stringify(data));
-}
-
 let data = loadData();
 
-// ===== РЕНДЕРИНГ САЙТА =====
+// ===== РЕНДЕРИНГ =====
 function renderSite() {
-    // Hero
     document.getElementById('heroDesc').textContent = data.heroDesc;
-    
-    // About
     document.getElementById('aboutText').textContent = data.aboutText;
-    document.getElementById('aboutAvatar').textContent = data.aboutAvatar || '🧑‍💻';
-    
-    // Contacts
     document.getElementById('contactsText').textContent = data.contactsText;
-    
-    // Footer
     document.getElementById('footerText').textContent = data.footerText;
     document.getElementById('footerCopyright').textContent = data.footerCopyright;
     
-    // Stats
     document.getElementById('statProjects').textContent = data.stats.projects;
     document.getElementById('statClients').textContent = data.stats.clients;
     document.getElementById('statHappy').textContent = data.stats.happy + '%';
     
-    // Services
     document.getElementById('servicesGrid').innerHTML = data.services.map(s => `
         <div class="service-card">
             <div class="service-icon">${s.icon}</div>
@@ -106,46 +91,35 @@ function renderSite() {
         </div>
     `).join('');
     
-    // Portfolio
     document.getElementById('portfolioGrid').innerHTML = data.portfolio.map(p => `
         <div class="portfolio-card">
             <div class="portfolio-image">${p.icon}</div>
             <div class="portfolio-info">
                 <h3>${p.title}</h3>
                 <p>${p.desc}</p>
-                <div class="portfolio-tags">
-                    ${p.tags.map(t => `<span>${t}</span>`).join('')}
-                </div>
+                <div class="portfolio-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
                 <a href="${p.link}" class="btn btn-outline" target="_blank">Смотреть</a>
             </div>
         </div>
     `).join('');
     
-    // Pricing
     document.getElementById('pricingGrid').innerHTML = data.pricing.map(p => `
         <div class="pricing-card ${p.popular ? 'popular' : ''}">
             ${p.popular ? '<div class="pricing-badge">🔥 Популярный</div>' : ''}
             <div class="pricing-name">${p.name}</div>
             <div class="pricing-price">${p.price}</div>
-            <ul class="pricing-features">
-                ${p.features.map(f => `<li>✅ ${f}</li>`).join('')}
-            </ul>
+            <ul class="pricing-features">${p.features.map(f => `<li>✅ ${f}</li>`).join('')}</ul>
             <a href="#contacts" class="btn btn-primary">Заказать</a>
         </div>
     `).join('');
     
-    // Features
     document.getElementById('aboutFeatures').innerHTML = data.features.map(f => `
         <div class="about-feature">
             <span>${f.icon}</span>
-            <div>
-                <strong>${f.title}</strong>
-                <p>${f.desc}</p>
-            </div>
+            <div><strong>${f.title}</strong><p>${f.desc}</p></div>
         </div>
     `).join('');
     
-    // Steps
     document.getElementById('stepsGrid').innerHTML = data.steps.map(s => `
         <div class="step-card">
             <div class="step-number">${s.number}</div>
@@ -154,572 +128,63 @@ function renderSite() {
         </div>
     `).join('');
     
-    // FAQ
     document.getElementById('faqGrid').innerHTML = data.faq.map((f, i) => `
         <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                ${f.question} <span>+</span>
-            </button>
-            <div class="faq-answer">
-                <p>${f.answer}</p>
-            </div>
+            <button class="faq-question" onclick="toggleFaq(this)">${f.question} <span>+</span></button>
+            <div class="faq-answer"><p>${f.answer}</p></div>
         </div>
     `).join('');
     
-    // Social (contacts)
     document.getElementById('contactsSocial').innerHTML = data.social.map(s => `
         <a href="${s.link}" class="contact-link" target="_blank">
             <span class="contact-icon">${s.icon}</span> ${s.name}
         </a>
     `).join('');
     
-    // Social (footer)
     document.getElementById('footerSocial').innerHTML = data.social.map(s => `
         <a href="${s.link}" target="_blank">${s.icon}</a>
     `).join('');
 }
 
-// ===== FAQ TOGGLE =====
+// ===== FAQ =====
 function toggleFaq(btn) {
     const answer = btn.nextElementSibling;
     const isOpen = answer.style.maxHeight;
-
-    document.querySelectorAll('.faq-answer').forEach(a => {
-        a.style.maxHeight = null;
-    });
-    document.querySelectorAll('.faq-question').forEach(b => {
-        b.classList.remove('active');
-    });
-
+    document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = null);
+    document.querySelectorAll('.faq-question').forEach(b => b.classList.remove('active'));
     if (!isOpen) {
         answer.style.maxHeight = answer.scrollHeight + 50 + 'px';
         btn.classList.add('active');
     }
 }
 
-// ===== АДМИН-ПАНЕЛЬ =====
-const ADMIN_PASSWORD = 'webmaster2026';
-
-function openAdmin() {
-    document.getElementById('adminModal').classList.add('active');
-    document.getElementById('adminLogin').style.display = 'block';
-    document.getElementById('adminPanel').style.display = 'none';
-    document.getElementById('adminPassword').value = '';
-}
-
-function closeAdmin() {
-    document.getElementById('adminModal').classList.remove('active');
-}
-
-function checkAdminPassword() {
-    const pass = document.getElementById('adminPassword').value;
-    if (pass === ADMIN_PASSWORD) {
-        document.getElementById('adminLogin').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        renderAdmin();
-    } else {
-        alert('❌ Неверный пароль!');
-    }
-}
-
-// ===== РЕНДЕРИНГ АДМИНКИ =====
-function renderAdmin() {
-    // Тексты
-    document.getElementById('editHeroDesc').value = data.heroDesc || '';
-    document.getElementById('editAboutText').value = data.aboutText || '';
-    document.getElementById('editContactsText').value = data.contactsText || '';
-    document.getElementById('editFooterText').value = data.footerText || '';
-    document.getElementById('editFooterCopyright').value = data.footerCopyright || '';
-    
-    document.getElementById('editStatProjects').value = data.stats.projects || 0;
-    document.getElementById('editStatClients').value = data.stats.clients || 0;
-    document.getElementById('editStatHappy').value = data.stats.happy || 0;
-    
-    // Услуги
-    document.getElementById('adminServices').innerHTML = data.services.map((s, i) => `
-        <div class="admin-item">
-            <span>${s.icon} ${s.title} — ${s.price}</span>
-            <div class="admin-item-actions">
-                <button class="edit" onclick="editService(${i})">✎</button>
-                <button class="delete" onclick="deleteService(${i})">✕</button>
-            </div>
-        </div>
-    `).join('');
-    
-    // Портфолио
-    document.getElementById('adminPortfolio').innerHTML = data.portfolio.map((p, i) => `
-        <div class="admin-item">
-            <span>${p.icon} ${p.title}</span>
-            <div class="admin-item-actions">
-                <button class="edit" onclick="editPortfolio(${i})">✎</button>
-                <button class="delete" onclick="deletePortfolio(${i})">✕</button>
-            </div>
-        </div>
-    `).join('');
-    
-    // Тарифы
-    document.getElementById('adminPricing').innerHTML = data.pricing.map((p, i) => `
-        <div class="admin-item">
-            <span>${p.name} — ${p.price} ${p.popular ? '🔥' : ''}</span>
-            <div class="admin-item-actions">
-                <button class="edit" onclick="editPricing(${i})">✎</button>
-                <button class="delete" onclick="deletePricing(${i})">✕</button>
-            </div>
-        </div>
-    `).join('');
-    
-    // Особенности
-    document.getElementById('adminFeatures').innerHTML = data.features.map((f, i) => `
-        <div class="admin-item">
-            <span>${f.icon} ${f.title}</span>
-            <div class="admin-item-actions">
-                <button class="edit" onclick="editFeature(${i})">✎</button>
-                <button class="delete" onclick="deleteFeature(${i})">✕</button>
-            </div>
-        </div>
-    `).join('');
-    
-    // Этапы
-    document.getElementById('adminSteps').innerHTML = data.steps.map((s, i) => `
-        <div class="admin-item">
-            <span>${s.number} ${s.title}</span>
-            <div class="admin-item-actions">
-                <button class="edit" onclick="editStep(${i})">✎</button>
-                <button class="delete" onclick="deleteStep(${i})">✕</button>
-            </div>
-        </div>
-    `).join('');
-    
-    // FAQ
-    document.getElementById('adminFaq').innerHTML = data.faq.map((f, i) => `
-        <div class="admin-item">
-            <span>${f.question}</span>
-            <div class="admin-item-actions">
-                <button class="edit" onclick="editFaq(${i})">✎</button>
-                <button class="delete" onclick="deleteFaq(${i})">✕</button>
-            </div>
-        </div>
-    `).join('');
-    
-    // Соцсети
-    document.getElementById('adminSocial').innerHTML = data.social.map((s, i) => `
-        <div class="admin-item">
-            <span>${s.icon} ${s.name}</span>
-            <div class="admin-item-actions">
-                <button class="edit" onclick="editSocial(${i})">✎</button>
-                <button class="delete" onclick="deleteSocial(${i})">✕</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// ===== СОХРАНЕНИЕ ТЕКСТОВ =====
-function saveTexts() {
-    data.heroDesc = document.getElementById('editHeroDesc').value;
-    data.aboutText = document.getElementById('editAboutText').value;
-    data.contactsText = document.getElementById('editContactsText').value;
-    data.footerText = document.getElementById('editFooterText').value;
-    data.footerCopyright = document.getElementById('editFooterCopyright').value;
-    
-    saveData(data);
-    renderSite();
-    showToast('✅ Тексты сохранены!');
-}
-
-function saveStats() {
-    data.stats.projects = parseInt(document.getElementById('editStatProjects').value) || 0;
-    data.stats.clients = parseInt(document.getElementById('editStatClients').value) || 0;
-    data.stats.happy = parseInt(document.getElementById('editStatHappy').value) || 0;
-    
-    saveData(data);
-    renderSite();
-    showToast('✅ Статистика сохранена!');
-}
-
-// ===== CRUD ДЛЯ ВСЕХ СЕКЦИЙ =====
-function addService() {
-    const title = prompt('Название услуги:');
-    if (!title) return;
-    const desc = prompt('Описание:');
-    if (!desc) return;
-    const price = prompt('Цена (например: от 5 000 ₽):');
-    if (!price) return;
-    
-    data.services.push({ icon: '🛠️', title, desc, price });
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Услуга добавлена!');
-}
-
-function editService(index) {
-    const s = data.services[index];
-    const title = prompt('Название:', s.title);
-    if (!title) return;
-    const desc = prompt('Описание:', s.desc);
-    if (!desc) return;
-    const price = prompt('Цена:', s.price);
-    if (!price) return;
-    
-    data.services[index] = { ...s, title, desc, price };
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Услуга обновлена!');
-}
-
-function deleteService(index) {
-    if (!confirm('Удалить услугу?')) return;
-    data.services.splice(index, 1);
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('🗑️ Услуга удалена');
-}
-
-// Аналогичные функции для остальных секций
-function addPortfolio() {
-    const icon = prompt('Иконка (эмодзи):', '🚀');
-    const title = prompt('Название проекта:');
-    if (!title) return;
-    const desc = prompt('Описание:');
-    if (!desc) return;
-    const tags = prompt('Теги (через запятую):').split(',').map(t => t.trim());
-    const link = prompt('Ссылка на проект:', '#');
-    
-    data.portfolio.push({ icon: icon || '🚀', title, desc, tags, link });
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Проект добавлен!');
-}
-
-function editPortfolio(index) {
-    const p = data.portfolio[index];
-    const icon = prompt('Иконка:', p.icon);
-    const title = prompt('Название:', p.title);
-    if (!title) return;
-    const desc = prompt('Описание:', p.desc);
-    if (!desc) return;
-    const tags = prompt('Теги (через запятую):', p.tags.join(', ')).split(',').map(t => t.trim());
-    const link = prompt('Ссылка:', p.link);
-    
-    data.portfolio[index] = { icon: icon || '🚀', title, desc, tags, link };
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Проект обновлён!');
-}
-
-function deletePortfolio(index) {
-    if (!confirm('Удалить проект?')) return;
-    data.portfolio.splice(index, 1);
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('🗑️ Проект удалён');
-}
-
-function addPricing() {
-    const name = prompt('Название тарифа:');
-    if (!name) return;
-    const price = prompt('Цена:');
-    if (!price) return;
-    const features = prompt('Опции (через запятую):').split(',').map(f => f.trim());
-    const popular = confirm('Сделать популярным?');
-    
-    data.pricing.push({ name, price, features, popular });
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Тариф добавлен!');
-}
-
-function editPricing(index) {
-    const p = data.pricing[index];
-    const name = prompt('Название:', p.name);
-    if (!name) return;
-    const price = prompt('Цена:', p.price);
-    if (!price) return;
-    const features = prompt('Опции (через запятую):', p.features.join(', ')).split(',').map(f => f.trim());
-    const popular = confirm('Сделать популярным?');
-    
-    data.pricing[index] = { name, price, features, popular };
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Тариф обновлён!');
-}
-
-function deletePricing(index) {
-    if (!confirm('Удалить тариф?')) return;
-    data.pricing.splice(index, 1);
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('🗑️ Тариф удалён');
-}
-
-function addFeature() {
-    const icon = prompt('Иконка (эмодзи):', '⚡');
-    const title = prompt('Название особенности:');
-    if (!title) return;
-    const desc = prompt('Описание:');
-    if (!desc) return;
-    
-    data.features.push({ icon: icon || '⚡', title, desc });
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Особенность добавлена!');
-}
-
-function editFeature(index) {
-    const f = data.features[index];
-    const icon = prompt('Иконка:', f.icon);
-    const title = prompt('Название:', f.title);
-    if (!title) return;
-    const desc = prompt('Описание:', f.desc);
-    if (!desc) return;
-    
-    data.features[index] = { icon: icon || '⚡', title, desc };
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Особенность обновлена!');
-}
-
-function deleteFeature(index) {
-    if (!confirm('Удалить особенность?')) return;
-    data.features.splice(index, 1);
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('🗑️ Особенность удалена');
-}
-
-function addStep() {
-    const number = prompt('Номер этапа (например: 01):');
-    const title = prompt('Название этапа:');
-    if (!title) return;
-    const desc = prompt('Описание:');
-    if (!desc) return;
-    
-    data.steps.push({ number: number || '0' + (data.steps.length + 1), title, desc });
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Этап добавлен!');
-}
-
-function editStep(index) {
-    const s = data.steps[index];
-    const number = prompt('Номер:', s.number);
-    const title = prompt('Название:', s.title);
-    if (!title) return;
-    const desc = prompt('Описание:', s.desc);
-    if (!desc) return;
-    
-    data.steps[index] = { number: number || s.number, title, desc };
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Этап обновлён!');
-}
-
-function deleteStep(index) {
-    if (!confirm('Удалить этап?')) return;
-    data.steps.splice(index, 1);
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('🗑️ Этап удалён');
-}
-
-function addFaq() {
-    const question = prompt('Вопрос:');
-    if (!question) return;
-    const answer = prompt('Ответ:');
-    if (!answer) return;
-    
-    data.faq.push({ question, answer });
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Вопрос добавлен!');
-}
-
-function editFaq(index) {
-    const f = data.faq[index];
-    const question = prompt('Вопрос:', f.question);
-    if (!question) return;
-    const answer = prompt('Ответ:', f.answer);
-    if (!answer) return;
-    
-    data.faq[index] = { question, answer };
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Вопрос обновлён!');
-}
-
-function deleteFaq(index) {
-    if (!confirm('Удалить вопрос?')) return;
-    data.faq.splice(index, 1);
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('🗑️ Вопрос удалён');
-}
-
-function addSocial() {
-    const icon = prompt('Иконка (эмодзи):', '📱');
-    const name = prompt('Название (Telegram/Instagram/Email):');
-    if (!name) return;
-    const link = prompt('Ссылка:', '#');
-    
-    data.social.push({ icon: icon || '📱', name, link });
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Контакт добавлен!');
-}
-
-function editSocial(index) {
-    const s = data.social[index];
-    const icon = prompt('Иконка:', s.icon);
-    const name = prompt('Название:', s.name);
-    if (!name) return;
-    const link = prompt('Ссылка:', s.link);
-    
-    data.social[index] = { icon: icon || '📱', name, link };
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('✅ Контакт обновлён!');
-}
-
-function deleteSocial(index) {
-    if (!confirm('Удалить контакт?')) return;
-    data.social.splice(index, 1);
-    saveData(data);
-    renderSite();
-    renderAdmin();
-    showToast('🗑️ Контакт удалён');
-}
-
-// ===== ЭКСПОРТ/ИМПОРТ =====
-function exportData() {
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `webmaster_data_${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('📤 Данные экспортированы!');
-}
-
-function importData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const imported = JSON.parse(e.target.result);
-            data = imported;
-            saveData(data);
-            renderSite();
-            renderAdmin();
-            showToast('📥 Данные импортированы!');
-        } catch (err) {
-            alert('❌ Ошибка импорта!');
-        }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
-}
-
-// ===== TOAST =====
-function showToast(message) {
-    const existing = document.querySelector('.toast');
-    if (existing) existing.remove();
-    
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.8);
-        backdrop-filter: blur(20px);
-        padding: 12px 24px;
-        border-radius: 30px;
-        color: #fff;
-        font-size: 14px;
-        font-weight: 500;
-        z-index: 10000;
-        border: 0.5px solid rgba(255,255,255,0.04);
-        animation: toastIn 0.4s ease;
-    `;
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(-50%) translateY(-20px)';
-        toast.style.transition = '0.4s';
-        setTimeout(() => toast.remove(), 400);
-    }, 2500);
-}
-
 // ===== ФОРМА =====
 function sendForm(e) {
     e.preventDefault();
     const btn = e.target.querySelector('.btn');
-    const originalText = btn.textContent;
+    const original = btn.textContent;
     btn.textContent = '✅ Отправлено!';
     btn.style.background = '#34c759';
     setTimeout(() => {
-        btn.textContent = originalText;
+        btn.textContent = original;
         btn.style.background = '';
         e.target.reset();
     }, 3000);
 }
 
 // ===== МОБИЛЬНОЕ МЕНЮ =====
-const toggle = document.getElementById('navToggle');
-const menu = document.getElementById('navMenu');
-
-toggle.addEventListener('click', () => {
-    menu.classList.toggle('active');
+document.getElementById('navToggle').addEventListener('click', () => {
+    document.getElementById('navMenu').classList.toggle('active');
 });
-
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-        menu.classList.remove('active');
-    });
-});
-
-// ===== ЗАКРЫТИЕ АДМИНКИ ПО ESC =====
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeAdmin();
-    }
+document.querySelectorAll('.nav-link').forEach(l => {
+    l.addEventListener('click', () => document.getElementById('navMenu').classList.remove('active'));
 });
 
 // ===== ЗАПУСК =====
 document.addEventListener('DOMContentLoaded', () => {
     renderSite();
-    
-    // Открываем первый FAQ автоматически
     setTimeout(() => {
-        const firstFaq = document.querySelector('.faq-question');
-        if (firstFaq) {
-            firstFaq.click();
-        }
-    }, 800);
+        const first = document.querySelector('.faq-question');
+        if (first) first.click();
+    }, 500);
 });
