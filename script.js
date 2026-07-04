@@ -1,4 +1,5 @@
-// ===== ДАННЫЕ ПО УМОЛЧАНИЮ =====
+var STORAGE_KEY = 'webmaster_pro_data';
+
 function getDefaultData() {
     return {
         heroDesc: 'Быстро, красиво, дёшево. Полный цикл — от идеи до запуска. Бесплатный хостинг, адаптив, админ-панель.',
@@ -49,38 +50,35 @@ function getDefaultData() {
     };
 }
 
-// ===== ИКОНКИ ДЛЯ СОЦСЕТЕЙ =====
-const socialIcons = {
-    telegram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 4.5L2.5 10.5L9.5 14.5L13.5 21.5L21.5 4.5Z"/><path d="M9.5 14.5L13.5 9.5"/></svg>`,
-    instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
-    email: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
-    default: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`
+var socialIcons = {
+    telegram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 4.5L2.5 10.5L9.5 14.5L13.5 21.5L21.5 4.5Z"/><path d="M9.5 14.5L13.5 9.5"/></svg>',
+    instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',
+    email: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    default: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
 };
 
-// ===== ЗАГРУЗКА ДАННЫХ =====
 function loadData() {
-    const stored = localStorage.getItem('webmaster_pro_data');
+    var stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
         try {
             return JSON.parse(stored);
         } catch (e) {
-            const def = getDefaultData();
-            localStorage.setItem('webmaster_pro_data', JSON.stringify(def));
+            var def = getDefaultData();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(def));
             return def;
         }
     }
-    const def = getDefaultData();
-    localStorage.setItem('webmaster_pro_data', JSON.stringify(def));
+    var def = getDefaultData();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(def));
     return def;
 }
 
 function saveData(data) {
-    localStorage.setItem('webmaster_pro_data', JSON.stringify(data));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-let data = loadData();
+var data = loadData();
 
-// ===== РЕНДЕРИНГ =====
 function renderSite() {
     document.getElementById('heroDesc').textContent = data.heroDesc;
     document.getElementById('aboutText').textContent = data.aboutText;
@@ -92,140 +90,139 @@ function renderSite() {
     document.getElementById('statClients').textContent = data.stats.clients;
     document.getElementById('statHappy').textContent = data.stats.happy + '%';
     
-    document.getElementById('servicesGrid').innerHTML = data.services.map(s => `
-        <div class="service-card">
-            <div class="service-icon">${s.icon}</div>
-            <h3>${s.title}</h3>
-            <p>${s.desc}</p>
-            <div class="service-tag">${s.price}</div>
-        </div>
-    `).join('');
+    var servicesHtml = '';
+    for (var i = 0; i < data.services.length; i++) {
+        var s = data.services[i];
+        servicesHtml += '<div class="service-card"><div class="service-icon">' + s.icon + '</div><h3>' + s.title + '</h3><p>' + s.desc + '</p><div class="service-tag">' + s.price + '</div></div>';
+    }
+    document.getElementById('servicesGrid').innerHTML = servicesHtml;
     
-    // ===== ПОРТФОЛИО С ФОТО =====
-    document.getElementById('portfolioGrid').innerHTML = data.portfolio.map(p => {
-        const imageHtml = p.image && p.image.startsWith('data:image') 
-            ? `<img src="${p.image}" alt="${p.title}">` 
-            : `<span style="font-size:48px;">${p.icon || '📷'}</span>`;
-        
-        return `
-            <div class="portfolio-card">
-                <div class="portfolio-image">${imageHtml}</div>
-                <div class="portfolio-info">
-                    <h3>${p.title}</h3>
-                    <p>${p.desc}</p>
-                    <div class="portfolio-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
-                    <a href="${p.link}" class="btn btn-outline" target="_blank">Смотреть</a>
-                </div>
-            </div>
-        `;
-    }).join('');
+    var portfolioHtml = '';
+    for (var j = 0; j < data.portfolio.length; j++) {
+        var p = data.portfolio[j];
+        var imageHtml = (p.image && p.image.indexOf('data:image') === 0) ? '<img src="' + p.image + '" alt="' + p.title + '">' : '<span style="font-size:48px;">' + (p.icon || '📷') + '</span>';
+        var tagsHtml = '';
+        for (var t = 0; t < p.tags.length; t++) {
+            tagsHtml += '<span>' + p.tags[t] + '</span>';
+        }
+        portfolioHtml += '<div class="portfolio-card"><div class="portfolio-image">' + imageHtml + '</div><div class="portfolio-info"><h3>' + p.title + '</h3><p>' + p.desc + '</p><div class="portfolio-tags">' + tagsHtml + '</div><a href="' + p.link + '" class="btn btn-outline" target="_blank">Смотреть</a></div></div>';
+    }
+    document.getElementById('portfolioGrid').innerHTML = portfolioHtml;
     
-    document.getElementById('pricingGrid').innerHTML = data.pricing.map(p => `
-        <div class="pricing-card ${p.popular ? 'popular' : ''}">
-            ${p.popular ? '<div class="pricing-badge">🔥 Популярный</div>' : ''}
-            <div class="pricing-name">${p.name}</div>
-            <div class="pricing-price">${p.price}</div>
-            <ul class="pricing-features">${p.features.map(f => `<li>✅ ${f}</li>`).join('')}</ul>
-            <a href="#contacts" class="btn btn-primary">Заказать</a>
-        </div>
-    `).join('');
+    var pricingHtml = '';
+    for (var k = 0; k < data.pricing.length; k++) {
+        var pr = data.pricing[k];
+        var featuresHtml = '';
+        for (var f = 0; f < pr.features.length; f++) {
+            featuresHtml += '<li>✅ ' + pr.features[f] + '</li>';
+        }
+        var popularBadge = pr.popular ? '<div class="pricing-badge">🔥 Популярный</div>' : '';
+        var popularClass = pr.popular ? ' popular' : '';
+        pricingHtml += '<div class="pricing-card' + popularClass + '">' + popularBadge + '<div class="pricing-name">' + pr.name + '</div><div class="pricing-price">' + pr.price + '</div><ul class="pricing-features">' + featuresHtml + '</ul><a href="#contacts" class="btn btn-primary">Заказать</a></div>';
+    }
+    document.getElementById('pricingGrid').innerHTML = pricingHtml;
     
-    document.getElementById('aboutFeatures').innerHTML = data.features.map(f => `
-        <div class="about-feature">
-            <span>${f.icon}</span>
-            <div><strong>${f.title}</strong><p>${f.desc}</p></div>
-        </div>
-    `).join('');
+    var featuresHtml2 = '';
+    for (var l = 0; l < data.features.length; l++) {
+        var ft = data.features[l];
+        featuresHtml2 += '<div class="about-feature"><span>' + ft.icon + '</span><div><strong>' + ft.title + '</strong><p>' + ft.desc + '</p></div></div>';
+    }
+    document.getElementById('aboutFeatures').innerHTML = featuresHtml2;
     
-    document.getElementById('stepsGrid').innerHTML = data.steps.map(s => `
-        <div class="step-card">
-            <div class="step-number">${s.number}</div>
-            <h3>${s.title}</h3>
-            <p>${s.desc}</p>
-        </div>
-    `).join('');
+    var stepsHtml = '';
+    for (var m = 0; m < data.steps.length; m++) {
+        var st = data.steps[m];
+        stepsHtml += '<div class="step-card"><div class="step-number">' + st.number + '</div><h3>' + st.title + '</h3><p>' + st.desc + '</p></div>';
+    }
+    document.getElementById('stepsGrid').innerHTML = stepsHtml;
     
-    document.getElementById('faqGrid').innerHTML = data.faq.map((f, i) => `
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">${f.question} <span>+</span></button>
-            <div class="faq-answer"><p>${f.answer}</p></div>
-        </div>
-    `).join('');
+    var faqHtml = '';
+    for (var n = 0; n < data.faq.length; n++) {
+        var fa = data.faq[n];
+        faqHtml += '<div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">' + fa.question + ' <span>+</span></button><div class="faq-answer"><p>' + fa.answer + '</p></div></div>';
+    }
+    document.getElementById('faqGrid').innerHTML = faqHtml;
     
-    // ===== СОЦСЕТИ =====
-    document.getElementById('contactsSocial').innerHTML = data.social.map(s => `
-        <a href="${s.link}" class="contact-link" target="_blank">
-            <span class="contact-icon">${socialIcons[s.icon] || socialIcons.default}</span>
-            ${s.name}
-        </a>
-    `).join('');
+    var socialHtml = '';
+    for (var o = 0; o < data.social.length; o++) {
+        var so = data.social[o];
+        var iconSvg = socialIcons[so.icon] || socialIcons.default;
+        socialHtml += '<a href="' + so.link + '" class="contact-link" target="_blank"><span class="contact-icon">' + iconSvg + '</span>' + so.name + '</a>';
+    }
+    document.getElementById('contactsSocial').innerHTML = socialHtml;
     
-    document.getElementById('footerSocial').innerHTML = data.social.map(s => `
-        <a href="${s.link}" target="_blank">
-            <span class="footer-icon">${socialIcons[s.icon] || socialIcons.default}</span>
-        </a>
-    `).join('');
+    var footerHtml = '';
+    for (var p2 = 0; p2 < data.social.length; p2++) {
+        var so2 = data.social[p2];
+        var iconSvg2 = socialIcons[so2.icon] || socialIcons.default;
+        footerHtml += '<a href="' + so2.link + '" target="_blank"><span class="footer-icon">' + iconSvg2 + '</span></a>';
+    }
+    document.getElementById('footerSocial').innerHTML = footerHtml;
 }
 
-// ===== FAQ =====
 function toggleFaq(btn) {
-    const answer = btn.nextElementSibling;
-    const isOpen = answer.style.maxHeight;
-    document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = null);
-    document.querySelectorAll('.faq-question').forEach(b => b.classList.remove('active'));
+    var answer = btn.nextElementSibling;
+    var isOpen = answer.style.maxHeight;
+    var allAnswers = document.querySelectorAll('.faq-answer');
+    for (var i = 0; i < allAnswers.length; i++) {
+        allAnswers[i].style.maxHeight = null;
+    }
+    var allQuestions = document.querySelectorAll('.faq-question');
+    for (var j = 0; j < allQuestions.length; j++) {
+        allQuestions[j].classList.remove('active');
+    }
     if (!isOpen) {
         answer.style.maxHeight = answer.scrollHeight + 50 + 'px';
         btn.classList.add('active');
     }
 }
 
-// ===== ФОРМА С ОТПРАВКОЙ НА ПОЧТУ =====
 function sendForm(e) {
     e.preventDefault();
-    const form = e.target;
-    const btn = form.querySelector('.btn');
-    const originalText = btn.textContent;
+    var form = e.target;
+    var btn = form.querySelector('.btn');
+    var originalText = btn.textContent;
 
-    const nameInput = form.querySelector('input[placeholder="Ваше имя"]');
-    const contactInput = form.querySelector('input[placeholder="Telegram или Instagram"]');
-    const messageInput = form.querySelector('textarea');
+    var nameInput = form.querySelector('input[placeholder="Ваше имя"]');
+    var contactInput = form.querySelector('input[placeholder="Telegram или Instagram"]');
+    var messageInput = form.querySelector('textarea');
 
-    const name = nameInput ? nameInput.value : 'Не указано';
-    const contact = contactInput ? contactInput.value : 'Не указано';
-    const message = messageInput ? messageInput.value : 'Не указано';
+    var name = nameInput ? nameInput.value : 'Не указано';
+    var contact = contactInput ? contactInput.value : 'Не указано';
+    var message = messageInput ? messageInput.value : 'Не указано';
 
     btn.textContent = '⏳ Отправка...';
     btn.disabled = true;
 
     emailjs.send(
-        'service_abc123',      // 🔥 ЗАМЕНИТЕ НА ВАШ Service ID
-        'template_xyz789',     // 🔥 ЗАМЕНИТЕ НА ВАШ Template ID
+        'service_abc123',
+        'template_xyz789',
         {
             from_name: name,
             from_contact: contact,
             message: message,
             current_date: new Date().toLocaleString('ru-RU')
         },
-        'abc123def456...'      // 🔥 ЗАМЕНИТЕ НА ВАШ Public Key
+        'abc123def456...'
     )
-    .then(() => {
+    .then(function() {
         btn.textContent = '✅ Отправлено!';
         btn.style.background = '#34c759';
         form.reset();
-        const analytics = JSON.parse(localStorage.getItem('webmaster_analytics') || '{"leads":0,"views":0}');
+        var analytics = JSON.parse(localStorage.getItem('webmaster_analytics') || '{"leads":0,"views":0}');
         analytics.leads = (analytics.leads || 0) + 1;
         localStorage.setItem('webmaster_analytics', JSON.stringify(analytics));
-        setTimeout(() => {
+        setTimeout(function() {
             btn.textContent = originalText;
             btn.style.background = '';
             btn.disabled = false;
         }, 3000);
     })
-    .catch((error) => {
+    .catch(function(error) {
         console.error('Ошибка:', error);
         btn.textContent = '❌ Ошибка';
         btn.style.background = '#ff3b30';
-        setTimeout(() => {
+        setTimeout(function() {
             btn.textContent = originalText;
             btn.style.background = '';
             btn.disabled = false;
@@ -233,19 +230,21 @@ function sendForm(e) {
     });
 }
 
-// ===== МОБИЛЬНОЕ МЕНЮ =====
-document.getElementById('navToggle').addEventListener('click', () => {
+document.getElementById('navToggle').addEventListener('click', function() {
     document.getElementById('navMenu').classList.toggle('active');
 });
-document.querySelectorAll('.nav-link').forEach(l => {
-    l.addEventListener('click', () => document.getElementById('navMenu').classList.remove('active'));
-});
 
-// ===== ЗАПУСК =====
-document.addEventListener('DOMContentLoaded', () => {
+var navLinks = document.querySelectorAll('.nav-link');
+for (var i = 0; i < navLinks.length; i++) {
+    navLinks[i].addEventListener('click', function() {
+        document.getElementById('navMenu').classList.remove('active');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
     renderSite();
-    setTimeout(() => {
-        const first = document.querySelector('.faq-question');
+    setTimeout(function() {
+        var first = document.querySelector('.faq-question');
         if (first) first.click();
     }, 500);
 });
