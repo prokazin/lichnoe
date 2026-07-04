@@ -1,56 +1,58 @@
-// ===== УНИКАЛЬНОЕ ХРАНИЛИЩЕ =====
-const STORAGE_KEY = 'webmaster_pro_data';
-
 // ===== ДАННЫЕ ПО УМОЛЧАНИЮ =====
-function getDefaultData() {
-    return {
-        heroDesc: 'Быстро, красиво, дёшево. Полный цикл — от идеи до запуска. Бесплатный хостинг, адаптив, админ-панель.',
-        aboutText: 'Я создаю сайты на GitHub с 2025 года. Моя цель — сделать качественный продукт, который будет работать, приносить результат и радовать глаз.',
-        contactsText: 'Напишите мне в Telegram или Instagram — я отвечу в течение часа.',
-        footerText: 'Создание сайтов на GitHub — быстро, красиво, дёшево.',
-        footerCopyright: '© 2025 WebMaster. Все права защищены.',
-        stats: { projects: 12, clients: 9, happy: 100 },
-        services: [
-            { icon: '📄', title: 'Лендинг', desc: 'Одностраничный сайт под ваш продукт или услугу. Быстрый запуск.', price: 'от 5 000 ₽' },
-            { icon: '🛍️', title: 'Сайт-витрина', desc: 'Каталог товаров, админ-панель, загрузка фото, фильтры, характеристики.', price: 'от 10 000 ₽' },
-            { icon: '📱', title: 'Telegram Web App', desc: 'Мини-приложение внутри бота для продаж, каталога или сервиса.', price: 'от 15 000 ₽' },
-            { icon: '⚡', title: 'Сайт с корзиной', desc: 'Полноценный интернет-магазин с корзиной, заказами и админкой.', price: 'от 20 000 ₽' }
-        ],
-        portfolio: [
-            { icon: '🏂', title: 'SnowShop', desc: 'Магазин сноубордов. Каталог, админ-панель, фильтры, характеристики.', tags: ['витрина', 'админ-панель', 'адаптив'], link: '#' },
-            { icon: '🚀', title: 'Стартап-лендинг', desc: 'Продающий лендинг для IT-продукта. Конверсия, аналитика, форма заявки.', tags: ['лендинг', 'конверсия', 'форма'], link: '#' },
-            { icon: '📱', title: 'Telegram Shop', desc: 'Магазин внутри Telegram-бота. Каталог, корзина, оформление заказа.', tags: ['Telegram', 'корзина', 'бот'], link: '#' }
-        ],
-        pricing: [
-            { name: 'Старт', price: '5 000 ₽', features: ['Лендинг (1 страница)', 'Адаптив под все устройства', 'Форма заявки', '1 правка бесплатно', 'Деплой на GitHub'], popular: false },
-            { name: 'Базовый', price: '10 000 ₽', features: ['Сайт-витрина (до 20 товаров)', 'Админ-панель', 'Загрузка фото', 'Фильтры и характеристики', '3 правки бесплатно', 'Деплой на GitHub'], popular: true },
-            { name: 'Премиум', price: '20 000 ₽', features: ['Полноценный каталог', 'Корзина и оформление', 'Telegram Web App', 'Админ-панель + аналитика', '5 правок бесплатно', 'Деплой на GitHub'], popular: false }
-        ],
-        features: [
-            { icon: '⚡', title: 'Быстро', desc: 'Сайт готов за 3–7 дней' },
-            { icon: '🎨', title: 'Красиво', desc: 'Современный дизайн, стиль Apple' },
-            { icon: '💰', title: 'Дёшево', desc: 'Цены ниже рыночных, качество — выше' },
-            { icon: '🛠️', title: 'Надёжно', desc: 'Бесплатный хостинг на GitHub' }
-        ],
-        steps: [
-            { number: '01', title: 'Обсуждаем', desc: 'Рассказываете идею, я предлагаю решение и сроки' },
-            { number: '02', title: 'Прототип', desc: 'Создаю макет страниц, утверждаем структуру' },
-            { number: '03', title: 'Разрабатываю', desc: 'Пишу код, делаю админ-панель, настраиваю' },
-            { number: '04', title: 'Запускаю', desc: 'Тестирую, деплою на GitHub, передаю клиенту' }
-        ],
-        faq: [
-            { question: 'Сколько времени занимает создание сайта?', answer: 'От 3 до 7 дней в зависимости от сложности. Лендинг — 3 дня, витрина — 5 дней, полный каталог — 7 дней.' },
-            { question: 'Нужно ли покупать хостинг?', answer: 'Нет! Я размещаю сайты на GitHub Pages — это полностью бесплатно и надёжно.' },
-            { question: 'Можно ли посмотреть примеры?', answer: 'Конечно! В разделе «Портфолио» вы можете посмотреть готовые проекты и оценить качество.' },
-            { question: 'Как я могу оплатить?', answer: 'Предоплата 50%, остальное — после запуска. Оплата на карту или по ссылке.' }
-        ],
-        social: [
-            { icon: 'telegram', name: 'Telegram', link: '#' },
-            { icon: 'instagram', name: 'Instagram', link: '#' },
-            { icon: 'email', name: 'Email', link: '#' }
-        ]
-    };
-}
+const defaultData = {
+    heroDesc: 'Быстро, красиво, дёшево. Полный цикл — от идеи до запуска. Бесплатный хостинг, адаптив, админ-панель.',
+    aboutText: 'Я создаю сайты на GitHub с 2025 года. Моя цель — сделать качественный продукт, который будет работать, приносить результат и радовать глаз.',
+    contactsText: 'Напишите мне в Telegram или Instagram — я отвечу в течение часа.',
+    footerText: 'Создание сайтов на GitHub — быстро, красиво, дёшево.',
+    footerCopyright: '© 2025 WebMaster. Все права защищены.',
+    stats: { projects: 12, clients: 9, happy: 100 },
+    
+    services: [
+        { icon: '📄', title: 'Лендинг', desc: 'Одностраничный сайт под ваш продукт или услугу. Быстрый запуск.', price: 'от 5 000 ₽' },
+        { icon: '🛍️', title: 'Сайт-витрина', desc: 'Каталог товаров, админ-панель, загрузка фото, фильтры, характеристики.', price: 'от 10 000 ₽' },
+        { icon: '📱', title: 'Telegram Web App', desc: 'Мини-приложение внутри бота для продаж, каталога или сервиса.', price: 'от 15 000 ₽' },
+        { icon: '⚡', title: 'Сайт с корзиной', desc: 'Полноценный интернет-магазин с корзиной, заказами и админкой.', price: 'от 20 000 ₽' }
+    ],
+    
+    portfolio: [
+        { icon: '🏂', title: 'SnowShop', desc: 'Магазин сноубордов. Каталог, админ-панель, фильтры, характеристики.', tags: ['витрина', 'админ-панель', 'адаптив'], link: '#' },
+        { icon: '🚀', title: 'Стартап-лендинг', desc: 'Продающий лендинг для IT-продукта. Конверсия, аналитика, форма заявки.', tags: ['лендинг', 'конверсия', 'форма'], link: '#' },
+        { icon: '📱', title: 'Telegram Shop', desc: 'Магазин внутри Telegram-бота. Каталог, корзина, оформление заказа.', tags: ['Telegram', 'корзина', 'бот'], link: '#' }
+    ],
+    
+    pricing: [
+        { name: 'Старт', price: '5 000 ₽', features: ['Лендинг (1 страница)', 'Адаптив под все устройства', 'Форма заявки', '1 правка бесплатно', 'Деплой на GitHub'], popular: false },
+        { name: 'Базовый', price: '10 000 ₽', features: ['Сайт-витрина (до 20 товаров)', 'Админ-панель', 'Загрузка фото', 'Фильтры и характеристики', '3 правки бесплатно', 'Деплой на GitHub'], popular: true },
+        { name: 'Премиум', price: '20 000 ₽', features: ['Полноценный каталог', 'Корзина и оформление', 'Telegram Web App', 'Админ-панель + аналитика', '5 правок бесплатно', 'Деплой на GitHub'], popular: false }
+    ],
+    
+    features: [
+        { icon: '⚡', title: 'Быстро', desc: 'Сайт готов за 3–7 дней' },
+        { icon: '🎨', title: 'Красиво', desc: 'Современный дизайн, стиль Apple' },
+        { icon: '💰', title: 'Дёшево', desc: 'Цены ниже рыночных, качество — выше' },
+        { icon: '🛠️', title: 'Надёжно', desc: 'Бесплатный хостинг на GitHub' }
+    ],
+    
+    steps: [
+        { number: '01', title: 'Обсуждаем', desc: 'Рассказываете идею, я предлагаю решение и сроки' },
+        { number: '02', title: 'Прототип', desc: 'Создаю макет страниц, утверждаем структуру' },
+        { number: '03', title: 'Разрабатываю', desc: 'Пишу код, делаю админ-панель, настраиваю' },
+        { number: '04', title: 'Запускаю', desc: 'Тестирую, деплою на GitHub, передаю клиенту' }
+    ],
+    
+    faq: [
+        { question: 'Сколько времени занимает создание сайта?', answer: 'От 3 до 7 дней в зависимости от сложности. Лендинг — 3 дня, витрина — 5 дней, полный каталог — 7 дней.' },
+        { question: 'Нужно ли покупать хостинг?', answer: 'Нет! Я размещаю сайты на GitHub Pages — это полностью бесплатно и надёжно.' },
+        { question: 'Можно ли посмотреть примеры?', answer: 'Конечно! В разделе «Портфолио» вы можете посмотреть готовые проекты и оценить качество.' },
+        { question: 'Как я могу оплатить?', answer: 'Предоплата 50%, остальное — после запуска. Оплата на карту или по ссылке.' }
+    ],
+    
+    social: [
+        { icon: 'telegram', name: 'Telegram', link: '#' },
+        { icon: 'instagram', name: 'Instagram', link: '#' },
+        { icon: 'email', name: 'Email', link: '#' }
+    ]
+};
 
 // ===== ИКОНКИ ДЛЯ СОЦСЕТЕЙ (ОРИГИНАЛЬНЫЕ SVG) =====
 const socialIcons = {
@@ -62,23 +64,23 @@ const socialIcons = {
 
 // ===== ЗАГРУЗКА ДАННЫХ =====
 function loadData() {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem('webmaster_pro_data');
     if (stored) {
         try {
             return JSON.parse(stored);
         } catch (e) {
             const def = getDefaultData();
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(def));
+            localStorage.setItem('webmaster_pro_data', JSON.stringify(def));
             return def;
         }
     }
     const def = getDefaultData();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(def));
+    localStorage.setItem('webmaster_pro_data', JSON.stringify(def));
     return def;
 }
 
 function saveData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem('webmaster_pro_data', JSON.stringify(data));
 }
 
 let data = loadData();
@@ -175,24 +177,61 @@ function toggleFaq(btn) {
     }
 }
 
-// ===== ФОРМА =====
+// ===== ФОРМА С ОТПРАВКОЙ НА ПОЧТУ (EMAILJS) =====
 function sendForm(e) {
     e.preventDefault();
-    const btn = e.target.querySelector('.btn');
-    const original = btn.textContent;
-    btn.textContent = '✅ Отправлено!';
-    btn.style.background = '#34c759';
-    
-    // Увеличиваем счётчик заявок в аналитике
-    const analytics = JSON.parse(localStorage.getItem('webmaster_analytics') || '{"leads":0,"views":0}');
-    analytics.leads = (analytics.leads || 0) + 1;
-    localStorage.setItem('webmaster_analytics', JSON.stringify(analytics));
-    
-    setTimeout(() => {
-        btn.textContent = original;
-        btn.style.background = '';
-        e.target.reset();
-    }, 3000);
+    const form = e.target;
+    const btn = form.querySelector('.btn');
+    const originalText = btn.textContent;
+
+    // Получаем данные из формы
+    const nameInput = form.querySelector('input[placeholder="Ваше имя"]');
+    const contactInput = form.querySelector('input[placeholder="Telegram или Instagram"]');
+    const messageInput = form.querySelector('textarea');
+
+    const name = nameInput ? nameInput.value : 'Не указано';
+    const contact = contactInput ? contactInput.value : 'Не указано';
+    const message = messageInput ? messageInput.value : 'Не указано';
+
+    // Отправляем через EmailJS
+    btn.textContent = '⏳ Отправка...';
+    btn.disabled = true;
+
+    emailjs.send(
+        'service_abc123',      // 🔥 ЗАМЕНИТЕ НА ВАШ Service ID
+        'template_xyz789',     // 🔥 ЗАМЕНИТЕ НА ВАШ Template ID
+        {
+            from_name: name,
+            from_contact: contact,
+            message: message,
+            current_date: new Date().toLocaleString('ru-RU')
+        },
+        'abc123def456...'      // 🔥 ЗАМЕНИТЕ НА ВАШ Public Key
+    )
+    .then(() => {
+        btn.textContent = '✅ Отправлено!';
+        btn.style.background = '#34c759';
+        form.reset();
+        // Увеличиваем счётчик заявок
+        const analytics = JSON.parse(localStorage.getItem('webmaster_analytics') || '{"leads":0,"views":0}');
+        analytics.leads = (analytics.leads || 0) + 1;
+        localStorage.setItem('webmaster_analytics', JSON.stringify(analytics));
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+            btn.disabled = false;
+        }, 3000);
+    })
+    .catch((error) => {
+        console.error('Ошибка:', error);
+        btn.textContent = '❌ Ошибка';
+        btn.style.background = '#ff3b30';
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+            btn.disabled = false;
+        }, 3000);
+    });
 }
 
 // ===== МОБИЛЬНОЕ МЕНЮ =====
