@@ -544,7 +544,7 @@ section {
     color: #b0b0b8;
 }
 
-/* ===== КОНТАКТЫ ===== */
+/* ===== КОНТАКТЫ С ОРИГИНАЛЬНЫМИ ИКОНКАМИ ===== */
 .contacts-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -584,7 +584,19 @@ section {
 }
 
 .contact-icon {
-    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.contact-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .contacts-form {
@@ -631,7 +643,7 @@ section {
     width: 100%;
 }
 
-/* ===== FOOTER ===== */
+/* ===== FOOTER С ОРИГИНАЛЬНЫМИ ИКОНКАМИ ===== */
 .footer {
     padding: 40px 0 20px;
     background: rgba(10, 10, 15, 0.8);
@@ -681,14 +693,36 @@ section {
 }
 
 .footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
     color: #6a6a72;
     text-decoration: none;
-    font-size: 20px;
     transition: 0.3s;
 }
 
 .footer-social a:hover {
+    background: rgba(255, 255, 255, 0.08);
     color: #fff;
+}
+
+.footer-social a .footer-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.footer-social a .footer-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .footer-bottom {
@@ -698,29 +732,9 @@ section {
     color: #4a4a52;
 }
 
-/* ===== ССЫЛКА НА АДМИНКУ ===== */
+/* ===== ССЫЛКА НА АДМИНКУ (СКРЫТА) ===== */
 .admin-link {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 999;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.04);
-    border: 0.5px solid rgba(255, 255, 255, 0.04);
-    color: #6a6a72;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.admin-link:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+    display: none !important;
 }
 
 /* ===== TOAST ===== */
