@@ -6,6 +6,7 @@
     <title>Админ-панель WebMaster</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* ===== ОСНОВНЫЕ СТИЛИ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -19,7 +20,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
         .header {
@@ -44,7 +45,17 @@
             color: #6a6a72;
             font-size: 14px;
         }
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .badge.on { background: rgba(52,199,89,0.12); color: #34c759; }
+        .badge.off { background: rgba(255,59,48,0.12); color: #ff3b30; }
 
+        /* ===== ВХОД ===== */
         #loginForm {
             background: rgba(255,255,255,0.03);
             border-radius: 24px;
@@ -54,10 +65,7 @@
             margin: 60px auto;
             text-align: center;
         }
-        #loginForm h2 {
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
+        #loginForm h2 { margin-bottom: 20px; font-weight: 700; }
         #loginForm input {
             width: 100%;
             padding: 14px 16px;
@@ -70,10 +78,7 @@
             margin-bottom: 16px;
             transition: 0.3s;
         }
-        #loginForm input:focus {
-            outline: none;
-            border-color: #007aff;
-        }
+        #loginForm input:focus { outline: none; border-color: #007aff; }
         #loginForm button {
             width: 100%;
             padding: 14px;
@@ -86,14 +91,11 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        #loginForm button:hover {
-            background: #0055b3;
-        }
+        #loginForm button:hover { background: #0055b3; }
 
-        #adminPanel {
-            display: none;
-        }
+        #adminPanel { display: none; }
 
+        /* ===== ВКЛАДКИ ===== */
         .tabs {
             display: flex;
             gap: 6px;
@@ -115,22 +117,13 @@
             font-family: inherit;
             white-space: nowrap;
         }
-        .tab-btn:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.06);
-        }
-        .tab-btn.active {
-            background: #007aff;
-            color: #fff;
-        }
+        .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.06); }
+        .tab-btn.active { background: #007aff; color: #fff; }
 
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
+        /* ===== СЕКЦИИ ===== */
         .section {
             background: rgba(255,255,255,0.03);
             border-radius: 24px;
@@ -155,21 +148,9 @@
             margin-bottom: 12px;
         }
 
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .row-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-        }
-        .row-4 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 12px;
-        }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .row-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
 
         input, textarea, select {
             width: 100%;
@@ -183,30 +164,12 @@
             margin-bottom: 10px;
             transition: 0.3s;
         }
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #007aff;
-        }
-        input::placeholder, textarea::placeholder {
-            color: #4a4a52;
-        }
-        input[type="color"] {
-            height: 48px;
-            padding: 4px;
-            cursor: pointer;
-        }
-        input[type="file"] {
-            padding: 10px;
-            color: #6a6a72;
-        }
-        select option {
-            background: #1a1a22;
-            color: #fff;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #007aff; }
+        input::placeholder, textarea::placeholder { color: #4a4a52; }
+        input[type="color"] { height: 48px; padding: 4px; cursor: pointer; }
+        input[type="file"] { padding: 10px; color: #6a6a72; }
+        select option { background: #1a1a22; color: #fff; }
+        textarea { resize: vertical; min-height: 80px; }
 
         .btn {
             padding: 12px 24px;
@@ -218,49 +181,18 @@
             transition: 0.3s;
             font-family: inherit;
         }
-        .btn-primary {
-            background: #007aff;
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: #0055b3;
-        }
-        .btn-secondary {
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-            border: 0.5px solid rgba(255,255,255,0.04);
-        }
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.12);
-        }
-        .btn-danger {
-            background: #ff3b30;
-            color: #fff;
-        }
-        .btn-danger:hover {
-            background: #cc2d24;
-        }
-        .btn-success {
-            background: #34c759;
-            color: #fff;
-        }
-        .btn-success:hover {
-            background: #28a745;
-        }
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 12px;
-        }
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
+        .btn-primary { background: #007aff; color: #fff; }
+        .btn-primary:hover { background: #0055b3; }
+        .btn-secondary { background: rgba(255,255,255,0.06); color: #fff; border: 0.5px solid rgba(255,255,255,0.04); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+        .btn-danger { background: #ff3b30; color: #fff; }
+        .btn-danger:hover { background: #cc2d24; }
+        .btn-success { background: #34c759; color: #fff; }
+        .btn-success:hover { background: #28a745; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
 
-        .item-list {
-            margin-top: 12px;
-        }
+        .item-list { margin-top: 12px; }
         .item {
             display: flex;
             justify-content: space-between;
@@ -270,21 +202,9 @@
             gap: 10px;
             flex-wrap: wrap;
         }
-        .item:last-child {
-            border-bottom: none;
-        }
-        .item span {
-            color: #b0b0b8;
-            font-size: 14px;
-        }
-        .item .label {
-            color: #6a6a72;
-            font-size: 12px;
-        }
-        .item-actions {
-            display: flex;
-            gap: 6px;
-        }
+        .item:last-child { border-bottom: none; }
+        .item span { color: #b0b0b8; font-size: 14px; }
+        .item-actions { display: flex; gap: 6px; }
         .item-actions button {
             padding: 4px 12px;
             border-radius: 12px;
@@ -294,54 +214,13 @@
             transition: 0.3s;
             font-family: inherit;
         }
-        .item-actions .edit {
-            background: rgba(0,122,255,0.12);
-            color: #007aff;
-        }
-        .item-actions .delete {
-            background: rgba(255,59,48,0.12);
-            color: #ff3b30;
-        }
-        .item-actions .toggle {
-            background: rgba(52,199,89,0.12);
-            color: #34c759;
-        }
-        .item-actions .toggle.off {
-            background: rgba(255,59,48,0.12);
-            color: #ff3b30;
-        }
-        .item-actions button:hover {
-            opacity: 0.7;
-        }
+        .item-actions .edit { background: rgba(0,122,255,0.12); color: #007aff; }
+        .item-actions .delete { background: rgba(255,59,48,0.12); color: #ff3b30; }
+        .item-actions .toggle { background: rgba(52,199,89,0.12); color: #34c759; }
+        .item-actions .toggle.off { background: rgba(255,59,48,0.12); color: #ff3b30; }
+        .item-actions button:hover { opacity: 0.7; }
 
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 500;
-            background: rgba(0,122,255,0.12);
-            color: #007aff;
-        }
-        .badge.popular {
-            background: rgba(255,215,0,0.12);
-            color: #ffd700;
-        }
-        .badge.on {
-            background: rgba(52,199,89,0.12);
-            color: #34c759;
-        }
-        .badge.off {
-            background: rgba(255,59,48,0.12);
-            color: #ff3b30;
-        }
-
-        .empty {
-            color: #4a4a52;
-            font-size: 14px;
-            padding: 12px 0;
-        }
-
+        .empty { color: #4a4a52; font-size: 14px; padding: 12px 0; }
         .back-link {
             display: inline-block;
             margin-top: 20px;
@@ -350,9 +229,7 @@
             font-size: 14px;
             transition: 0.3s;
         }
-        .back-link:hover {
-            color: #fff;
-        }
+        .back-link:hover { color: #fff; }
 
         .toast {
             position: fixed;
@@ -374,13 +251,7 @@
             100% { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        .preview-img {
-            max-width: 60px;
-            max-height: 60px;
-            border-radius: 8px;
-            border: 0.5px solid rgba(255,255,255,0.04);
-        }
-
+        .preview-img { max-width: 60px; max-height: 60px; border-radius: 8px; border: 0.5px solid rgba(255,255,255,0.04); }
         .toggle-switch {
             position: relative;
             width: 42px;
@@ -391,9 +262,7 @@
             transition: 0.3s;
             display: inline-block;
         }
-        .toggle-switch.active {
-            background: #007aff;
-        }
+        .toggle-switch.active { background: #007aff; }
         .toggle-switch .knob {
             position: absolute;
             top: 2px;
@@ -404,49 +273,55 @@
             border-radius: 50%;
             transition: 0.3s;
         }
-        .toggle-switch.active .knob {
-            left: 20px;
-        }
+        .toggle-switch.active .knob { left: 20px; }
 
+        /* ===== АНАЛИТИКА ===== */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+        }
+        .analytics-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            border: 0.5px solid rgba(255,255,255,0.04);
+        }
+        .analytics-card .number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .analytics-card .label {
+            font-size: 12px;
+            color: #6a6a72;
+            margin-top: 4px;
+        }
+        .analytics-card .change {
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .analytics-card .change.up { color: #34c759; }
+        .analytics-card .change.down { color: #ff3b30; }
+
+        /* ===== АДАПТИВ ===== */
         @media (max-width: 768px) {
-            .row, .row-3, .row-4 {
-                grid-template-columns: 1fr;
-            }
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .tabs {
-                gap: 4px;
-            }
-            .tab-btn {
-                padding: 6px 12px;
-                font-size: 11px;
-            }
-            .section {
-                padding: 16px;
-            }
-            #loginForm {
-                padding: 24px;
-                margin: 30px 16px;
-            }
-            .item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-            }
-            .item-actions {
-                width: 100%;
-            }
+            .row, .row-3, .row-4 { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: flex-start; }
+            .tabs { gap: 4px; }
+            .tab-btn { padding: 6px 12px; font-size: 11px; }
+            .section { padding: 16px; }
+            #loginForm { padding: 24px; margin: 30px 16px; }
+            .item { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .item-actions { width: 100%; }
+            .analytics-grid { grid-template-columns: 1fr 1fr; }
         }
         @media (max-width: 480px) {
-            .tab-btn {
-                font-size: 10px;
-                padding: 4px 8px;
-            }
-            .section h2 {
-                font-size: 16px;
-            }
+            .tab-btn { font-size: 10px; padding: 4px 8px; }
+            .section h2 { font-size: 16px; }
+            .analytics-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -460,6 +335,7 @@
             <a href="index.html" class="btn btn-secondary btn-sm">← На сайт</a>
         </div>
 
+        <!-- ===== ВХОД ===== -->
         <div id="loginForm">
             <h2>🔐 Вход в админ-панель</h2>
             <input type="password" id="adminPassword" placeholder="Введите пароль">
@@ -467,9 +343,12 @@
             <div style="margin-top:12px;font-size:12px;color:#4a4a52;">Пароль: webmaster2026</div>
         </div>
 
+        <!-- ===== АДМИН-ПАНЕЛЬ ===== -->
         <div id="adminPanel">
             <div class="tabs" id="tabs">
-                <button class="tab-btn active" data-tab="design">🎨 Дизайн</button>
+                <button class="tab-btn active" data-tab="dashboard">📊 Дашборд</button>
+                <button class="tab-btn" data-tab="analytics">📈 Аналитика</button>
+                <button class="tab-btn" data-tab="design">🎨 Дизайн</button>
                 <button class="tab-btn" data-tab="media">🖼️ Медиа</button>
                 <button class="tab-btn" data-tab="seo">📱 SEO</button>
                 <button class="tab-btn" data-tab="sections">🧩 Секции</button>
@@ -485,14 +364,97 @@
                 <button class="tab-btn" data-tab="faq">❓ FAQ</button>
                 <button class="tab-btn" data-tab="social">🔗 Соцсети</button>
                 <button class="tab-btn" data-tab="pages">📄 Страницы</button>
-                <button class="tab-btn" data-tab="analytics">📈 Аналитика</button>
                 <button class="tab-btn" data-tab="backup">💾 Бэкап</button>
             </div>
 
-            <!-- ===== ДИЗАЙН ===== -->
-            <div class="tab-content active" id="tab-design">
+            <!-- ===== ДАШБОРД ===== -->
+            <div class="tab-content active" id="tab-dashboard">
                 <div class="section">
-                    <h2>🎨 Цвета и стиль</h2>
+                    <h2>📊 Общая статистика</h2>
+                    <div class="analytics-grid" id="dashboardStats">
+                        <div class="analytics-card">
+                            <div class="number" id="dashViews">0</div>
+                            <div class="label">Всего просмотров</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="number" id="dashLeads">0</div>
+                            <div class="label">Всего заявок</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="number" id="dashConversion">0%</div>
+                            <div class="label">Конверсия</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="number" id="dashToday">0</div>
+                            <div class="label">Сегодня</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="number" id="dashYesterday">0</div>
+                            <div class="label">Вчера</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="number" id="dashWeek">0</div>
+                            <div class="label">За неделю</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2>📈 Активность</h2>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="number" id="dashPeak">--:--</div>
+                            <div class="label">Пик активности</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="number" id="dashCountries">🌍</div>
+                            <div class="label">Топ-3 страны</div>
+                            <div style="font-size:13px;color:#6a6a72;margin-top:4px;" id="dashCountriesList">Россия, США, Германия</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== АНАЛИТИКА ===== -->
+            <div class="tab-content" id="tab-analytics">
+                <div class="section">
+                    <h2>📈 Детальная аналитика</h2>
+                    <div class="analytics-grid">
+                        <div class="analytics-card" style="border-color:rgba(0,122,255,0.1);">
+                            <div class="number" style="color:#007aff;" id="analyticsViews">0</div>
+                            <div class="label">Всего просмотров</div>
+                        </div>
+                        <div class="analytics-card" style="border-color:rgba(52,199,89,0.1);">
+                            <div class="number" style="color:#34c759;" id="analyticsLeads">0</div>
+                            <div class="label">Всего заявок</div>
+                        </div>
+                        <div class="analytics-card" style="border-color:rgba(255,215,0,0.1);">
+                            <div class="number" style="color:#ffd700;" id="analyticsConversion">0%</div>
+                            <div class="label">Конверсия</div>
+                        </div>
+                    </div>
+                    <div class="analytics-grid" style="margin-top:12px;">
+                        <div class="analytics-card">
+                            <div class="number" id="analyticsToday">0</div>
+                            <div class="label">👥 Сегодня</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="number" id="analyticsYesterday">0</div>
+                            <div class="label">📅 Вчера</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="number" id="analyticsWeek">0</div>
+                            <div class="label">📆 За неделю</div>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetAnalytics()">↺ Сбросить аналитику</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ОСТАЛЬНЫЕ ВКЛАДКИ (сокращённо для экономии места) ===== -->
+            <div class="tab-content" id="tab-design">
+                <div class="section"><h2>🎨 Цвета и стиль</h2>
                     <div class="row-3">
                         <div><label style="font-size:12px;color:#6a6a72;">Фон</label><input type="color" id="colorBg" value="#0a0a0f"></div>
                         <div><label style="font-size:12px;color:#6a6a72;">Текст</label><input type="color" id="colorText" value="#ffffff"></div>
@@ -504,98 +466,54 @@
                         <div><label style="font-size:12px;color:#6a6a72;">Серый текст</label><input type="color" id="colorGray" value="#6a6a72"></div>
                     </div>
                     <div class="row-3">
-                        <div><label style="font-size:12px;color:#6a6a72;">Шрифт</label>
-                            <select id="fontSize">
-                                <option value="16px">16px (стандарт)</option>
-                                <option value="18px">18px</option>
-                                <option value="20px">20px (крупный)</option>
-                            </select>
-                        </div>
-                        <div><label style="font-size:12px;color:#6a6a72;">Скругление</label>
-                            <select id="borderRadius">
-                                <option value="16px">16px</option>
-                                <option value="20px">20px</option>
-                                <option value="24px">24px</option>
-                                <option value="32px">32px</option>
-                            </select>
-                        </div>
-                        <div><label style="font-size:12px;color:#6a6a72;">Тема</label>
-                            <select id="theme">
-                                <option value="dark">Тёмная</option>
-                                <option value="light">Светлая</option>
-                            </select>
-                        </div>
+                        <div><label style="font-size:12px;color:#6a6a72;">Шрифт</label><select id="fontSize"><option value="16px">16px</option><option value="18px">18px</option><option value="20px">20px</option></select></div>
+                        <div><label style="font-size:12px;color:#6a6a72;">Скругление</label><select id="borderRadius"><option value="16px">16px</option><option value="20px">20px</option><option value="24px">24px</option><option value="32px">32px</option></select></div>
+                        <div><label style="font-size:12px;color:#6a6a72;">Тема</label><select id="theme"><option value="dark">Тёмная</option><option value="light">Светлая</option></select></div>
                     </div>
-                    <div class="btn-group">
-                        <button class="btn btn-primary" onclick="saveDesign()">💾 Сохранить дизайн</button>
-                        <button class="btn btn-secondary" onclick="resetDesign()">↺ Сбросить</button>
-                    </div>
+                    <button class="btn btn-primary" onclick="saveDesign()">💾 Сохранить</button>
+                    <button class="btn btn-secondary" onclick="resetDesign()">↺ Сбросить</button>
                 </div>
                 <div class="section">
                     <h2>🎨 Дополнительные CSS</h2>
                     <textarea id="customCss" placeholder="Ваши CSS-стили..." rows="4"></textarea>
-                    <button class="btn btn-primary" onclick="saveCustomCss()">💾 Сохранить CSS</button>
+                    <button class="btn btn-primary" onclick="saveCustomCss()">💾 Сохранить</button>
                 </div>
             </div>
 
-            <!-- ===== МЕДИА ===== -->
             <div class="tab-content" id="tab-media">
-                <div class="section">
-                    <h2>🖼️ Управление медиа</h2>
+                <div class="section"><h2>🖼️ Управление медиа</h2>
                     <div class="row-3">
-                        <div>
-                            <label style="font-size:12px;color:#6a6a72;">Логотип</label>
-                            <input type="file" id="logoUpload" accept="image/*" onchange="uploadLogo(event)">
-                            <div id="logoPreview"></div>
-                        </div>
-                        <div>
-                            <label style="font-size:12px;color:#6a6a72;">Favicon</label>
-                            <input type="file" id="faviconUpload" accept="image/*" onchange="uploadFavicon(event)">
-                            <div id="faviconPreview"></div>
-                        </div>
-                        <div>
-                            <label style="font-size:12px;color:#6a6a72;">Фоновое видео</label>
-                            <input type="text" id="videoPath" placeholder="assets/hero-bg.mp4">
-                            <button class="btn btn-primary btn-sm" onclick="saveVideo()">Сохранить</button>
-                        </div>
+                        <div><label style="font-size:12px;color:#6a6a72;">Логотип</label><input type="file" id="logoUpload" accept="image/*" onchange="uploadLogo(event)"><div id="logoPreview"></div></div>
+                        <div><label style="font-size:12px;color:#6a6a72;">Favicon</label><input type="file" id="faviconUpload" accept="image/*" onchange="uploadFavicon(event)"><div id="faviconPreview"></div></div>
+                        <div><label style="font-size:12px;color:#6a6a72;">Фоновое видео</label><input type="text" id="videoPath" placeholder="assets/hero-bg.mp4"><button class="btn btn-primary btn-sm" onclick="saveVideo()">Сохранить</button></div>
                     </div>
                 </div>
             </div>
 
-            <!-- ===== SEO ===== -->
             <div class="tab-content" id="tab-seo">
-                <div class="section">
-                    <h2>📱 Meta-теги и SEO</h2>
+                <div class="section"><h2>📱 Meta-теги и SEO</h2>
                     <input type="text" id="seoTitle" placeholder="Заголовок страницы (Title)">
                     <textarea id="seoDesc" placeholder="Описание (Description)" rows="2"></textarea>
                     <input type="text" id="seoKeywords" placeholder="Ключевые слова (Keywords)">
                     <input type="text" id="seoOgImage" placeholder="Ссылка на картинку для соцсетей (OG Image)">
-                    <button class="btn btn-primary" onclick="saveSeo()">💾 Сохранить SEO</button>
+                    <button class="btn btn-primary" onclick="saveSeo()">💾 Сохранить</button>
                 </div>
             </div>
 
-            <!-- ===== СЕКЦИИ ===== -->
             <div class="tab-content" id="tab-sections">
-                <div class="section">
-                    <h2>🧩 Вкл/выкл секции</h2>
-                    <div id="sectionsList"></div>
-                    <button class="btn btn-secondary" onclick="addSection()">➕ Добавить секцию</button>
-                </div>
+                <div class="section"><h2>🧩 Вкл/выкл секции</h2><div id="sectionsList"></div><button class="btn btn-secondary" onclick="addSection()">➕ Добавить секцию</button></div>
             </div>
 
-            <!-- ===== ТЕКСТЫ ===== -->
             <div class="tab-content" id="tab-texts">
-                <div class="section">
-                    <h2>📄 Тексты сайта</h2>
+                <div class="section"><h2>📄 Тексты сайта</h2>
                     <input type="text" id="editHeroDesc" placeholder="Текст в Hero блоке">
                     <input type="text" id="editAboutText" placeholder="Текст 'Обо мне'">
                     <input type="text" id="editContactsText" placeholder="Текст в контактах">
                     <input type="text" id="editFooterText" placeholder="Текст в футере">
                     <input type="text" id="editFooterCopyright" placeholder="Копирайт">
-                    <button class="btn btn-primary" onclick="saveTexts()">💾 Сохранить тексты</button>
+                    <button class="btn btn-primary" onclick="saveTexts()">💾 Сохранить</button>
                 </div>
-                <div class="section">
-                    <h2>🏷️ Названия секций</h2>
+                <div class="section"><h2>🏷️ Названия секций</h2>
                     <div class="row-3">
                         <input type="text" id="editLabelServices" placeholder="Услуги">
                         <input type="text" id="editLabelPortfolio" placeholder="Портфолио">
@@ -610,14 +528,12 @@
                         <input type="text" id="editLabelContacts" placeholder="Контакты">
                         <input type="text" id="editLabelHero" placeholder="Hero">
                     </div>
-                    <button class="btn btn-primary" onclick="saveLabels()">💾 Сохранить названия</button>
+                    <button class="btn btn-primary" onclick="saveLabels()">💾 Сохранить</button>
                 </div>
             </div>
 
-            <!-- ===== СТАТИСТИКА ===== -->
             <div class="tab-content" id="tab-stats">
-                <div class="section">
-                    <h2>📊 Статистика на главной</h2>
+                <div class="section"><h2>📊 Статистика на главной</h2>
                     <div class="row-3">
                         <input type="number" id="editStatProjects" placeholder="Проектов">
                         <input type="number" id="editStatClients" placeholder="Клиентов">
@@ -628,150 +544,68 @@
                         <input type="text" id="editStatLabelClients" placeholder="Подпись: клиентов">
                         <input type="text" id="editStatLabelHappy" placeholder="Подпись: довольных">
                     </div>
-                    <button class="btn btn-primary" onclick="saveStats()">💾 Сохранить статистику</button>
+                    <button class="btn btn-primary" onclick="saveStats()">💾 Сохранить</button>
                 </div>
             </div>
 
-            <!-- ===== БАННЕР ===== -->
             <div class="tab-content" id="tab-banner">
-                <div class="section">
-                    <h2>🔔 Баннер / Уведомления</h2>
-                    <div class="row">
-                        <div>
-                            <label style="font-size:12px;color:#6a6a72;">Показать баннер</label>
-                            <div class="toggle-switch" id="bannerToggle" onclick="toggleBanner()">
-                                <div class="knob"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="text" id="bannerText" placeholder="Текст баннера (например: 🔥 Скидка 20% на все услуги! )">
+                <div class="section"><h2>🔔 Баннер / Уведомления</h2>
+                    <div class="row"><div><label style="font-size:12px;color:#6a6a72;">Показать баннер</label><div class="toggle-switch" id="bannerToggle" onclick="toggleBanner()"><div class="knob"></div></div></div></div>
+                    <input type="text" id="bannerText" placeholder="Текст баннера">
                     <input type="text" id="bannerLink" placeholder="Ссылка (опционально)">
                     <input type="text" id="bannerBg" placeholder="Цвет фона (например: #007aff)">
-                    <div class="row-3">
-                        <input type="number" id="bannerTimer" placeholder="Таймер (сек до скрытия, 0 = без таймера)">
-                    </div>
-                    <button class="btn btn-primary" onclick="saveBanner()">💾 Сохранить баннер</button>
+                    <input type="number" id="bannerTimer" placeholder="Таймер (сек до скрытия, 0 = без таймера)">
+                    <button class="btn btn-primary" onclick="saveBanner()">💾 Сохранить</button>
                 </div>
             </div>
 
-            <!-- ===== ФОРМА ===== -->
             <div class="tab-content" id="tab-form">
-                <div class="section">
-                    <h2>📧 Настройка формы заявки</h2>
-                    <input type="text" id="formButtonText" placeholder="Текст кнопки (отправить заявку)">
+                <div class="section"><h2>📧 Настройка формы заявки</h2>
+                    <input type="text" id="formButtonText" placeholder="Текст кнопки">
                     <input type="text" id="formEmail" placeholder="Email для уведомлений">
                     <div class="row">
-                        <input type="text" id="formField1" placeholder="Поле 1 (имя)">
-                        <input type="text" id="formField2" placeholder="Поле 2 (контакт)">
+                        <input type="text" id="formField1" placeholder="Поле 1">
+                        <input type="text" id="formField2" placeholder="Поле 2">
                     </div>
-                    <textarea id="formField3" placeholder="Поле 3 (сообщение)" rows="2"></textarea>
+                    <textarea id="formField3" placeholder="Поле 3" rows="2"></textarea>
                     <div class="row-3">
-                        <input type="text" id="formPlaceholder1" placeholder="Плейсхолдер поля 1">
-                        <input type="text" id="formPlaceholder2" placeholder="Плейсхолдер поля 2">
-                        <input type="text" id="formPlaceholder3" placeholder="Плейсхолдер поля 3">
+                        <input type="text" id="formPlaceholder1" placeholder="Плейсхолдер 1">
+                        <input type="text" id="formPlaceholder2" placeholder="Плейсхолдер 2">
+                        <input type="text" id="formPlaceholder3" placeholder="Плейсхолдер 3">
                     </div>
-                    <button class="btn btn-primary" onclick="saveForm()">💾 Сохранить форму</button>
+                    <button class="btn btn-primary" onclick="saveForm()">💾 Сохранить</button>
                 </div>
             </div>
 
-            <!-- ===== УСЛУГИ ===== -->
+            <!-- ===== CRUD ВКЛАДКИ ===== -->
             <div class="tab-content" id="tab-services">
-                <div class="section">
-                    <h2>🛠️ Управление услугами <small>(CRUD)</small></h2>
-                    <div id="adminServices" class="item-list"></div>
-                    <button class="btn btn-secondary" onclick="addService()">➕ Добавить услугу</button>
-                </div>
+                <div class="section"><h2>🛠️ Управление услугами <small>(CRUD)</small></h2><div id="adminServices" class="item-list"></div><button class="btn btn-secondary" onclick="addService()">➕ Добавить услугу</button></div>
             </div>
-
-            <!-- ===== ПОРТФОЛИО ===== -->
             <div class="tab-content" id="tab-portfolio">
-                <div class="section">
-                    <h2>📂 Управление портфолио <small>(CRUD)</small></h2>
-                    <div id="adminPortfolio" class="item-list"></div>
-                    <button class="btn btn-secondary" onclick="addPortfolio()">➕ Добавить проект</button>
-                </div>
+                <div class="section"><h2>📂 Управление портфолио <small>(CRUD)</small></h2><div id="adminPortfolio" class="item-list"></div><button class="btn btn-secondary" onclick="addPortfolio()">➕ Добавить проект</button></div>
             </div>
-
-            <!-- ===== ТАРИФЫ ===== -->
             <div class="tab-content" id="tab-pricing">
-                <div class="section">
-                    <h2>💰 Управление тарифами <small>(CRUD)</small></h2>
-                    <div id="adminPricing" class="item-list"></div>
-                    <button class="btn btn-secondary" onclick="addPricing()">➕ Добавить тариф</button>
-                </div>
+                <div class="section"><h2>💰 Управление тарифами <small>(CRUD)</small></h2><div id="adminPricing" class="item-list"></div><button class="btn btn-secondary" onclick="addPricing()">➕ Добавить тариф</button></div>
             </div>
-
-            <!-- ===== ОСОБЕННОСТИ ===== -->
             <div class="tab-content" id="tab-features">
-                <div class="section">
-                    <h2>⭐ Особенности (Обо мне) <small>(CRUD)</small></h2>
-                    <div id="adminFeatures" class="item-list"></div>
-                    <button class="btn btn-secondary" onclick="addFeature()">➕ Добавить особенность</button>
-                </div>
+                <div class="section"><h2>⭐ Особенности <small>(CRUD)</small></h2><div id="adminFeatures" class="item-list"></div><button class="btn btn-secondary" onclick="addFeature()">➕ Добавить особенность</button></div>
             </div>
-
-            <!-- ===== ЭТАПЫ ===== -->
             <div class="tab-content" id="tab-steps">
-                <div class="section">
-                    <h2>📌 Этапы работы <small>(CRUD)</small></h2>
-                    <div id="adminSteps" class="item-list"></div>
-                    <button class="btn btn-secondary" onclick="addStep()">➕ Добавить этап</button>
-                </div>
+                <div class="section"><h2>📌 Этапы <small>(CRUD)</small></h2><div id="adminSteps" class="item-list"></div><button class="btn btn-secondary" onclick="addStep()">➕ Добавить этап</button></div>
             </div>
-
-            <!-- ===== FAQ ===== -->
             <div class="tab-content" id="tab-faq">
-                <div class="section">
-                    <h2>❓ Вопросы-ответы <small>(CRUD)</small></h2>
-                    <div id="adminFaq" class="item-list"></div>
-                    <button class="btn btn-secondary" onclick="addFaq()">➕ Добавить вопрос</button>
-                </div>
+                <div class="section"><h2>❓ FAQ <small>(CRUD)</small></h2><div id="adminFaq" class="item-list"></div><button class="btn btn-secondary" onclick="addFaq()">➕ Добавить вопрос</button></div>
             </div>
-
-            <!-- ===== СОЦСЕТИ ===== -->
             <div class="tab-content" id="tab-social">
-                <div class="section">
-                    <h2>🔗 Социальные сети <small>(CRUD)</small></h2>
-                    <div id="adminSocial" class="item-list"></div>
-                    <button class="btn btn-secondary" onclick="addSocial()">➕ Добавить контакт</button>
-                </div>
+                <div class="section"><h2>🔗 Социальные сети <small>(CRUD)</small></h2><div id="adminSocial" class="item-list"></div><button class="btn btn-secondary" onclick="addSocial()">➕ Добавить контакт</button></div>
             </div>
-
-            <!-- ===== СТРАНИЦЫ ===== -->
             <div class="tab-content" id="tab-pages">
-                <div class="section">
-                    <h2>📄 Дополнительные страницы <small>(CRUD)</small></h2>
-                    <div id="adminPages" class="item-list"></div>
-                    <button class="btn btn-secondary" onclick="addPage()">➕ Создать страницу</button>
-                </div>
-            </div>
-
-            <!-- ===== АНАЛИТИКА ===== -->
-            <div class="tab-content" id="tab-analytics">
-                <div class="section">
-                    <h2>📈 Статистика сайта</h2>
-                    <div class="row-3">
-                        <div class="section" style="background:rgba(0,122,255,0.05);border-color:rgba(0,122,255,0.1);">
-                            <div style="font-size:32px;font-weight:800;color:#007aff;" id="analyticsViews">0</div>
-                            <div style="font-size:13px;color:#6a6a72;">Просмотров сайта</div>
-                        </div>
-                        <div class="section" style="background:rgba(52,199,89,0.05);border-color:rgba(52,199,89,0.1);">
-                            <div style="font-size:32px;font-weight:800;color:#34c759;" id="analyticsLeads">0</div>
-                            <div style="font-size:13px;color:#6a6a72;">Отправленных заявок</div>
-                        </div>
-                        <div class="section" style="background:rgba(255,215,0,0.05);border-color:rgba(255,215,0,0.1);">
-                            <div style="font-size:32px;font-weight:800;color:#ffd700;" id="analyticsConversion">0%</div>
-                            <div style="font-size:13px;color:#6a6a72;">Конверсия</div>
-                        </div>
-                    </div>
-                    <button class="btn btn-secondary" onclick="resetAnalytics()">↺ Сбросить аналитику</button>
-                </div>
+                <div class="section"><h2>📄 Дополнительные страницы <small>(CRUD)</small></h2><div id="adminPages" class="item-list"></div><button class="btn btn-secondary" onclick="addPage()">➕ Создать страницу</button></div>
             </div>
 
             <!-- ===== БЭКАП ===== -->
             <div class="tab-content" id="tab-backup">
-                <div class="section">
-                    <h2>💾 Экспорт / Импорт данных</h2>
+                <div class="section"><h2>💾 Экспорт / Импорт данных</h2>
                     <div class="desc">Полный бэкап всех данных сайта</div>
                     <div class="btn-group">
                         <button class="btn btn-success" onclick="exportData()">📤 Экспорт все данные</button>
@@ -780,8 +614,7 @@
                         <button class="btn btn-danger" onclick="resetAll()">⚠️ Сбросить все данные</button>
                     </div>
                 </div>
-                <div class="section">
-                    <h2>🔄 Синхронизация</h2>
+                <div class="section"><h2>🔄 Синхронизация</h2>
                     <div class="desc">Принудительно обновить сайт после изменений</div>
                     <button class="btn btn-primary" onclick="syncSite()">🔄 Синхронизировать</button>
                 </div>
