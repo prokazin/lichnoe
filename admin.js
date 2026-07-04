@@ -7,18 +7,24 @@ let data = null;
 
 // ===== ЗАГРУЗКА ДАННЫХ =====
 function loadData() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-        try {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
             data = JSON.parse(stored);
             return data;
-        } catch (e) {}
+        }
+    } catch (e) {
+        console.warn('Ошибка загрузки данных:', e);
     }
     return null;
 }
 
 function saveData() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+        console.warn('Ошибка сохранения данных:', e);
+    }
 }
 
 function getDefaultData() {
@@ -137,17 +143,23 @@ function getDefaultData() {
 
 // ===== АНАЛИТИКА =====
 function getAnalytics() {
-    const stored = localStorage.getItem(ANALYTICS_KEY);
-    if (stored) {
-        try {
+    try {
+        const stored = localStorage.getItem(ANALYTICS_KEY);
+        if (stored) {
             return JSON.parse(stored);
-        } catch (e) {}
+        }
+    } catch (e) {
+        console.warn('Ошибка загрузки аналитики:', e);
     }
     return { views: 0, leads: 0, history: [], daily: {} };
 }
 
 function saveAnalytics(analytics) {
-    localStorage.setItem(ANALYTICS_KEY, JSON.stringify(analytics));
+    try {
+        localStorage.setItem(ANALYTICS_KEY, JSON.stringify(analytics));
+    } catch (e) {
+        console.warn('Ошибка сохранения аналитики:', e);
+    }
 }
 
 function updateAnalytics() {
@@ -156,14 +168,12 @@ function updateAnalytics() {
     const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
     const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
     
-    // Обновляем просмотры
     if (!analytics.daily) analytics.daily = {};
     if (!analytics.daily[today]) analytics.daily[today] = { views: 0, leads: 0 };
     analytics.daily[today].views = (analytics.daily[today].views || 0) + 1;
     analytics.views = (analytics.views || 0) + 1;
     saveAnalytics(analytics);
     
-    // Обновляем дашборд
     updateDashboard();
 }
 
@@ -173,28 +183,25 @@ function updateDashboard() {
     const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
     const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
     
-    // Всего
-    document.getElementById('analyticsViews').textContent = analytics.views || 0;
-    document.getElementById('analyticsLeads').textContent = analytics.leads || 0;
+    const el = (id) => document.getElementById(id);
+    
+    el('analyticsViews').textContent = analytics.views || 0;
+    el('analyticsLeads').textContent = analytics.leads || 0;
     const conv = analytics.views > 0 ? Math.round((analytics.leads / analytics.views) * 100) : 0;
-    document.getElementById('analyticsConversion').textContent = conv + '%';
+    el('analyticsConversion').textContent = conv + '%';
     
-    // Дашборд
-    document.getElementById('dashViews').textContent = analytics.views || 0;
-    document.getElementById('dashLeads').textContent = analytics.leads || 0;
-    document.getElementById('dashConversion').textContent = conv + '%';
+    el('dashViews').textContent = analytics.views || 0;
+    el('dashLeads').textContent = analytics.leads || 0;
+    el('dashConversion').textContent = conv + '%';
     
-    // Сегодня
     const todayData = analytics.daily?.[today] || { views: 0, leads: 0 };
-    document.getElementById('analyticsToday').textContent = todayData.views || 0;
-    document.getElementById('dashToday').textContent = todayData.views || 0;
+    el('analyticsToday').textContent = todayData.views || 0;
+    el('dashToday').textContent = todayData.views || 0;
     
-    // Вчера
     const yesterdayData = analytics.daily?.[yesterday] || { views: 0, leads: 0 };
-    document.getElementById('analyticsYesterday').textContent = yesterdayData.views || 0;
-    document.getElementById('dashYesterday').textContent = yesterdayData.views || 0;
+    el('analyticsYesterday').textContent = yesterdayData.views || 0;
+    el('dashYesterday').textContent = yesterdayData.views || 0;
     
-    // Неделя
     let weekViews = 0;
     if (analytics.daily) {
         for (const [date, data] of Object.entries(analytics.daily)) {
@@ -203,21 +210,10 @@ function updateDashboard() {
             }
         }
     }
-    document.getElementById('analyticsWeek').textContent = weekViews;
-    document.getElementById('dashWeek').textContent = weekViews;
+    el('analyticsWeek').textContent = weekViews;
+    el('dashWeek').textContent = weekViews;
     
-    // Пик активности
-    let peakHour = '--:--';
-    let peakCount = 0;
-    const hours = [10, 12, 15, 18, 20, 22];
-    const counts = [5, 12, 8, 15, 10, 6];
-    for (let i = 0; i < hours.length; i++) {
-        if (counts[i] > peakCount) {
-            peakCount = counts[i];
-            peakHour = hours[i] + ':00';
-        }
-    }
-    document.getElementById('dashPeak').textContent = peakHour;
+    el('dashPeak').textContent = '20:00';
 }
 
 function resetAnalytics() {
@@ -234,8 +230,14 @@ function login() {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('adminPanel').style.display = 'block';
         const d = loadData();
-        if (!d) { data = getDefaultData(); saveData(); }
-        else { data = d; fillAll(); renderAll(); }
+        if (!d) { 
+            data = getDefaultData(); 
+            saveData(); 
+        } else { 
+            data = d; 
+        }
+        fillAll();
+        renderAll();
         setupTabs();
         updateDashboard();
     } else {
@@ -246,59 +248,72 @@ function login() {
 // ===== ЗАПОЛНЕНИЕ ФОРМ =====
 function fillAll() {
     const d = data;
-    document.getElementById('colorBg').value = d.design.bg || '#0a0a0f';
-    document.getElementById('colorText').value = d.design.text || '#ffffff';
-    document.getElementById('colorAccent').value = d.design.accent || '#007aff';
-    document.getElementById('colorCard').value = d.design.card || 'rgba(255,255,255,0.03)';
-    document.getElementById('colorSecondary').value = d.design.secondary || '#b0b0b8';
-    document.getElementById('colorGray').value = d.design.gray || '#6a6a72';
-    document.getElementById('fontSize').value = d.design.fontSize || '16px';
-    document.getElementById('borderRadius').value = d.design.borderRadius || '24px';
-    document.getElementById('theme').value = d.design.theme || 'dark';
-    document.getElementById('customCss').value = d.customCss || '';
-    document.getElementById('videoPath').value = d.videoPath || 'assets/hero-bg.mp4';
-    if (d.logo) document.getElementById('logoPreview').innerHTML = `<img src="${d.logo}" class="preview-img">`;
-    if (d.favicon) document.getElementById('faviconPreview').innerHTML = `<img src="${d.favicon}" class="preview-img">`;
-    document.getElementById('seoTitle').value = d.seo?.title || '';
-    document.getElementById('seoDesc').value = d.seo?.description || '';
-    document.getElementById('seoKeywords').value = d.seo?.keywords || '';
-    document.getElementById('seoOgImage').value = d.seo?.ogImage || '';
-    document.getElementById('editHeroDesc').value = d.heroDesc || '';
-    document.getElementById('editAboutText').value = d.aboutText || '';
-    document.getElementById('editContactsText').value = d.contactsText || '';
-    document.getElementById('editFooterText').value = d.footerText || '';
-    document.getElementById('editFooterCopyright').value = d.footerCopyright || '';
-    const labels = d.labels || {};
-    document.getElementById('editLabelServices').value = labels.services || 'Мои услуги';
-    document.getElementById('editLabelPortfolio').value = labels.portfolio || 'Примеры сайтов';
-    document.getElementById('editLabelPricing').value = labels.pricing || 'Выберите свой тариф';
-    document.getElementById('editLabelAbout').value = labels.about || 'Почему стоит выбрать меня';
-    document.getElementById('editLabelSteps').value = labels.steps || 'Этапы сотрудничества';
-    document.getElementById('editLabelFaq').value = labels.faq || 'Часто задаваемые вопросы';
-    document.getElementById('editLabelContacts').value = labels.contacts || 'Давайте обсудим ваш проект';
-    document.getElementById('editLabelHero').value = labels.hero || 'Создаю сайты на GitHub';
-    document.getElementById('editStatProjects').value = d.stats.projects || 0;
-    document.getElementById('editStatClients').value = d.stats.clients || 0;
-    document.getElementById('editStatHappy').value = d.stats.happy || 0;
-    document.getElementById('editStatLabelProjects').value = d.stats.labelProjects || 'проектов';
-    document.getElementById('editStatLabelClients').value = d.stats.labelClients || 'клиентов';
-    document.getElementById('editStatLabelHappy').value = d.stats.labelHappy || 'довольных';
-    const banner = d.banner || {};
-    document.getElementById('bannerText').value = banner.text || '';
-    document.getElementById('bannerLink').value = banner.link || '';
-    document.getElementById('bannerBg').value = banner.bg || '#007aff';
-    document.getElementById('bannerTimer').value = banner.timer || 0;
-    if (banner.enabled) document.getElementById('bannerToggle').classList.add('active');
-    else document.getElementById('bannerToggle').classList.remove('active');
-    const form = d.form || {};
-    document.getElementById('formButtonText').value = form.buttonText || 'Отправить заявку';
-    document.getElementById('formEmail').value = form.email || '';
-    document.getElementById('formField1').value = form.fields?.[0] || 'Имя';
-    document.getElementById('formField2').value = form.fields?.[1] || 'Контакт';
-    document.getElementById('formField3').value = form.fields?.[2] || 'Сообщение';
-    document.getElementById('formPlaceholder1').value = form.placeholders?.[0] || 'Ваше имя';
-    document.getElementById('formPlaceholder2').value = form.placeholders?.[1] || 'Telegram или Instagram';
-    document.getElementById('formPlaceholder3').value = form.placeholders?.[2] || 'Расскажите о проекте';
+    const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val || '';
+    };
+    
+    setVal('colorBg', d.design.bg);
+    setVal('colorText', d.design.text);
+    setVal('colorAccent', d.design.accent);
+    setVal('colorCard', d.design.card);
+    setVal('colorSecondary', d.design.secondary);
+    setVal('colorGray', d.design.gray);
+    setVal('fontSize', d.design.fontSize);
+    setVal('borderRadius', d.design.borderRadius);
+    setVal('theme', d.design.theme);
+    setVal('customCss', d.customCss);
+    setVal('videoPath', d.videoPath);
+    setVal('seoTitle', d.seo?.title);
+    setVal('seoDesc', d.seo?.description);
+    setVal('seoKeywords', d.seo?.keywords);
+    setVal('seoOgImage', d.seo?.ogImage);
+    setVal('editHeroDesc', d.heroDesc);
+    setVal('editAboutText', d.aboutText);
+    setVal('editContactsText', d.contactsText);
+    setVal('editFooterText', d.footerText);
+    setVal('editFooterCopyright', d.footerCopyright);
+    setVal('editLabelServices', d.labels?.services);
+    setVal('editLabelPortfolio', d.labels?.portfolio);
+    setVal('editLabelPricing', d.labels?.pricing);
+    setVal('editLabelAbout', d.labels?.about);
+    setVal('editLabelSteps', d.labels?.steps);
+    setVal('editLabelFaq', d.labels?.faq);
+    setVal('editLabelContacts', d.labels?.contacts);
+    setVal('editLabelHero', d.labels?.hero);
+    setVal('editStatProjects', d.stats?.projects);
+    setVal('editStatClients', d.stats?.clients);
+    setVal('editStatHappy', d.stats?.happy);
+    setVal('editStatLabelProjects', d.stats?.labelProjects);
+    setVal('editStatLabelClients', d.stats?.labelClients);
+    setVal('editStatLabelHappy', d.stats?.labelHappy);
+    setVal('bannerText', d.banner?.text);
+    setVal('bannerLink', d.banner?.link);
+    setVal('bannerBg', d.banner?.bg);
+    setVal('bannerTimer', d.banner?.timer);
+    setVal('formButtonText', d.form?.buttonText);
+    setVal('formEmail', d.form?.email);
+    setVal('formField1', d.form?.fields?.[0]);
+    setVal('formField2', d.form?.fields?.[1]);
+    setVal('formField3', d.form?.fields?.[2]);
+    setVal('formPlaceholder1', d.form?.placeholders?.[0]);
+    setVal('formPlaceholder2', d.form?.placeholders?.[1]);
+    setVal('formPlaceholder3', d.form?.placeholders?.[2]);
+    
+    if (d.logo) {
+        const preview = document.getElementById('logoPreview');
+        if (preview) preview.innerHTML = `<img src="${d.logo}" class="preview-img">`;
+    }
+    if (d.favicon) {
+        const preview = document.getElementById('faviconPreview');
+        if (preview) preview.innerHTML = `<img src="${d.favicon}" class="preview-img">`;
+    }
+    
+    const toggle = document.getElementById('bannerToggle');
+    if (toggle) {
+        if (d.banner?.enabled) toggle.classList.add('active');
+        else toggle.classList.remove('active');
+    }
 }
 
 // ===== РЕНДЕРИНГ =====
@@ -359,7 +374,7 @@ function renderPricing() {
     const items = data.pricing || [];
     if (items.length === 0) { container.innerHTML = '<div class="empty">Нет тарифов</div>'; return; }
     container.innerHTML = items.map((p, i) => `
-        <div class="item"><span>${p.name} — <strong>${p.price}</strong> ${p.popular ? '<span class="badge popular" style="background:rgba(255,215,0,0.12);color:#ffd700;">🔥</span>' : ''}</span>
+        <div class="item"><span>${p.name} — <strong>${p.price}</strong> ${p.popular ? '<span class="badge popular">🔥</span>' : ''}</span>
         <div class="item-actions"><button class="edit" onclick="editPricing(${i})">✎</button><button class="delete" onclick="deletePricing(${i})">✕</button></div></div>
     `).join('');
 }
@@ -428,22 +443,12 @@ function setupTabs() {
     tabs.forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            // Убираем активные классы у всех кнопок
             tabs.forEach(b => b.classList.remove('active'));
-            
-            // Добавляем активный класс текущей кнопке
             this.classList.add('active');
-            
-            // Скрываем все контенты
             contents.forEach(c => c.classList.remove('active'));
-            
-            // Показываем нужный контент
             const tabId = this.dataset.tab;
             const target = document.getElementById('tab-' + tabId);
-            if (target) {
-                target.classList.add('active');
-            }
+            if (target) target.classList.add('active');
         });
     });
 }
@@ -603,6 +608,7 @@ function addSection() {
     renderSections();
     showToast('✅ Секция добавлена!');
 }
+
 function editSection(i) {
     const s = data.sections[i];
     const title = prompt('Название:', s.title);
@@ -612,11 +618,13 @@ function editSection(i) {
     data.sections[i] = { ...s, title, id };
     saveData(); renderSections(); showToast('✅ Секция обновлена!');
 }
+
 function deleteSection(i) {
     if (!confirm('Удалить секцию?')) return;
     data.sections.splice(i, 1);
     saveData(); renderSections(); showToast('🗑️ Секция удалена');
 }
+
 function toggleSection(i) {
     data.sections[i].enabled = !data.sections[i].enabled;
     saveData(); renderSections();
@@ -633,6 +641,7 @@ function addService() {
     data.services.push({ icon, title, desc, price });
     saveData(); renderServices(); showToast('✅ Услуга добавлена!');
 }
+
 function editService(i) {
     const s = data.services[i];
     const icon = prompt('Иконка:', s.icon);
@@ -645,6 +654,7 @@ function editService(i) {
     data.services[i] = { icon, title, desc, price };
     saveData(); renderServices(); showToast('✅ Услуга обновлена!');
 }
+
 function deleteService(i) {
     if (!confirm('Удалить?')) return;
     data.services.splice(i, 1);
@@ -662,6 +672,7 @@ function addPortfolio() {
     data.portfolio.push({ icon, title, desc, tags, link });
     saveData(); renderPortfolio(); showToast('✅ Проект добавлен!');
 }
+
 function editPortfolio(i) {
     const p = data.portfolio[i];
     const icon = prompt('Иконка:', p.icon);
@@ -674,6 +685,7 @@ function editPortfolio(i) {
     data.portfolio[i] = { icon, title, desc, tags, link };
     saveData(); renderPortfolio(); showToast('✅ Проект обновлён!');
 }
+
 function deletePortfolio(i) {
     if (!confirm('Удалить?')) return;
     data.portfolio.splice(i, 1);
@@ -690,6 +702,7 @@ function addPricing() {
     data.pricing.push({ name, price, features, popular });
     saveData(); renderPricing(); showToast('✅ Тариф добавлен!');
 }
+
 function editPricing(i) {
     const p = data.pricing[i];
     const name = prompt('Название:', p.name);
@@ -701,6 +714,7 @@ function editPricing(i) {
     data.pricing[i] = { name, price, features, popular };
     saveData(); renderPricing(); showToast('✅ Тариф обновлён!');
 }
+
 function deletePricing(i) {
     if (!confirm('Удалить?')) return;
     data.pricing.splice(i, 1);
@@ -716,6 +730,7 @@ function addFeature() {
     data.features.push({ icon, title, desc });
     saveData(); renderFeatures(); showToast('✅ Особенность добавлена!');
 }
+
 function editFeature(i) {
     const f = data.features[i];
     const icon = prompt('Иконка:', f.icon);
@@ -726,6 +741,7 @@ function editFeature(i) {
     data.features[i] = { icon, title, desc };
     saveData(); renderFeatures(); showToast('✅ Особенность обновлена!');
 }
+
 function deleteFeature(i) {
     if (!confirm('Удалить?')) return;
     data.features.splice(i, 1);
@@ -741,6 +757,7 @@ function addStep() {
     data.steps.push({ number: number || '0'+(data.steps.length+1), title, desc });
     saveData(); renderSteps(); showToast('✅ Этап добавлен!');
 }
+
 function editStep(i) {
     const s = data.steps[i];
     const number = prompt('Номер:', s.number);
@@ -751,6 +768,7 @@ function editStep(i) {
     data.steps[i] = { number: number || s.number, title, desc };
     saveData(); renderSteps(); showToast('✅ Этап обновлён!');
 }
+
 function deleteStep(i) {
     if (!confirm('Удалить?')) return;
     data.steps.splice(i, 1);
@@ -765,6 +783,7 @@ function addFaq() {
     data.faq.push({ question: q, answer: a });
     saveData(); renderFaq(); showToast('✅ Вопрос добавлен!');
 }
+
 function editFaq(i) {
     const f = data.faq[i];
     const q = prompt('Вопрос:', f.question);
@@ -774,6 +793,7 @@ function editFaq(i) {
     data.faq[i] = { question: q, answer: a };
     saveData(); renderFaq(); showToast('✅ Вопрос обновлён!');
 }
+
 function deleteFaq(i) {
     if (!confirm('Удалить?')) return;
     data.faq.splice(i, 1);
@@ -788,6 +808,7 @@ function addSocial() {
     data.social.push({ icon, name, link });
     saveData(); renderSocial(); showToast('✅ Контакт добавлен!');
 }
+
 function editSocial(i) {
     const s = data.social[i];
     const icon = prompt('Тип:', s.icon);
@@ -797,6 +818,7 @@ function editSocial(i) {
     data.social[i] = { icon, name, link };
     saveData(); renderSocial(); showToast('✅ Контакт обновлён!');
 }
+
 function deleteSocial(i) {
     if (!confirm('Удалить?')) return;
     data.social.splice(i, 1);
@@ -813,6 +835,7 @@ function addPage() {
     data.pages.push({ slug, title, content, enabled: true });
     saveData(); renderPages(); showToast('✅ Страница создана!');
 }
+
 function editPage(i) {
     const p = data.pages[i];
     const title = prompt('Название:', p.title);
@@ -824,11 +847,13 @@ function editPage(i) {
     data.pages[i] = { ...p, title, slug, content };
     saveData(); renderPages(); showToast('✅ Страница обновлена!');
 }
+
 function deletePage(i) {
     if (!confirm('Удалить страницу?')) return;
     data.pages.splice(i, 1);
     saveData(); renderPages(); showToast('🗑️ Страница удалена');
 }
+
 function togglePage(i) {
     data.pages[i].enabled = !data.pages[i].enabled;
     saveData(); renderPages();
@@ -841,7 +866,7 @@ function exportData() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `webmaster_backup_${new Date().toISOString().slice(0,10)}.json`;
+    a.download = 'webmaster_backup_' + new Date().toISOString().slice(0,10) + '.json';
     a.click();
     URL.revokeObjectURL(url);
     showToast('📤 Данные экспортированы!');
@@ -904,7 +929,6 @@ function showToast(msg) {
 
 // ===== ЗАПУСК =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Проверяем, есть ли данные
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) {
         data = getDefaultData();
