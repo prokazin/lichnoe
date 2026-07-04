@@ -11,10 +11,38 @@ html {
 
 body {
     font-family: 'Inter', -apple-system, 'Helvetica Neue', sans-serif;
-    background: #f5f5f7;
-    color: #1d1d1f;
+    background: transparent;
+    color: #fff;
     -webkit-font-smoothing: antialiased;
     line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ===== ФОНОВОЕ ВИДЕО ===== */
+.video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.video-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
 }
 
 .container {
@@ -28,7 +56,7 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: #007aff;
+    color: rgba(255, 255, 255, 0.3);
     margin-bottom: 8px;
 }
 
@@ -37,6 +65,7 @@ body {
     font-weight: 800;
     letter-spacing: -1px;
     margin-bottom: 20px;
+    color: #fff;
 }
 
 .section-title .highlight {
@@ -52,10 +81,9 @@ body {
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.04);
-    transition: background 0.3s;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.04);
 }
 
 .nav-container {
@@ -70,7 +98,7 @@ body {
 .nav-logo {
     font-size: 22px;
     font-weight: 800;
-    color: #1d1d1f;
+    color: #fff;
     text-decoration: none;
 }
 
@@ -83,27 +111,28 @@ body {
 .nav-link {
     font-size: 14px;
     font-weight: 500;
-    color: #1d1d1f;
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     transition: color 0.3s;
     padding: 6px 0;
 }
 
 .nav-link:hover {
-    color: #007aff;
+    color: #fff;
 }
 
 .nav-cta {
-    background: #007aff;
-    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #fff !important;
     padding: 8px 20px;
     border-radius: 30px;
     font-weight: 600;
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-cta:hover {
-    background: #0055b3;
-    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .nav-toggle {
@@ -119,61 +148,44 @@ body {
 .nav-toggle span {
     width: 25px;
     height: 2px;
-    background: #1d1d1f;
+    background: #fff;
     border-radius: 2px;
     transition: 0.3s;
 }
 
+/* ===== СЕКЦИИ (прозрачные карточки) ===== */
+section {
+    padding: 80px 0;
+    background: transparent;
+}
+
+.services, .portfolio, .pricing, .about, .steps, .faq, .contacts {
+    backdrop-filter: blur(10px);
+}
+
 /* ===== HERO ===== */
 .hero {
-    position: relative;
     min-height: 100vh;
     display: flex;
     align-items: center;
     padding: 100px 0 60px;
-}
-
-.hero-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    overflow: hidden;
-}
-
-.hero-bg video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: transparent;
 }
 
 .hero-content {
-    position: relative;
-    z-index: 1;
     max-width: 700px;
 }
 
 .hero-badge {
     display: inline-block;
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(10px);
     padding: 6px 16px;
     border-radius: 30px;
     font-size: 13px;
     font-weight: 500;
-    color: #fff;
-    border: 0.5px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.6);
+    border: 0.5px solid rgba(255, 255, 255, 0.06);
     margin-bottom: 20px;
 }
 
@@ -194,7 +206,7 @@ body {
 
 .hero-desc {
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.6);
     max-width: 540px;
     margin-bottom: 30px;
 }
@@ -229,14 +241,14 @@ body {
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(10px);
     color: #fff;
-    border: 0.5px solid rgba(255, 255, 255, 0.15);
+    border: 0.5px solid rgba(255, 255, 255, 0.06);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .btn-outline {
@@ -250,6 +262,15 @@ body {
 .btn-outline:hover {
     background: #007aff;
     color: #fff;
+}
+
+.btn-danger {
+    background: #ff3b30;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #cc2d24;
 }
 
 .hero-stats {
@@ -270,33 +291,45 @@ body {
 
 .stat-label {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.3);
 }
 
-/* ===== УСЛУГИ ===== */
-.services {
-    padding: 80px 0;
-    background: #f5f5f7;
-}
-
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 24px;
-    margin-top: 40px;
-}
-
-.service-card {
-    background: #fff;
+/* ===== КАРТОЧКИ (прозрачные) ===== */
+.service-card,
+.portfolio-card,
+.pricing-card,
+.step-card,
+.faq-item {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s;
+    border: 0.5px solid rgba(255, 255, 255, 0.04);
+    transition: all 0.4s;
 }
 
-.service-card:hover {
+.service-card:hover,
+.portfolio-card:hover,
+.pricing-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.service-card h3,
+.portfolio-card h3,
+.pricing-card h3,
+.step-card h3 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.service-card p,
+.portfolio-card p,
+.step-card p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 15px;
 }
 
 .service-icon {
@@ -304,21 +337,9 @@ body {
     margin-bottom: 12px;
 }
 
-.service-card h3 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.service-card p {
-    font-size: 15px;
-    color: #86868b;
-    margin-bottom: 16px;
-}
-
 .service-tag {
     display: inline-block;
-    background: #007aff10;
+    background: rgba(0, 122, 255, 0.15);
     color: #007aff;
     padding: 4px 14px;
     border-radius: 30px;
@@ -326,103 +347,63 @@ body {
     font-weight: 600;
 }
 
-/* ===== ПОРТФОЛИО ===== */
-.portfolio {
-    padding: 80px 0;
-    background: #fff;
-}
-
-.portfolio-grid {
+/* ===== СЕТКИ ===== */
+.services-grid,
+.portfolio-grid,
+.pricing-grid,
+.steps-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
+    gap: 24px;
     margin-top: 40px;
 }
 
-.portfolio-card {
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s;
-    background: #fff;
-    border: 0.5px solid rgba(0, 0, 0, 0.04);
+.services-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
-.portfolio-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+.portfolio-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
-.portfolio-image {
+.pricing-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.steps-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* ===== ПОРТФОЛИО ===== */
+.portfolio-card .portfolio-image {
     height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #1a1a2e;
-}
-
-.portfolio-info {
-    padding: 24px;
-}
-
-.portfolio-info h3 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-
-.portfolio-info p {
-    font-size: 14px;
-    color: #86868b;
-    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    font-size: 48px;
 }
 
 .portfolio-tags {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
-    margin-bottom: 16px;
+    margin: 12px 0 16px;
 }
 
 .portfolio-tags span {
-    background: #f5f5f7;
+    background: rgba(255, 255, 255, 0.04);
     padding: 4px 12px;
     border-radius: 30px;
     font-size: 12px;
     font-weight: 500;
-    color: #1d1d1f;
+    color: rgba(255, 255, 255, 0.4);
 }
 
 /* ===== ЦЕНЫ ===== */
-.pricing {
-    padding: 80px 0;
-    background: #f5f5f7;
-}
-
-.pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.pricing-card {
-    background: #fff;
-    border-radius: 24px;
-    padding: 30px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s;
-    position: relative;
-}
-
-.pricing-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-}
-
 .pricing-card.popular {
-    border: 2px solid #007aff;
+    border: 1px solid #007aff;
     transform: scale(1.02);
 }
 
@@ -431,29 +412,21 @@ body {
 }
 
 .pricing-badge {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
+    display: inline-block;
     background: #007aff;
     color: #fff;
-    padding: 4px 20px;
+    padding: 4px 16px;
     border-radius: 30px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-}
-
-.pricing-name {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 12px;
 }
 
 .pricing-price {
     font-size: 32px;
     font-weight: 800;
-    color: #1d1d1f;
-    margin-bottom: 20px;
+    color: #fff;
+    margin-bottom: 16px;
 }
 
 .pricing-features {
@@ -465,7 +438,7 @@ body {
 .pricing-features li {
     padding: 6px 0;
     font-size: 14px;
-    color: #86868b;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .pricing-card .btn {
@@ -473,11 +446,6 @@ body {
 }
 
 /* ===== ОБО МНЕ ===== */
-.about {
-    padding: 80px 0;
-    background: #fff;
-}
-
 .about-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -489,16 +457,18 @@ body {
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #007aff20, #5856d620);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 80px;
+    border: 0.5px solid rgba(255, 255, 255, 0.04);
 }
 
 .about-content p {
     font-size: 17px;
-    color: #86868b;
+    color: rgba(255, 255, 255, 0.5);
     margin-bottom: 24px;
 }
 
@@ -521,56 +491,28 @@ body {
 .about-feature strong {
     display: block;
     font-size: 15px;
+    color: #fff;
 }
 
 .about-feature p {
     font-size: 13px;
-    color: #86868b;
+    color: rgba(255, 255, 255, 0.3);
     margin: 0;
 }
 
 /* ===== ЭТАПЫ ===== */
-.steps {
-    padding: 80px 0;
-    background: #f5f5f7;
-}
-
-.steps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
 .step-card {
     text-align: center;
-    padding: 24px;
 }
 
 .step-number {
     font-size: 40px;
     font-weight: 900;
-    color: #007aff20;
+    color: rgba(255, 255, 255, 0.05);
     margin-bottom: 8px;
 }
 
-.step-card h3 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-
-.step-card p {
-    font-size: 14px;
-    color: #86868b;
-}
-
 /* ===== FAQ ===== */
-.faq {
-    padding: 80px 0;
-    background: #fff;
-}
-
 .faq-grid {
     max-width: 700px;
     margin: 40px auto 0;
@@ -580,7 +522,7 @@ body {
 }
 
 .faq-item {
-    border-bottom: 0.5px solid rgba(0, 0, 0, 0.04);
+    padding: 0 20px;
 }
 
 .faq-question {
@@ -590,7 +532,7 @@ body {
     border: none;
     font-size: 17px;
     font-weight: 600;
-    color: #1d1d1f;
+    color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -605,6 +547,7 @@ body {
 .faq-question span {
     font-size: 22px;
     transition: 0.3s;
+    color: rgba(255, 255, 255, 0.3);
 }
 
 .faq-question.active span {
@@ -620,15 +563,10 @@ body {
 .faq-answer p {
     padding-bottom: 18px;
     font-size: 15px;
-    color: #86868b;
+    color: rgba(255, 255, 255, 0.4);
 }
 
 /* ===== КОНТАКТЫ ===== */
-.contacts {
-    padding: 80px 0;
-    background: #f5f5f7;
-}
-
 .contacts-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -638,7 +576,7 @@ body {
 
 .contacts-info p {
     font-size: 17px;
-    color: #86868b;
+    color: rgba(255, 255, 255, 0.5);
     margin-bottom: 24px;
 }
 
@@ -654,17 +592,18 @@ body {
     gap: 8px;
     padding: 10px 24px;
     border-radius: 30px;
-    background: #fff;
-    color: #1d1d1f;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     font-weight: 500;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 0.5px solid rgba(255, 255, 255, 0.04);
     transition: 0.3s;
 }
 
 .contact-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
 }
 
 .contact-icon {
@@ -672,15 +611,17 @@ body {
 }
 
 .contacts-form {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
     padding: 30px;
     border-radius: 24px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 0.5px solid rgba(255, 255, 255, 0.04);
 }
 
 .contacts-form h3 {
     font-size: 22px;
     font-weight: 700;
+    color: #fff;
     margin-bottom: 20px;
 }
 
@@ -689,18 +630,25 @@ body {
     width: 100%;
     padding: 14px 16px;
     border-radius: 16px;
-    border: 1px solid #e5e5ea;
+    border: 0.5px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.02);
+    color: #fff;
     font-size: 15px;
     font-family: inherit;
     margin-bottom: 12px;
     transition: 0.3s;
 }
 
+.contacts-form input::placeholder,
+.contacts-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
 .contacts-form input:focus,
 .contacts-form textarea:focus {
     outline: none;
     border-color: #007aff;
-    box-shadow: 0 0 0 3px #007aff20;
+    background: rgba(255, 255, 255, 0.04);
 }
 
 .contacts-form .btn {
@@ -710,8 +658,9 @@ body {
 /* ===== FOOTER ===== */
 .footer {
     padding: 40px 0 20px;
-    background: #1d1d1f;
-    color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    border-top: 0.5px solid rgba(255, 255, 255, 0.04);
 }
 
 .footer-content {
@@ -732,6 +681,7 @@ body {
 
 .footer-brand p {
     font-size: 14px;
+    color: rgba(255, 255, 255, 0.3);
 }
 
 .footer-links {
@@ -740,7 +690,7 @@ body {
 }
 
 .footer-links a {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.3);
     text-decoration: none;
     font-size: 14px;
     transition: 0.3s;
@@ -756,7 +706,7 @@ body {
 }
 
 .footer-social a {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.3);
     text-decoration: none;
     font-size: 20px;
     transition: 0.3s;
@@ -770,6 +720,169 @@ body {
     text-align: center;
     padding-top: 20px;
     font-size: 13px;
+    color: rgba(255, 255, 255, 0.15);
+}
+
+/* ===== АДМИН-ПАНЕЛЬ ===== */
+.admin-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    border: 0.5px solid rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.admin-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.admin-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-modal.active {
+    display: flex;
+}
+
+.admin-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(30px);
+}
+
+.admin-content {
+    position: relative;
+    background: rgba(20, 20, 22, 0.95);
+    backdrop-filter: blur(40px);
+    border-radius: 32px;
+    max-width: 800px;
+    width: 92%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 30px;
+    border: 0.5px solid rgba(255, 255, 255, 0.04);
+    z-index: 1;
+}
+
+.admin-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.admin-content h2 {
+    color: #fff;
+    margin-bottom: 24px;
+    font-weight: 700;
+}
+
+.admin-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.04);
+}
+
+.admin-section h3 {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.admin-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 0.5px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.02);
+    color: #fff;
+    font-size: 14px;
+    margin-bottom: 8px;
+    transition: 0.3s;
+}
+
+.admin-input:focus {
+    outline: none;
+    border-color: #007aff;
+}
+
+.admin-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.admin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.02);
+}
+
+.admin-item span {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.admin-item-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.admin-item-actions button {
+    background: none;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.admin-item-actions .edit {
+    color: #007aff;
+    background: rgba(0, 122, 255, 0.1);
+}
+
+.admin-item-actions .delete {
+    color: #ff3b30;
+    background: rgba(255, 59, 48, 0.1);
+}
+
+.admin-item-actions button:hover {
+    opacity: 0.7;
+}
+
+.admin-content .btn {
+    margin-top: 4px;
 }
 
 /* ===== АДАПТИВ ===== */
@@ -794,12 +907,12 @@ body {
         top: 100%;
         left: 0;
         width: 100%;
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(20px);
         flex-direction: column;
         padding: 20px;
         gap: 12px;
-        border-top: 0.5px solid rgba(0, 0, 0, 0.04);
+        border-top: 0.5px solid rgba(255, 255, 255, 0.04);
     }
     .nav-menu.active {
         display: flex;
@@ -850,6 +963,14 @@ body {
         flex-direction: column;
         text-align: center;
     }
+
+    .admin-row {
+        grid-template-columns: 1fr;
+    }
+    .admin-content {
+        padding: 20px;
+        width: 96%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -866,12 +987,8 @@ body {
         flex-wrap: wrap;
         justify-content: center;
     }
-    .services-grid {
-        grid-template-columns: 1fr;
-    }
-    .portfolio-grid {
-        grid-template-columns: 1fr;
-    }
+    .services-grid,
+    .portfolio-grid,
     .pricing-grid {
         grid-template-columns: 1fr;
     }
