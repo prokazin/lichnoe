@@ -8,6 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Фоновое видео -->
+    <div class="video-bg">
+        <video autoplay muted loop playsinline>
+            <source src="assets/hero-bg.mp4" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+    </div>
+
     <!-- ===== НАВИГАЦИЯ ===== -->
     <nav class="navbar">
         <div class="nav-container">
@@ -29,12 +37,6 @@
 
     <!-- ===== HERO ===== -->
     <section class="hero" id="hero">
-        <div class="hero-bg">
-            <video autoplay muted loop playsinline>
-                <source src="assets/hero-bg.mp4" type="video/mp4">
-            </video>
-            <div class="hero-overlay"></div>
-        </div>
         <div class="container hero-content">
             <div class="hero-badge">🔥 Работаю с 2025</div>
             <h1 class="hero-title">
@@ -42,7 +44,7 @@
                 <span class="hero-highlight">GitHub</span> для блогеров,<br>
                 стартапов и бизнеса
             </h1>
-            <p class="hero-desc">
+            <p class="hero-desc" id="heroDesc">
                 Быстро, красиво, дёшево. Полный цикл — от идеи до запуска.
                 Бесплатный хостинг, адаптив, админ-панель.
             </p>
@@ -72,31 +74,8 @@
         <div class="container">
             <div class="section-label">Что я делаю</div>
             <h2 class="section-title">Мои <span class="highlight">услуги</span></h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">📄</div>
-                    <h3>Лендинг</h3>
-                    <p>Одностраничный сайт под ваш продукт или услугу. Быстрый запуск.</p>
-                    <div class="service-tag">от 5 000 ₽</div>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🛍️</div>
-                    <h3>Сайт-витрина</h3>
-                    <p>Каталог товаров, админ-панель, загрузка фото, фильтры, характеристики.</p>
-                    <div class="service-tag">от 10 000 ₽</div>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">📱</div>
-                    <h3>Telegram Web App</h3>
-                    <p>Мини-приложение внутри бота для продаж, каталога или сервиса.</p>
-                    <div class="service-tag">от 15 000 ₽</div>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">⚡</div>
-                    <h3>Сайт с корзиной</h3>
-                    <p>Полноценный интернет-магазин с корзиной, заказами и админкой.</p>
-                    <div class="service-tag">от 20 000 ₽</div>
-                </div>
+            <div class="services-grid" id="servicesGrid">
+                <!-- Загружаются из localStorage -->
             </div>
         </div>
     </section>
@@ -106,52 +85,8 @@
         <div class="container">
             <div class="section-label">Мои работы</div>
             <h2 class="section-title">Примеры <span class="highlight">сайтов</span></h2>
-            <div class="portfolio-grid">
-                <div class="portfolio-card">
-                    <div class="portfolio-image" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
-                        <span style="font-size: 48px;">🏂</span>
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>SnowShop</h3>
-                        <p>Магазин сноубордов. Каталог, админ-панель, фильтры, характеристики.</p>
-                        <div class="portfolio-tags">
-                            <span>витрина</span>
-                            <span>админ-панель</span>
-                            <span>адаптив</span>
-                        </div>
-                        <a href="#" class="btn btn-outline" target="_blank">Смотреть</a>
-                    </div>
-                </div>
-                <div class="portfolio-card">
-                    <div class="portfolio-image" style="background: linear-gradient(135deg, #0f0c29, #302b63);">
-                        <span style="font-size: 48px;">🚀</span>
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Стартап-лендинг</h3>
-                        <p>Продающий лендинг для IT-продукта. Конверсия, аналитика, форма заявки.</p>
-                        <div class="portfolio-tags">
-                            <span>лендинг</span>
-                            <span>конверсия</span>
-                            <span>форма</span>
-                        </div>
-                        <a href="#" class="btn btn-outline" target="_blank">Смотреть</a>
-                    </div>
-                </div>
-                <div class="portfolio-card">
-                    <div class="portfolio-image" style="background: linear-gradient(135deg, #1a1a2e, #2d3436);">
-                        <span style="font-size: 48px;">📱</span>
-                    </div>
-                    <div class="portfolio-info">
-                        <h3>Telegram Shop</h3>
-                        <p>Магазин внутри Telegram-бота. Каталог, корзина, оформление заказа.</p>
-                        <div class="portfolio-tags">
-                            <span>Telegram</span>
-                            <span>корзина</span>
-                            <span>бот</span>
-                        </div>
-                        <a href="#" class="btn btn-outline" target="_blank">Смотреть</a>
-                    </div>
-                </div>
+            <div class="portfolio-grid" id="portfolioGrid">
+                <!-- Загружаются из localStorage -->
             </div>
         </div>
     </section>
@@ -161,46 +96,8 @@
         <div class="container">
             <div class="section-label">Стоимость</div>
             <h2 class="section-title">Выберите свой <span class="highlight">тариф</span></h2>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="pricing-name">Старт</div>
-                    <div class="pricing-price">5 000 ₽</div>
-                    <ul class="pricing-features">
-                        <li>✅ Лендинг (1 страница)</li>
-                        <li>✅ Адаптив под все устройства</li>
-                        <li>✅ Форма заявки</li>
-                        <li>✅ 1 правка бесплатно</li>
-                        <li>✅ Деплой на GitHub</li>
-                    </ul>
-                    <a href="#contacts" class="btn btn-primary">Заказать</a>
-                </div>
-                <div class="pricing-card popular">
-                    <div class="pricing-badge">🔥 Популярный</div>
-                    <div class="pricing-name">Базовый</div>
-                    <div class="pricing-price">10 000 ₽</div>
-                    <ul class="pricing-features">
-                        <li>✅ Сайт-витрина (до 20 товаров)</li>
-                        <li>✅ Админ-панель</li>
-                        <li>✅ Загрузка фото</li>
-                        <li>✅ Фильтры и характеристики</li>
-                        <li>✅ 3 правки бесплатно</li>
-                        <li>✅ Деплой на GitHub</li>
-                    </ul>
-                    <a href="#contacts" class="btn btn-primary">Заказать</a>
-                </div>
-                <div class="pricing-card">
-                    <div class="pricing-name">Премиум</div>
-                    <div class="pricing-price">20 000 ₽</div>
-                    <ul class="pricing-features">
-                        <li>✅ Полноценный каталог</li>
-                        <li>✅ Корзина и оформление</li>
-                        <li>✅ Telegram Web App</li>
-                        <li>✅ Админ-панель + аналитика</li>
-                        <li>✅ 5 правок бесплатно</li>
-                        <li>✅ Деплой на GitHub</li>
-                    </ul>
-                    <a href="#contacts" class="btn btn-primary">Заказать</a>
-                </div>
+            <div class="pricing-grid" id="pricingGrid">
+                <!-- Загружаются из localStorage -->
             </div>
         </div>
     </section>
@@ -210,41 +107,14 @@
         <div class="container">
             <div class="about-grid">
                 <div class="about-image">
-                    <div class="about-avatar">🧑‍💻</div>
+                    <div class="about-avatar" id="aboutAvatar">🧑‍💻</div>
                 </div>
                 <div class="about-content">
                     <div class="section-label">Обо мне</div>
                     <h2 class="section-title">Почему стоит <span class="highlight">выбрать меня</span></h2>
-                    <p>Я создаю сайты на GitHub с 2025 года. Моя цель — сделать качественный продукт, который будет работать, приносить результат и радовать глаз.</p>
-                    <div class="about-features">
-                        <div class="about-feature">
-                            <span>⚡</span>
-                            <div>
-                                <strong>Быстро</strong>
-                                <p>Сайт готов за 3–7 дней</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <span>🎨</span>
-                            <div>
-                                <strong>Красиво</strong>
-                                <p>Современный дизайн, стиль Apple</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <span>💰</span>
-                            <div>
-                                <strong>Дёшево</strong>
-                                <p>Цены ниже рыночных, качество — выше</p>
-                            </div>
-                        </div>
-                        <div class="about-feature">
-                            <span>🛠️</span>
-                            <div>
-                                <strong>Надёжно</strong>
-                                <p>Бесплатный хостинг на GitHub</p>
-                            </div>
-                        </div>
+                    <p id="aboutText">Я создаю сайты на GitHub с 2025 года. Моя цель — сделать качественный продукт, который будет работать, приносить результат и радовать глаз.</p>
+                    <div class="about-features" id="aboutFeatures">
+                        <!-- Загружаются из localStorage -->
                     </div>
                 </div>
             </div>
@@ -256,61 +126,19 @@
         <div class="container">
             <div class="section-label">Как я работаю</div>
             <h2 class="section-title">Этапы <span class="highlight">сотрудничества</span></h2>
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">01</div>
-                    <h3>Обсуждаем</h3>
-                    <p>Рассказываете идею, я предлагаю решение и сроки</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">02</div>
-                    <h3>Прототип</h3>
-                    <p>Создаю макет страниц, утверждаем структуру</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">03</div>
-                    <h3>Разрабатываю</h3>
-                    <p>Пишу код, делаю админ-панель, настраиваю</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">04</div>
-                    <h3>Запускаю</h3>
-                    <p>Тестирую, деплою на GitHub, передаю клиенту</p>
-                </div>
+            <div class="steps-grid" id="stepsGrid">
+                <!-- Загружаются из localStorage -->
             </div>
         </div>
     </section>
 
     <!-- ===== FAQ ===== -->
-    <section class="faq">
+    <section class="faq" id="faq">
         <div class="container">
             <div class="section-label">Вопросы и ответы</div>
             <h2 class="section-title">Часто задаваемые <span class="highlight">вопросы</span></h2>
-            <div class="faq-grid">
-                <div class="faq-item">
-                    <button class="faq-question">Сколько времени занимает создание сайта? <span>+</span></button>
-                    <div class="faq-answer">
-                        <p>От 3 до 7 дней в зависимости от сложности. Лендинг — 3 дня, витрина — 5 дней, полный каталог — 7 дней.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question">Нужно ли покупать хостинг? <span>+</span></button>
-                    <div class="faq-answer">
-                        <p>Нет! Я размещаю сайты на GitHub Pages — это полностью бесплатно и надёжно.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question">Можно ли посмотреть примеры? <span>+</span></button>
-                    <div class="faq-answer">
-                        <p>Конечно! В разделе «Портфолио» вы можете посмотреть готовые проекты и оценить качество.</p>
-                    </div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question">Как я могу оплатить? <span>+</span></button>
-                    <div class="faq-answer">
-                        <p>Предоплата 50%, остальное — после запуска. Оплата на карту или по ссылке.</p>
-                    </div>
-                </div>
+            <div class="faq-grid" id="faqGrid">
+                <!-- Загружаются из localStorage -->
             </div>
         </div>
     </section>
@@ -322,17 +150,9 @@
                 <div class="contacts-info">
                     <div class="section-label">Свяжитесь со мной</div>
                     <h2 class="section-title">Давайте <span class="highlight">обсудим</span> ваш проект</h2>
-                    <p>Напишите мне в Telegram или Instagram — я отвечу в течение часа.</p>
-                    <div class="contacts-social">
-                        <a href="#" class="contact-link" target="_blank">
-                            <span class="contact-icon">📱</span> Telegram
-                        </a>
-                        <a href="#" class="contact-link" target="_blank">
-                            <span class="contact-icon">📷</span> Instagram
-                        </a>
-                        <a href="#" class="contact-link" target="_blank">
-                            <span class="contact-icon">✉️</span> Email
-                        </a>
+                    <p id="contactsText">Напишите мне в Telegram или Instagram — я отвечу в течение часа.</p>
+                    <div class="contacts-social" id="contactsSocial">
+                        <!-- Загружаются из localStorage -->
                     </div>
                 </div>
                 <div class="contacts-form">
@@ -354,7 +174,7 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <span class="footer-logo">⚡ WebMaster</span>
-                    <p>Создание сайтов на GitHub — быстро, красиво, дёшево.</p>
+                    <p id="footerText">Создание сайтов на GitHub — быстро, красиво, дёшево.</p>
                 </div>
                 <div class="footer-links">
                     <a href="#services">Услуги</a>
@@ -362,17 +182,108 @@
                     <a href="#pricing">Цены</a>
                     <a href="#contacts">Контакты</a>
                 </div>
-                <div class="footer-social">
-                    <a href="#" target="_blank">📱</a>
-                    <a href="#" target="_blank">📷</a>
-                    <a href="#" target="_blank">✉️</a>
+                <div class="footer-social" id="footerSocial">
+                    <!-- Загружаются из localStorage -->
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2025 WebMaster. Все права защищены.</p>
+                <p id="footerCopyright">© 2025 WebMaster. Все права защищены.</p>
             </div>
         </div>
     </footer>
+
+    <!-- ===== АДМИН-ПАНЕЛЬ (кнопка входа) ===== -->
+    <button class="admin-toggle" onclick="openAdmin()">⚙️</button>
+
+    <!-- ===== АДМИН-МОДАЛКА ===== -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-overlay" onclick="closeAdmin()"></div>
+        <div class="admin-content">
+            <button class="admin-close" onclick="closeAdmin()">✕</button>
+            <h2>⚙️ Админ-панель</h2>
+            
+            <div id="adminLogin">
+                <input type="password" id="adminPassword" placeholder="Введите пароль" class="admin-input">
+                <button onclick="checkAdminPassword()" class="btn btn-primary">Войти</button>
+            </div>
+
+            <div id="adminPanel" style="display:none;">
+                <!-- Управление секциями -->
+                <div class="admin-section">
+                    <h3>📄 Текст на сайте</h3>
+                    <div class="admin-row">
+                        <input type="text" id="editHeroDesc" placeholder="Текст в Hero" class="admin-input">
+                        <input type="text" id="editAboutText" placeholder="Текст 'Обо мне'" class="admin-input">
+                        <input type="text" id="editContactsText" placeholder="Текст в контактах" class="admin-input">
+                        <input type="text" id="editFooterText" placeholder="Текст в футере" class="admin-input">
+                        <input type="text" id="editFooterCopyright" placeholder="Копирайт" class="admin-input">
+                    </div>
+                    <button onclick="saveTexts()" class="btn btn-primary">💾 Сохранить тексты</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>🛠️ Услуги</h3>
+                    <div id="adminServices"></div>
+                    <button onclick="addService()" class="btn btn-secondary">➕ Добавить услугу</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>📂 Портфолио</h3>
+                    <div id="adminPortfolio"></div>
+                    <button onclick="addPortfolio()" class="btn btn-secondary">➕ Добавить проект</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>💰 Тарифы</h3>
+                    <div id="adminPricing"></div>
+                    <button onclick="addPricing()" class="btn btn-secondary">➕ Добавить тариф</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>📋 Особенности (Обо мне)</h3>
+                    <div id="adminFeatures"></div>
+                    <button onclick="addFeature()" class="btn btn-secondary">➕ Добавить особенность</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>📌 Этапы работы</h3>
+                    <div id="adminSteps"></div>
+                    <button onclick="addStep()" class="btn btn-secondary">➕ Добавить этап</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>❓ FAQ</h3>
+                    <div id="adminFaq"></div>
+                    <button onclick="addFaq()" class="btn btn-secondary">➕ Добавить вопрос</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>🔗 Контакты (соцсети)</h3>
+                    <div id="adminSocial"></div>
+                    <button onclick="addSocial()" class="btn btn-secondary">➕ Добавить контакт</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>📊 Статистика</h3>
+                    <div class="admin-row">
+                        <input type="number" id="editStatProjects" placeholder="Проектов" class="admin-input">
+                        <input type="number" id="editStatClients" placeholder="Клиентов" class="admin-input">
+                        <input type="number" id="editStatHappy" placeholder="Довольных %" class="admin-input">
+                    </div>
+                    <button onclick="saveStats()" class="btn btn-primary">💾 Сохранить статистику</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>📤 Экспорт / Импорт</h3>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button onclick="exportData()" class="btn btn-secondary">📤 Экспорт</button>
+                        <button onclick="document.getElementById('importFile').click()" class="btn btn-secondary">📥 Импорт</button>
+                        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
