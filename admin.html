@@ -91,7 +91,6 @@
         .analytics-card .number { font-size:28px; font-weight:800; color:#fff; }
         .analytics-card .label { font-size:12px; color:#6a6a72; margin-top:4px; }
 
-        /* ===== МОДАЛЬНОЕ ОКНО ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -167,7 +166,6 @@
                 <button class="tab-btn" onclick="switchTab('backup')">💾 Бэкап</button>
             </div>
 
-            <!-- ===== ДАШБОРД ===== -->
             <div id="tab-dashboard" class="tab-content active">
                 <div class="section">
                     <h2>📊 Общая статистика</h2>
@@ -181,7 +179,6 @@
                 </div>
             </div>
 
-            <!-- ===== УСЛУГИ ===== -->
             <div id="tab-services" class="tab-content">
                 <div class="section">
                     <h2>🛠️ Услуги <small>(CRUD)</small></h2>
@@ -190,7 +187,6 @@
                 </div>
             </div>
 
-            <!-- ===== ПОРТФОЛИО ===== -->
             <div id="tab-portfolio" class="tab-content">
                 <div class="section">
                     <h2>📂 Портфолио <small>(с фото, карусель на сайте)</small></h2>
@@ -199,7 +195,6 @@
                 </div>
             </div>
 
-            <!-- ===== ТАРИФЫ ===== -->
             <div id="tab-pricing" class="tab-content">
                 <div class="section">
                     <h2>💰 Тарифы <small>(CRUD)</small></h2>
@@ -208,7 +203,6 @@
                 </div>
             </div>
 
-            <!-- ===== ОСОБЕННОСТИ ===== -->
             <div id="tab-features" class="tab-content">
                 <div class="section">
                     <h2>⭐ Особенности <small>(CRUD)</small></h2>
@@ -217,7 +211,6 @@
                 </div>
             </div>
 
-            <!-- ===== ЭТАПЫ ===== -->
             <div id="tab-steps" class="tab-content">
                 <div class="section">
                     <h2>📌 Этапы <small>(CRUD)</small></h2>
@@ -226,7 +219,6 @@
                 </div>
             </div>
 
-            <!-- ===== FAQ ===== -->
             <div id="tab-faq" class="tab-content">
                 <div class="section">
                     <h2>❓ FAQ <small>(CRUD)</small></h2>
@@ -235,7 +227,6 @@
                 </div>
             </div>
 
-            <!-- ===== СОЦСЕТИ ===== -->
             <div id="tab-social" class="tab-content">
                 <div class="section">
                     <h2>🔗 Социальные сети <small>(CRUD)</small></h2>
@@ -244,7 +235,6 @@
                 </div>
             </div>
 
-            <!-- ===== БЭКАП ===== -->
             <div id="tab-backup" class="tab-content">
                 <div class="section">
                     <h2>💾 Экспорт / Импорт данных</h2>
@@ -265,7 +255,6 @@
         </div>
     </div>
 
-    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
     <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
         <div class="modal-box">
             <button class="modal-close" onclick="closeModal()">✕</button>
@@ -275,37 +264,50 @@
     </div>
 
     <script>
-    // ===== ВКЛАДКИ =====
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        const target = document.getElementById('tab-' + tabId);
-        if (target) target.classList.add('active');
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => {
-            if (el.textContent.includes('Дашборд') && tabId === 'dashboard') el.classList.add('active');
-            else if (el.textContent.includes('Услуги') && tabId === 'services') el.classList.add('active');
-            else if (el.textContent.includes('Портфолио') && tabId === 'portfolio') el.classList.add('active');
-            else if (el.textContent.includes('Тарифы') && tabId === 'pricing') el.classList.add('active');
-            else if (el.textContent.includes('Особенности') && tabId === 'features') el.classList.add('active');
-            else if (el.textContent.includes('Этапы') && tabId === 'steps') el.classList.add('active');
-            else if (el.textContent.includes('FAQ') && tabId === 'faq') el.classList.add('active');
-            else if (el.textContent.includes('Соцсети') && tabId === 'social') el.classList.add('active');
-            else if (el.textContent.includes('Бэкап') && tabId === 'backup') el.classList.add('active');
-        });
-    }
+    var STORAGE_KEY = 'webmaster_pro_data';
+    var ADMIN_PASSWORD = 'webmaster2026';
+    var data = null;
+    var modalType = '';
+    var editIndex = null;
 
-    // ===== МОДАЛЬНОЕ ОКНО =====
-    let modalType = '';
-    let editIndex = null;
+    function switchTab(tabId) {
+        var contents = document.querySelectorAll('.tab-content');
+        for (var i = 0; i < contents.length; i++) {
+            contents[i].classList.remove('active');
+        }
+        var target = document.getElementById('tab-' + tabId);
+        if (target) target.classList.add('active');
+        
+        var btns = document.querySelectorAll('.tab-btn');
+        for (var j = 0; j < btns.length; j++) {
+            btns[j].classList.remove('active');
+        }
+        var btnMap = {
+            'dashboard': 'Дашборд',
+            'services': 'Услуги',
+            'portfolio': 'Портфолио',
+            'pricing': 'Тарифы',
+            'features': 'Особенности',
+            'steps': 'Этапы',
+            'faq': 'FAQ',
+            'social': 'Соцсети',
+            'backup': 'Бэкап'
+        };
+        for (var k = 0; k < btns.length; k++) {
+            if (btns[k].textContent.indexOf(btnMap[tabId]) !== -1) {
+                btns[k].classList.add('active');
+            }
+        }
+    }
 
     function openModal(type, index) {
         modalType = type;
-        editIndex = index !== undefined ? index : null;
-        const overlay = document.getElementById('modalOverlay');
-        const title = document.getElementById('modalTitle');
-        const body = document.getElementById('modalBody');
+        editIndex = (index !== undefined) ? index : null;
+        var overlay = document.getElementById('modalOverlay');
+        var title = document.getElementById('modalTitle');
+        var body = document.getElementById('modalBody');
 
-        const typeNames = {
+        var typeNames = {
             service: 'Услугу',
             portfolio: 'Проект',
             pricing: 'Тариф',
@@ -316,91 +318,58 @@
         };
         title.textContent = (index !== undefined ? '✎ Редактировать' : '➕ Добавить') + ' ' + typeNames[type];
 
-        let html = '';
-        if (type === 'service') {
-            const item = index !== undefined ? data.services[index] : null;
-            html = `
-                <label>Иконка (эмодзи)</label>
-                <input type="text" id="modalIcon" value="${item ? item.icon : '🛠️'}">
-                <label>Название</label>
-                <input type="text" id="modalTitleInput" value="${item ? item.title : ''}">
-                <label>Описание</label>
-                <textarea id="modalDesc" rows="3">${item ? item.desc : ''}</textarea>
-                <label>Цена</label>
-                <input type="text" id="modalPrice" value="${item ? item.price : ''}">
-            `;
-        } else if (type === 'portfolio') {
-            const item = index !== undefined ? data.portfolio[index] : null;
-            html = `
-                <label>Название проекта</label>
-                <input type="text" id="modalTitleInput" value="${item ? item.title : ''}">
-                <label>Описание</label>
-                <textarea id="modalDesc" rows="3">${item ? item.desc : ''}</textarea>
-                <label>Теги (через запятую)</label>
-                <input type="text" id="modalTags" value="${item ? item.tags.join(', ') : ''}">
-                <label>Ссылка</label>
-                <input type="text" id="modalLink" value="${item ? item.link : '#'}">
-                <label>Фото (нажмите для загрузки)</label>
-                <input type="file" id="modalImage" accept="image/*">
-                ${item && item.image ? `<img src="${item.image}" style="max-width:100%;max-height:100px;border-radius:12px;margin-top:8px;">` : ''}
-            `;
-        } else if (type === 'pricing') {
-            const item = index !== undefined ? data.pricing[index] : null;
-            html = `
-                <label>Название тарифа</label>
-                <input type="text" id="modalTitleInput" value="${item ? item.name : ''}">
-                <label>Цена</label>
-                <input type="text" id="modalPrice" value="${item ? item.price : ''}">
-                <label>Опции (через запятую)</label>
-                <input type="text" id="modalFeatures" value="${item ? item.features.join(', ') : ''}">
-                <label>Популярный?</label>
-                <select id="modalPopular"><option value="false" ${item && item.popular ? '' : 'selected'}>Нет</option><option value="true" ${item && item.popular ? 'selected' : ''}>Да</option></select>
-            `;
-        } else if (type === 'feature') {
-            const item = index !== undefined ? data.features[index] : null;
-            html = `
-                <label>Иконка (эмодзи)</label>
-                <input type="text" id="modalIcon" value="${item ? item.icon : '⚡'}">
-                <label>Название</label>
-                <input type="text" id="modalTitleInput" value="${item ? item.title : ''}">
-                <label>Описание</label>
-                <textarea id="modalDesc" rows="3">${item ? item.desc : ''}</textarea>
-            `;
-        } else if (type === 'step') {
-            const item = index !== undefined ? data.steps[index] : null;
-            html = `
-                <label>Номер (01, 02...)</label>
-                <input type="text" id="modalNumber" value="${item ? item.number : ''}">
-                <label>Название</label>
-                <input type="text" id="modalTitleInput" value="${item ? item.title : ''}">
-                <label>Описание</label>
-                <textarea id="modalDesc" rows="3">${item ? item.desc : ''}</textarea>
-            `;
-        } else if (type === 'faq') {
-            const item = index !== undefined ? data.faq[index] : null;
-            html = `
-                <label>Вопрос</label>
-                <input type="text" id="modalTitleInput" value="${item ? item.question : ''}">
-                <label>Ответ</label>
-                <textarea id="modalDesc" rows="3">${item ? item.answer : ''}</textarea>
-            `;
-        } else if (type === 'social') {
-            const item = index !== undefined ? data.social[index] : null;
-            html = `
-                <label>Тип (telegram / instagram / email)</label>
-                <input type="text" id="modalIcon" value="${item ? item.icon : 'telegram'}">
-                <label>Название</label>
-                <input type="text" id="modalTitleInput" value="${item ? item.name : ''}">
-                <label>Ссылка</label>
-                <input type="text" id="modalLink" value="${item ? item.link : '#'}">
-            `;
+        var html = '';
+        var item = null;
+        if (index !== undefined) {
+            var listNames = {
+                service: 'services',
+                portfolio: 'portfolio',
+                pricing: 'pricing',
+                feature: 'features',
+                step: 'steps',
+                faq: 'faq',
+                social: 'social'
+            };
+            item = data[listNames[type]][index];
         }
 
-        html += `<div class="btn-group">
-            <button class="btn btn-primary" onclick="saveModal()">💾 Сохранить</button>
-            <button class="btn btn-secondary" onclick="closeModal()">Отмена</button>
-        </div>`;
+        if (type === 'service') {
+            html = '<label>Иконка (эмодзи)</label><input type="text" id="modalIcon" value="' + (item ? item.icon : '🛠️') + '">';
+            html += '<label>Название</label><input type="text" id="modalTitleInput" value="' + (item ? item.title : '') + '">';
+            html += '<label>Описание</label><textarea id="modalDesc" rows="3">' + (item ? item.desc : '') + '</textarea>';
+            html += '<label>Цена</label><input type="text" id="modalPrice" value="' + (item ? item.price : '') + '">';
+        } else if (type === 'portfolio') {
+            html = '<label>Название проекта</label><input type="text" id="modalTitleInput" value="' + (item ? item.title : '') + '">';
+            html += '<label>Описание</label><textarea id="modalDesc" rows="3">' + (item ? item.desc : '') + '</textarea>';
+            html += '<label>Теги (через запятую)</label><input type="text" id="modalTags" value="' + (item ? item.tags.join(', ') : '') + '">';
+            html += '<label>Ссылка</label><input type="text" id="modalLink" value="' + (item ? item.link : '#') + '">';
+            html += '<label>Фото (нажмите для загрузки)</label><input type="file" id="modalImage" accept="image/*">';
+            if (item && item.image) {
+                html += '<img src="' + item.image + '" style="max-width:100%;max-height:100px;border-radius:12px;margin-top:8px;">';
+            }
+        } else if (type === 'pricing') {
+            html = '<label>Название тарифа</label><input type="text" id="modalTitleInput" value="' + (item ? item.name : '') + '">';
+            html += '<label>Цена</label><input type="text" id="modalPrice" value="' + (item ? item.price : '') + '">';
+            html += '<label>Опции (через запятую)</label><input type="text" id="modalFeatures" value="' + (item ? item.features.join(', ') : '') + '">';
+            html += '<label>Популярный?</label><select id="modalPopular"><option value="false"' + (item && item.popular ? '' : ' selected') + '>Нет</option><option value="true"' + (item && item.popular ? ' selected' : '') + '>Да</option></select>';
+        } else if (type === 'feature') {
+            html = '<label>Иконка (эмодзи)</label><input type="text" id="modalIcon" value="' + (item ? item.icon : '⚡') + '">';
+            html += '<label>Название</label><input type="text" id="modalTitleInput" value="' + (item ? item.title : '') + '">';
+            html += '<label>Описание</label><textarea id="modalDesc" rows="3">' + (item ? item.desc : '') + '</textarea>';
+        } else if (type === 'step') {
+            html = '<label>Номер (01, 02...)</label><input type="text" id="modalNumber" value="' + (item ? item.number : '') + '">';
+            html += '<label>Название</label><input type="text" id="modalTitleInput" value="' + (item ? item.title : '') + '">';
+            html += '<label>Описание</label><textarea id="modalDesc" rows="3">' + (item ? item.desc : '') + '</textarea>';
+        } else if (type === 'faq') {
+            html = '<label>Вопрос</label><input type="text" id="modalTitleInput" value="' + (item ? item.question : '') + '">';
+            html += '<label>Ответ</label><textarea id="modalDesc" rows="3">' + (item ? item.answer : '') + '</textarea>';
+        } else if (type === 'social') {
+            html = '<label>Тип (telegram / instagram / email)</label><input type="text" id="modalIcon" value="' + (item ? item.icon : 'telegram') + '">';
+            html += '<label>Название</label><input type="text" id="modalTitleInput" value="' + (item ? item.name : '') + '">';
+            html += '<label>Ссылка</label><input type="text" id="modalLink" value="' + (item ? item.link : '#') + '">';
+        }
 
+        html += '<div class="btn-group"><button class="btn btn-primary" onclick="saveModal()">💾 Сохранить</button><button class="btn btn-secondary" onclick="closeModal()">Отмена</button></div>';
         body.innerHTML = html;
         overlay.classList.add('active');
     }
@@ -410,101 +379,94 @@
         editIndex = null;
     }
 
+    function getVal(id) {
+        var el = document.getElementById(id);
+        return el ? el.value : '';
+    }
+
+    function getFile(id) {
+        var el = document.getElementById(id);
+        return el ? el.files[0] : null;
+    }
+
     function saveModal() {
-        const getVal = (id) => document.getElementById(id)?.value || '';
-        const getFile = (id) => document.getElementById(id)?.files[0] || null;
+        var icon = getVal('modalIcon') || '🛠️';
+        var title = getVal('modalTitleInput');
+        var desc = getVal('modalDesc');
+        var price = getVal('modalPrice');
+        var tags = getVal('modalTags');
+        var link = getVal('modalLink') || '#';
+        var number = getVal('modalNumber') || '0' + (data.steps.length + 1);
+        var popular = getVal('modalPopular') === 'true';
+        var file = getFile('modalImage');
+
+        if (!title) { showToast('❌ Введите название!'); return; }
 
         if (modalType === 'service') {
-            const item = {
-                icon: getVal('modalIcon') || '🛠️',
-                title: getVal('modalTitleInput'),
-                desc: getVal('modalDesc'),
-                price: getVal('modalPrice')
-            };
-            if (!item.title) { showToast('❌ Введите название!'); return; }
+            var item = { icon: icon, title: title, desc: desc, price: price };
             if (editIndex !== null) { data.services[editIndex] = item; }
             else { data.services.push(item); }
         } else if (modalType === 'portfolio') {
-            const file = getFile('modalImage');
-            const item = {
+            var oldItem = (editIndex !== null) ? data.portfolio[editIndex] : null;
+            var newItem = {
                 icon: '📷',
-                title: getVal('modalTitleInput'),
-                desc: getVal('modalDesc'),
-                tags: getVal('modalTags').split(',').map(t=>t.trim()).filter(Boolean),
-                link: getVal('modalLink') || '#',
-                image: ''
+                title: title,
+                desc: desc,
+                tags: tags ? tags.split(',').map(function(t){ return t.trim(); }).filter(function(t){ return t; }) : [],
+                link: link,
+                image: oldItem ? oldItem.image : ''
             };
-            if (!item.title) { showToast('❌ Введите название!'); return; }
             if (editIndex !== null) {
-                const old = data.portfolio[editIndex];
-                item.image = old.image || '';
-                data.portfolio[editIndex] = { ...old, ...item };
+                data.portfolio[editIndex] = newItem;
                 if (file) {
-                    const reader = new FileReader();
+                    var reader = new FileReader();
                     reader.onload = function(e) {
                         data.portfolio[editIndex].image = e.target.result;
-                        saveData(); renderPortfolio(); updateDashboard(); showToast('✅ Проект обновлён с фото!');
+                        saveData();
+                        renderAll();
+                        updateDashboard();
+                        showToast('✅ Проект обновлён с фото!');
                     };
                     reader.readAsDataURL(file);
-                    closeModal(); return;
+                    closeModal();
+                    return;
                 }
             } else {
-                data.portfolio.push(item);
+                data.portfolio.push(newItem);
                 if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        data.portfolio[data.portfolio.length-1].image = e.target.result;
-                        saveData(); renderPortfolio(); updateDashboard(); showToast('✅ Проект добавлен с фото!');
+                    var reader2 = new FileReader();
+                    reader2.onload = function(e) {
+                        data.portfolio[data.portfolio.length - 1].image = e.target.result;
+                        saveData();
+                        renderAll();
+                        updateDashboard();
+                        showToast('✅ Проект добавлен с фото!');
                     };
-                    reader.readAsDataURL(file);
-                    closeModal(); return;
+                    reader2.readAsDataURL(file);
+                    closeModal();
+                    return;
                 }
             }
         } else if (modalType === 'pricing') {
-            const item = {
-                name: getVal('modalTitleInput'),
-                price: getVal('modalPrice'),
-                features: getVal('modalFeatures').split(',').map(t=>t.trim()).filter(Boolean),
-                popular: getVal('modalPopular') === 'true'
-            };
-            if (!item.name) { showToast('❌ Введите название!'); return; }
-            if (editIndex !== null) { data.pricing[editIndex] = item; }
-            else { data.pricing.push(item); }
+            var item2 = { name: title, price: price, features: tags ? tags.split(',').map(function(t){ return t.trim(); }).filter(function(t){ return t; }) : [], popular: popular };
+            if (editIndex !== null) { data.pricing[editIndex] = item2; }
+            else { data.pricing.push(item2); }
         } else if (modalType === 'feature') {
-            const item = {
-                icon: getVal('modalIcon') || '⚡',
-                title: getVal('modalTitleInput'),
-                desc: getVal('modalDesc')
-            };
-            if (!item.title) { showToast('❌ Введите название!'); return; }
-            if (editIndex !== null) { data.features[editIndex] = item; }
-            else { data.features.push(item); }
+            var item3 = { icon: icon, title: title, desc: desc };
+            if (editIndex !== null) { data.features[editIndex] = item3; }
+            else { data.features.push(item3); }
         } else if (modalType === 'step') {
-            const item = {
-                number: getVal('modalNumber') || '0' + (data.steps.length + 1),
-                title: getVal('modalTitleInput'),
-                desc: getVal('modalDesc')
-            };
-            if (!item.title) { showToast('❌ Введите название!'); return; }
-            if (editIndex !== null) { data.steps[editIndex] = item; }
-            else { data.steps.push(item); }
+            var item4 = { number: number, title: title, desc: desc };
+            if (editIndex !== null) { data.steps[editIndex] = item4; }
+            else { data.steps.push(item4); }
         } else if (modalType === 'faq') {
-            const item = {
-                question: getVal('modalTitleInput'),
-                answer: getVal('modalDesc')
-            };
-            if (!item.question) { showToast('❌ Введите вопрос!'); return; }
-            if (editIndex !== null) { data.faq[editIndex] = item; }
-            else { data.faq.push(item); }
+            var item5 = { question: title, answer: desc };
+            if (editIndex !== null) { data.faq[editIndex] = item5; }
+            else { data.faq.push(item5); }
         } else if (modalType === 'social') {
-            const item = {
-                icon: getVal('modalIcon') || 'telegram',
-                name: getVal('modalTitleInput'),
-                link: getVal('modalLink') || '#'
-            };
-            if (!item.name) { showToast('❌ Введите название!'); return; }
-            if (editIndex !== null) { data.social[editIndex] = item; }
-            else { data.social.push(item); }
+            var item6 = { icon: icon, name: title, link: link };
+            if (editIndex !== null) { data.social[editIndex] = item6; }
+            else { data.social.push(item6); }
         }
 
         saveData();
@@ -514,21 +476,21 @@
         showToast('✅ Сохранено!');
     }
 
-    // ===== ДАННЫЕ =====
-    const STORAGE_KEY = 'webmaster_pro_data';
-    const ADMIN_PASSWORD = 'webmaster2026';
-    let data = null;
-
     function loadData() {
         try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) { data = JSON.parse(stored); return data; }
+            var stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                data = JSON.parse(stored);
+                return data;
+            }
         } catch(e) {}
         return null;
     }
 
     function saveData() {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch(e) {}
     }
 
     function getDefaultData() {
@@ -576,15 +538,18 @@
         };
     }
 
-    // ===== ВХОД =====
     function login() {
-        const pass = document.getElementById('adminPassword').value;
+        var pass = document.getElementById('adminPassword').value;
         if (pass === ADMIN_PASSWORD) {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
-            const d = loadData();
-            if (!d) { data = getDefaultData(); saveData(); }
-            else { data = d; }
+            var d = loadData();
+            if (!d) {
+                data = getDefaultData();
+                saveData();
+            } else {
+                data = d;
+            }
             renderAll();
             updateDashboard();
         } else {
@@ -592,7 +557,6 @@
         }
     }
 
-    // ===== РЕНДЕРИНГ =====
     function renderAll() {
         renderServices();
         renderPortfolio();
@@ -604,127 +568,130 @@
     }
 
     function renderServices() {
-        const container = document.getElementById('adminServices');
+        var container = document.getElementById('adminServices');
         if (!container) return;
-        const items = data.services || [];
+        var items = data.services || [];
         if (items.length === 0) { container.innerHTML = '<div class="empty">Нет услуг</div>'; return; }
-        container.innerHTML = items.map((s, i) => `
-            <div class="item">
-                <span>${s.icon} ${s.title} — <span class="badge">${s.price}</span></span>
-                <div class="item-actions">
-                    <button class="edit" onclick="openModal('service', ${i})">✎</button>
-                    <button class="delete" onclick="deleteItem('service', ${i})">✕</button>
-                </div>
-            </div>
-        `).join('');
+        var html = '';
+        for (var i = 0; i < items.length; i++) {
+            var s = items[i];
+            html += '<div class="item"><span>' + s.icon + ' ' + s.title + ' — <span class="badge">' + s.price + '</span></span>';
+            html += '<div class="item-actions"><button class="edit" onclick="openModal(\'service\', ' + i + ')">✎</button>';
+            html += '<button class="delete" onclick="deleteItem(\'service\', ' + i + ')">✕</button></div></div>';
+        }
+        container.innerHTML = html;
     }
 
     function renderPortfolio() {
-        const container = document.getElementById('adminPortfolio');
+        var container = document.getElementById('adminPortfolio');
         if (!container) return;
-        const items = data.portfolio || [];
+        var items = data.portfolio || [];
         if (items.length === 0) { container.innerHTML = '<div class="empty">Нет проектов</div>'; return; }
-        container.innerHTML = items.map((p, i) => `
-            <div class="portfolio-item">
-                ${p.image && p.image.startsWith('data:image') ? `<img src="${p.image}" alt="${p.title}">` : `<div style="width:80px;height:80px;background:rgba(255,255,255,0.02);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;">${p.icon || '📷'}</div>`}
-                <div class="info">
-                    <div class="title">${p.title}</div>
-                    <div class="desc">${p.desc}</div>
-                    ${p.tags ? p.tags.map(t => `<span class="badge" style="background:rgba(255,255,255,0.04);color:#6a6a72;">${t}</span>`).join(' ') : ''}
-                </div>
-                <div class="item-actions">
-                    <button class="edit" onclick="openModal('portfolio', ${i})">✎</button>
-                    <button class="delete" onclick="deleteItem('portfolio', ${i})">✕</button>
-                </div>
-            </div>
-        `).join('');
+        var html = '';
+        for (var i = 0; i < items.length; i++) {
+            var p = items[i];
+            var imgHtml = '';
+            if (p.image && p.image.indexOf('data:image') === 0) {
+                imgHtml = '<img src="' + p.image + '" alt="' + p.title + '">';
+            } else {
+                imgHtml = '<div style="width:80px;height:80px;background:rgba(255,255,255,0.02);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;">' + (p.icon || '📷') + '</div>';
+            }
+            var tagsHtml = '';
+            if (p.tags) {
+                for (var j = 0; j < p.tags.length; j++) {
+                    tagsHtml += '<span class="badge" style="background:rgba(255,255,255,0.04);color:#6a6a72;">' + p.tags[j] + '</span> ';
+                }
+            }
+            html += '<div class="portfolio-item">';
+            html += imgHtml;
+            html += '<div class="info"><div class="title">' + p.title + '</div><div class="desc">' + p.desc + '</div>' + tagsHtml + '</div>';
+            html += '<div class="item-actions"><button class="edit" onclick="openModal(\'portfolio\', ' + i + ')">✎</button>';
+            html += '<button class="delete" onclick="deleteItem(\'portfolio\', ' + i + ')">✕</button></div></div>';
+        }
+        container.innerHTML = html;
     }
 
     function renderPricing() {
-        const container = document.getElementById('adminPricing');
+        var container = document.getElementById('adminPricing');
         if (!container) return;
-        const items = data.pricing || [];
+        var items = data.pricing || [];
         if (items.length === 0) { container.innerHTML = '<div class="empty">Нет тарифов</div>'; return; }
-        container.innerHTML = items.map((p, i) => `
-            <div class="item">
-                <span>${p.name} — <strong>${p.price}</strong> ${p.popular ? '<span class="badge popular">🔥</span>' : ''}</span>
-                <div class="item-actions">
-                    <button class="edit" onclick="openModal('pricing', ${i})">✎</button>
-                    <button class="delete" onclick="deleteItem('pricing', ${i})">✕</button>
-                </div>
-            </div>
-        `).join('');
+        var html = '';
+        for (var i = 0; i < items.length; i++) {
+            var p = items[i];
+            var popularBadge = p.popular ? '<span class="badge popular">🔥</span>' : '';
+            html += '<div class="item"><span>' + p.name + ' — <strong>' + p.price + '</strong> ' + popularBadge + '</span>';
+            html += '<div class="item-actions"><button class="edit" onclick="openModal(\'pricing\', ' + i + ')">✎</button>';
+            html += '<button class="delete" onclick="deleteItem(\'pricing\', ' + i + ')">✕</button></div></div>';
+        }
+        container.innerHTML = html;
     }
 
     function renderFeatures() {
-        const container = document.getElementById('adminFeatures');
+        var container = document.getElementById('adminFeatures');
         if (!container) return;
-        const items = data.features || [];
+        var items = data.features || [];
         if (items.length === 0) { container.innerHTML = '<div class="empty">Нет особенностей</div>'; return; }
-        container.innerHTML = items.map((f, i) => `
-            <div class="item">
-                <span>${f.icon} ${f.title}</span>
-                <div class="item-actions">
-                    <button class="edit" onclick="openModal('feature', ${i})">✎</button>
-                    <button class="delete" onclick="deleteItem('feature', ${i})">✕</button>
-                </div>
-            </div>
-        `).join('');
+        var html = '';
+        for (var i = 0; i < items.length; i++) {
+            var f = items[i];
+            html += '<div class="item"><span>' + f.icon + ' ' + f.title + '</span>';
+            html += '<div class="item-actions"><button class="edit" onclick="openModal(\'feature\', ' + i + ')">✎</button>';
+            html += '<button class="delete" onclick="deleteItem(\'feature\', ' + i + ')">✕</button></div></div>';
+        }
+        container.innerHTML = html;
     }
 
     function renderSteps() {
-        const container = document.getElementById('adminSteps');
+        var container = document.getElementById('adminSteps');
         if (!container) return;
-        const items = data.steps || [];
+        var items = data.steps || [];
         if (items.length === 0) { container.innerHTML = '<div class="empty">Нет этапов</div>'; return; }
-        container.innerHTML = items.map((s, i) => `
-            <div class="item">
-                <span>${s.number} ${s.title}</span>
-                <div class="item-actions">
-                    <button class="edit" onclick="openModal('step', ${i})">✎</button>
-                    <button class="delete" onclick="deleteItem('step', ${i})">✕</button>
-                </div>
-            </div>
-        `).join('');
+        var html = '';
+        for (var i = 0; i < items.length; i++) {
+            var s = items[i];
+            html += '<div class="item"><span>' + s.number + ' ' + s.title + '</span>';
+            html += '<div class="item-actions"><button class="edit" onclick="openModal(\'step\', ' + i + ')">✎</button>';
+            html += '<button class="delete" onclick="deleteItem(\'step\', ' + i + ')">✕</button></div></div>';
+        }
+        container.innerHTML = html;
     }
 
     function renderFaq() {
-        const container = document.getElementById('adminFaq');
+        var container = document.getElementById('adminFaq');
         if (!container) return;
-        const items = data.faq || [];
+        var items = data.faq || [];
         if (items.length === 0) { container.innerHTML = '<div class="empty">Нет вопросов</div>'; return; }
-        container.innerHTML = items.map((f, i) => `
-            <div class="item">
-                <span>${f.question}</span>
-                <div class="item-actions">
-                    <button class="edit" onclick="openModal('faq', ${i})">✎</button>
-                    <button class="delete" onclick="deleteItem('faq', ${i})">✕</button>
-                </div>
-            </div>
-        `).join('');
+        var html = '';
+        for (var i = 0; i < items.length; i++) {
+            var f = items[i];
+            html += '<div class="item"><span>' + f.question + '</span>';
+            html += '<div class="item-actions"><button class="edit" onclick="openModal(\'faq\', ' + i + ')">✎</button>';
+            html += '<button class="delete" onclick="deleteItem(\'faq\', ' + i + ')">✕</button></div></div>';
+        }
+        container.innerHTML = html;
     }
 
     function renderSocial() {
-        const container = document.getElementById('adminSocial');
+        var container = document.getElementById('adminSocial');
         if (!container) return;
-        const items = data.social || [];
+        var items = data.social || [];
         if (items.length === 0) { container.innerHTML = '<div class="empty">Нет контактов</div>'; return; }
-        const icons = { telegram: '✈️', instagram: '📷', email: '✉️', default: '🔗' };
-        container.innerHTML = items.map((s, i) => `
-            <div class="item">
-                <span>${icons[s.icon] || icons.default} ${s.name}</span>
-                <div class="item-actions">
-                    <button class="edit" onclick="openModal('social', ${i})">✎</button>
-                    <button class="delete" onclick="deleteItem('social', ${i})">✕</button>
-                </div>
-            </div>
-        `).join('');
+        var icons = { telegram: '✈️', instagram: '📷', email: '✉️', default: '🔗' };
+        var html = '';
+        for (var i = 0; i < items.length; i++) {
+            var s = items[i];
+            var icon = icons[s.icon] || icons.default;
+            html += '<div class="item"><span>' + icon + ' ' + s.name + '</span>';
+            html += '<div class="item-actions"><button class="edit" onclick="openModal(\'social\', ' + i + ')">✎</button>';
+            html += '<button class="delete" onclick="deleteItem(\'social\', ' + i + ')">✕</button></div></div>';
+        }
+        container.innerHTML = html;
     }
 
-    // ===== УДАЛЕНИЕ =====
     function deleteItem(type, index) {
         if (!confirm('Удалить?')) return;
-        const lists = {
+        var lists = {
             service: 'services',
             portfolio: 'portfolio',
             pricing: 'pricing',
@@ -740,20 +707,18 @@
         showToast('🗑️ Удалено');
     }
 
-    // ===== ДАШБОРД =====
     function updateDashboard() {
-        document.getElementById('dashProjects').textContent = data.stats?.projects || 0;
-        document.getElementById('dashClients').textContent = data.stats?.clients || 0;
-        document.getElementById('dashHappy').textContent = data.stats?.happy + '%' || '0%';
-        document.getElementById('dashServices').textContent = data.services?.length || 0;
-        document.getElementById('dashPortfolio').textContent = data.portfolio?.length || 0;
+        document.getElementById('dashProjects').textContent = data.stats ? data.stats.projects : 0;
+        document.getElementById('dashClients').textContent = data.stats ? data.stats.clients : 0;
+        document.getElementById('dashHappy').textContent = (data.stats ? data.stats.happy : 0) + '%';
+        document.getElementById('dashServices').textContent = data.services ? data.services.length : 0;
+        document.getElementById('dashPortfolio').textContent = data.portfolio ? data.portfolio.length : 0;
     }
 
-    // ===== ЭКСПОРТ/ИМПОРТ =====
     function exportData() {
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
         a.href = url;
         a.download = 'webmaster_backup_' + new Date().toISOString().slice(0,10) + '.json';
         a.click();
@@ -762,9 +727,9 @@
     }
 
     function importData(event) {
-        const file = event.target.files[0];
+        var file = event.target.files[0];
         if (!file) return;
-        const reader = new FileReader();
+        var reader = new FileReader();
         reader.onload = function(e) {
             try {
                 data = JSON.parse(e.target.result);
@@ -795,24 +760,22 @@
         showToast('🔄 Сайт синхронизирован!');
     }
 
-    // ===== TOAST =====
     function showToast(msg) {
-        const existing = document.querySelector('.toast');
+        var existing = document.querySelector('.toast');
         if (existing) existing.remove();
-        const toast = document.createElement('div');
+        var toast = document.createElement('div');
         toast.className = 'toast';
         toast.textContent = msg;
         document.body.appendChild(toast);
-        setTimeout(() => {
+        setTimeout(function() {
             toast.style.opacity = '0';
             toast.style.transition = '0.4s';
-            setTimeout(() => toast.remove(), 400);
+            setTimeout(function() { toast.remove(); }, 400);
         }, 2500);
     }
 
-    // ===== ЗАПУСК =====
     document.addEventListener('DOMContentLoaded', function() {
-        const stored = localStorage.getItem(STORAGE_KEY);
+        var stored = localStorage.getItem(STORAGE_KEY);
         if (!stored) {
             data = getDefaultData();
             saveData();
