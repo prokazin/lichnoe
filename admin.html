@@ -38,12 +38,10 @@
 
         .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
         .row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
-        .row-4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; }
 
         input, textarea, select { width:100%; padding:12px 16px; border-radius:16px; border:0.5px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.02); color:#fff; font-size:14px; font-family:inherit; margin-bottom:10px; transition:0.3s; }
         input:focus, textarea:focus, select:focus { outline:none; border-color:#007aff; }
         input::placeholder, textarea::placeholder { color:#4a4a52; }
-        input[type="color"] { height:48px; padding:4px; cursor:pointer; }
         input[type="file"] { padding:10px; color:#6a6a72; }
         select option { background:#1a1a22; color:#fff; }
         textarea { resize:vertical; min-height:80px; }
@@ -68,8 +66,6 @@
         .item-actions button { padding:4px 12px; border-radius:12px; border:none; font-size:12px; cursor:pointer; transition:0.3s; font-family:inherit; }
         .item-actions .edit { background:rgba(0,122,255,0.12); color:#007aff; }
         .item-actions .delete { background:rgba(255,59,48,0.12); color:#ff3b30; }
-        .item-actions .toggle { background:rgba(52,199,89,0.12); color:#34c759; }
-        .item-actions .toggle.off { background:rgba(255,59,48,0.12); color:#ff3b30; }
         .item-actions button:hover { opacity:0.7; }
 
         .badge { display:inline-block; padding:2px 10px; border-radius:12px; font-size:11px; font-weight:500; }
@@ -85,17 +81,20 @@
         @keyframes toastIn { 0%{opacity:0;transform:translateX(-50%) translateY(20px);}100%{opacity:1;transform:translateX(-50%) translateY(0);} }
 
         .preview-img { max-width:60px; max-height:60px; border-radius:8px; border:0.5px solid rgba(255,255,255,0.04); }
-        .toggle-switch { position:relative; width:42px; height:24px; background:rgba(255,255,255,0.06); border-radius:30px; cursor:pointer; transition:0.3s; display:inline-block; }
-        .toggle-switch.active { background:#007aff; }
-        .toggle-switch .knob { position:absolute; top:2px; left:2px; width:20px; height:20px; background:#fff; border-radius:50%; transition:0.3s; }
-        .toggle-switch.active .knob { left:20px; }
 
         .analytics-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:16px; }
         .analytics-card { background:rgba(255,255,255,0.02); border-radius:16px; padding:18px; text-align:center; border:0.5px solid rgba(255,255,255,0.04); }
         .analytics-card .number { font-size:28px; font-weight:800; color:#fff; }
         .analytics-card .label { font-size:12px; color:#6a6a72; margin-top:4px; }
 
-        @media (max-width:768px) { .row,.row-3,.row-4 { grid-template-columns:1fr; } .header { flex-direction:column; align-items:flex-start; } .tabs { gap:4px; } .tab-btn { padding:6px 12px; font-size:11px; } .section { padding:16px; } #loginForm { padding:24px; margin:30px 16px; } .item { flex-direction:column; align-items:flex-start; gap:6px; } .item-actions { width:100%; } .analytics-grid { grid-template-columns:1fr 1fr; } }
+        /* Стили для портфолио с фото */
+        .portfolio-item { display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:0.5px solid rgba(255,255,255,0.02); flex-wrap:wrap; }
+        .portfolio-item img { width:80px; height:80px; object-fit:cover; border-radius:12px; border:0.5px solid rgba(255,255,255,0.04); }
+        .portfolio-item .info { flex:1; }
+        .portfolio-item .info .title { font-weight:600; color:#fff; }
+        .portfolio-item .info .desc { font-size:13px; color:#6a6a72; }
+
+        @media (max-width:768px) { .row,.row-3 { grid-template-columns:1fr; } .header { flex-direction:column; align-items:flex-start; } .tabs { gap:4px; } .tab-btn { padding:6px 12px; font-size:11px; } .section { padding:16px; } #loginForm { padding:24px; margin:30px 16px; } .item { flex-direction:column; align-items:flex-start; gap:6px; } .item-actions { width:100%; } .analytics-grid { grid-template-columns:1fr 1fr; } .portfolio-item { flex-direction:column; align-items:flex-start; } .portfolio-item img { width:100%; height:auto; max-height:200px; } }
         @media (max-width:480px) { .tab-btn { font-size:10px; padding:4px 8px; } .section h2 { font-size:16px; } .analytics-grid { grid-template-columns:1fr; } }
     </style>
 </head>
@@ -104,173 +103,112 @@
         <div class="header">
             <div>
                 <h1>⚙️ <span>WebMaster</span> — Админ-панель</h1>
-                <span class="sub">Полное управление сайтом</span>
+                <span class="sub">Управление сайтом</span>
             </div>
             <a href="index.html" class="btn btn-secondary btn-sm">← На сайт</a>
         </div>
 
         <div id="loginForm">
-            <h2>🔐 Вход в админ-панель</h2>
+            <h2>🔐 Вход</h2>
             <input type="password" id="adminPassword" placeholder="Введите пароль">
             <button onclick="login()">Войти</button>
             <div style="margin-top:12px;font-size:12px;color:#4a4a52;">Пароль: webmaster2026</div>
         </div>
 
         <div id="adminPanel">
-            <!-- ===== ВКЛАДКИ ===== -->
-            <div class="tabs" id="tabsContainer">
-                <button class="tab-btn active" data-tab="dashboard" onclick="switchTab('dashboard')">📊 Дашборд</button>
-                <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')">📈 Аналитика</button>
-                <button class="tab-btn" data-tab="design" onclick="switchTab('design')">🎨 Дизайн</button>
-                <button class="tab-btn" data-tab="media" onclick="switchTab('media')">🖼️ Медиа</button>
-                <button class="tab-btn" data-tab="seo" onclick="switchTab('seo')">📱 SEO</button>
-                <button class="tab-btn" data-tab="sections" onclick="switchTab('sections')">🧩 Секции</button>
-                <button class="tab-btn" data-tab="texts" onclick="switchTab('texts')">📄 Тексты</button>
-                <button class="tab-btn" data-tab="stats" onclick="switchTab('stats')">📊 Статистика</button>
-                <button class="tab-btn" data-tab="banner" onclick="switchTab('banner')">🔔 Баннер</button>
-                <button class="tab-btn" data-tab="form" onclick="switchTab('form')">📧 Форма</button>
-                <button class="tab-btn" data-tab="services" onclick="switchTab('services')">🛠️ Услуги</button>
-                <button class="tab-btn" data-tab="portfolio" onclick="switchTab('portfolio')">📂 Портфолио</button>
-                <button class="tab-btn" data-tab="pricing" onclick="switchTab('pricing')">💰 Тарифы</button>
-                <button class="tab-btn" data-tab="features" onclick="switchTab('features')">⭐ Особенности</button>
-                <button class="tab-btn" data-tab="steps" onclick="switchTab('steps')">📌 Этапы</button>
-                <button class="tab-btn" data-tab="faq" onclick="switchTab('faq')">❓ FAQ</button>
-                <button class="tab-btn" data-tab="social" onclick="switchTab('social')">🔗 Соцсети</button>
-                <button class="tab-btn" data-tab="pages" onclick="switchTab('pages')">📄 Страницы</button>
-                <button class="tab-btn" data-tab="backup" onclick="switchTab('backup')">💾 Бэкап</button>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Дашборд</button>
+                <button class="tab-btn" onclick="switchTab('services')">🛠️ Услуги</button>
+                <button class="tab-btn" onclick="switchTab('portfolio')">📂 Портфолио</button>
+                <button class="tab-btn" onclick="switchTab('pricing')">💰 Тарифы</button>
+                <button class="tab-btn" onclick="switchTab('features')">⭐ Особенности</button>
+                <button class="tab-btn" onclick="switchTab('steps')">📌 Этапы</button>
+                <button class="tab-btn" onclick="switchTab('faq')">❓ FAQ</button>
+                <button class="tab-btn" onclick="switchTab('social')">🔗 Соцсети</button>
+                <button class="tab-btn" onclick="switchTab('backup')">💾 Бэкап</button>
             </div>
 
-            <!-- ===== КОНТЕНТ ВКЛАДОК ===== -->
+            <!-- ===== ДАШБОРД ===== -->
             <div id="tab-dashboard" class="tab-content active">
-                <div class="section"><h2>📊 Общая статистика</h2>
+                <div class="section">
+                    <h2>📊 Общая статистика</h2>
                     <div class="analytics-grid">
-                        <div class="analytics-card"><div class="number" id="dashViews">0</div><div class="label">Всего просмотров</div></div>
-                        <div class="analytics-card"><div class="number" id="dashLeads">0</div><div class="label">Всего заявок</div></div>
-                        <div class="analytics-card"><div class="number" id="dashConversion">0%</div><div class="label">Конверсия</div></div>
-                        <div class="analytics-card"><div class="number" id="dashToday">0</div><div class="label">Сегодня</div></div>
-                        <div class="analytics-card"><div class="number" id="dashYesterday">0</div><div class="label">Вчера</div></div>
-                        <div class="analytics-card"><div class="number" id="dashWeek">0</div><div class="label">За неделю</div></div>
-                    </div>
-                </div>
-                <div class="section"><h2>📈 Активность</h2>
-                    <div class="analytics-grid">
-                        <div class="analytics-card"><div class="number" id="dashPeak">--:--</div><div class="label">Пик активности</div></div>
-                        <div class="analytics-card"><div class="number">🌍</div><div class="label">Топ-3 страны</div><div style="font-size:13px;color:#6a6a72;margin-top:4px;">Россия, США, Германия</div></div>
+                        <div class="analytics-card"><div class="number" id="dashProjects">0</div><div class="label">Проектов</div></div>
+                        <div class="analytics-card"><div class="number" id="dashClients">0</div><div class="label">Клиентов</div></div>
+                        <div class="analytics-card"><div class="number" id="dashHappy">0%</div><div class="label">Довольных</div></div>
+                        <div class="analytics-card"><div class="number" id="dashServices">0</div><div class="label">Услуг</div></div>
+                        <div class="analytics-card"><div class="number" id="dashPortfolio">0</div><div class="label">Проектов в портфолио</div></div>
                     </div>
                 </div>
             </div>
 
-            <div id="tab-analytics" class="tab-content">
-                <div class="section"><h2>📈 Детальная аналитика</h2>
-                    <div class="analytics-grid">
-                        <div class="analytics-card" style="border-color:rgba(0,122,255,0.1);"><div class="number" style="color:#007aff;" id="analyticsViews">0</div><div class="label">Всего просмотров</div></div>
-                        <div class="analytics-card" style="border-color:rgba(52,199,89,0.1);"><div class="number" style="color:#34c759;" id="analyticsLeads">0</div><div class="label">Всего заявок</div></div>
-                        <div class="analytics-card" style="border-color:rgba(255,215,0,0.1);"><div class="number" style="color:#ffd700;" id="analyticsConversion">0%</div><div class="label">Конверсия</div></div>
-                    </div>
-                    <div class="analytics-grid" style="margin-top:12px;">
-                        <div class="analytics-card"><div class="number" id="analyticsToday">0</div><div class="label">👥 Сегодня</div></div>
-                        <div class="analytics-card"><div class="number" id="analyticsYesterday">0</div><div class="label">📅 Вчера</div></div>
-                        <div class="analytics-card"><div class="number" id="analyticsWeek">0</div><div class="label">📆 За неделю</div></div>
-                    </div>
-                    <button class="btn btn-secondary" onclick="resetAnalytics()">↺ Сбросить аналитику</button>
+            <!-- ===== УСЛУГИ ===== -->
+            <div id="tab-services" class="tab-content">
+                <div class="section">
+                    <h2>🛠️ Услуги <small>(CRUD)</small></h2>
+                    <div id="adminServices" class="item-list"></div>
+                    <button class="btn btn-secondary" onclick="addService()">➕ Добавить услугу</button>
                 </div>
             </div>
 
-            <div id="tab-design" class="tab-content">
-                <div class="section"><h2>🎨 Цвета и стиль</h2>
-                    <div class="row-3"><div><label style="font-size:12px;color:#6a6a72;">Фон</label><input type="color" id="colorBg" value="#0a0a0f"></div><div><label style="font-size:12px;color:#6a6a72;">Текст</label><input type="color" id="colorText" value="#ffffff"></div><div><label style="font-size:12px;color:#6a6a72;">Акцент</label><input type="color" id="colorAccent" value="#007aff"></div></div>
-                    <div class="row-3"><div><label style="font-size:12px;color:#6a6a72;">Карточки</label><input type="color" id="colorCard" value="rgba(255,255,255,0.03)"></div><div><label style="font-size:12px;color:#6a6a72;">Вторичный текст</label><input type="color" id="colorSecondary" value="#b0b0b8"></div><div><label style="font-size:12px;color:#6a6a72;">Серый текст</label><input type="color" id="colorGray" value="#6a6a72"></div></div>
-                    <div class="row-3"><div><label style="font-size:12px;color:#6a6a72;">Шрифт</label><select id="fontSize"><option value="16px">16px</option><option value="18px">18px</option><option value="20px">20px</option></select></div><div><label style="font-size:12px;color:#6a6a72;">Скругление</label><select id="borderRadius"><option value="16px">16px</option><option value="20px">20px</option><option value="24px">24px</option><option value="32px">32px</option></select></div><div><label style="font-size:12px;color:#6a6a72;">Тема</label><select id="theme"><option value="dark">Тёмная</option><option value="light">Светлая</option></select></div></div>
-                    <button class="btn btn-primary" onclick="saveDesign()">💾 Сохранить</button>
-                    <button class="btn btn-secondary" onclick="resetDesign()">↺ Сбросить</button>
-                </div>
-                <div class="section"><h2>🎨 Дополнительные CSS</h2><textarea id="customCss" placeholder="Ваши CSS-стили..." rows="4"></textarea><button class="btn btn-primary" onclick="saveCustomCss()">💾 Сохранить</button></div>
-            </div>
-
-            <div id="tab-media" class="tab-content">
-                <div class="section"><h2>🖼️ Управление медиа</h2>
-                    <div class="row-3">
-                        <div><label style="font-size:12px;color:#6a6a72;">Логотип</label><input type="file" id="logoUpload" accept="image/*" onchange="uploadLogo(event)"><div id="logoPreview"></div></div>
-                        <div><label style="font-size:12px;color:#6a6a72;">Favicon</label><input type="file" id="faviconUpload" accept="image/*" onchange="uploadFavicon(event)"><div id="faviconPreview"></div></div>
-                        <div><label style="font-size:12px;color:#6a6a72;">Фоновое видео</label><input type="text" id="videoPath" placeholder="assets/hero-bg.mp4"><button class="btn btn-primary btn-sm" onclick="saveVideo()">Сохранить</button></div>
-                    </div>
+            <!-- ===== ПОРТФОЛИО С ФОТО ===== -->
+            <div id="tab-portfolio" class="tab-content">
+                <div class="section">
+                    <h2>📂 Портфолио <small>(с фото, карусель на сайте)</small></h2>
+                    <div id="adminPortfolio" class="item-list"></div>
+                    <button class="btn btn-secondary" onclick="addPortfolio()">➕ Добавить проект с фото</button>
                 </div>
             </div>
 
-            <div id="tab-seo" class="tab-content">
-                <div class="section"><h2>📱 Meta-теги и SEO</h2>
-                    <input type="text" id="seoTitle" placeholder="Заголовок страницы (Title)">
-                    <textarea id="seoDesc" placeholder="Описание (Description)" rows="2"></textarea>
-                    <input type="text" id="seoKeywords" placeholder="Ключевые слова (Keywords)">
-                    <input type="text" id="seoOgImage" placeholder="Ссылка на картинку для соцсетей (OG Image)">
-                    <button class="btn btn-primary" onclick="saveSeo()">💾 Сохранить</button>
+            <!-- ===== ТАРИФЫ ===== -->
+            <div id="tab-pricing" class="tab-content">
+                <div class="section">
+                    <h2>💰 Тарифы <small>(CRUD)</small></h2>
+                    <div id="adminPricing" class="item-list"></div>
+                    <button class="btn btn-secondary" onclick="addPricing()">➕ Добавить тариф</button>
                 </div>
             </div>
 
-            <div id="tab-sections" class="tab-content">
-                <div class="section"><h2>🧩 Вкл/выкл секции</h2><div id="sectionsList"></div><button class="btn btn-secondary" onclick="addSection()">➕ Добавить секцию</button></div>
-            </div>
-
-            <div id="tab-texts" class="tab-content">
-                <div class="section"><h2>📄 Тексты сайта</h2>
-                    <input type="text" id="editHeroDesc" placeholder="Текст в Hero блоке">
-                    <input type="text" id="editAboutText" placeholder="Текст 'Обо мне'">
-                    <input type="text" id="editContactsText" placeholder="Текст в контактах">
-                    <input type="text" id="editFooterText" placeholder="Текст в футере">
-                    <input type="text" id="editFooterCopyright" placeholder="Копирайт">
-                    <button class="btn btn-primary" onclick="saveTexts()">💾 Сохранить</button>
-                </div>
-                <div class="section"><h2>🏷️ Названия секций</h2>
-                    <div class="row-3"><input type="text" id="editLabelServices" placeholder="Услуги"><input type="text" id="editLabelPortfolio" placeholder="Портфолио"><input type="text" id="editLabelPricing" placeholder="Цены"></div>
-                    <div class="row-3"><input type="text" id="editLabelAbout" placeholder="Обо мне"><input type="text" id="editLabelSteps" placeholder="Этапы"><input type="text" id="editLabelFaq" placeholder="FAQ"></div>
-                    <div class="row-3"><input type="text" id="editLabelContacts" placeholder="Контакты"><input type="text" id="editLabelHero" placeholder="Hero"></div>
-                    <button class="btn btn-primary" onclick="saveLabels()">💾 Сохранить</button>
+            <!-- ===== ОСОБЕННОСТИ ===== -->
+            <div id="tab-features" class="tab-content">
+                <div class="section">
+                    <h2>⭐ Особенности <small>(CRUD)</small></h2>
+                    <div id="adminFeatures" class="item-list"></div>
+                    <button class="btn btn-secondary" onclick="addFeature()">➕ Добавить особенность</button>
                 </div>
             </div>
 
-            <div id="tab-stats" class="tab-content">
-                <div class="section"><h2>📊 Статистика на главной</h2>
-                    <div class="row-3"><input type="number" id="editStatProjects" placeholder="Проектов"><input type="number" id="editStatClients" placeholder="Клиентов"><input type="number" id="editStatHappy" placeholder="Довольных %"></div>
-                    <div class="row-3"><input type="text" id="editStatLabelProjects" placeholder="Подпись: проектов"><input type="text" id="editStatLabelClients" placeholder="Подпись: клиентов"><input type="text" id="editStatLabelHappy" placeholder="Подпись: довольных"></div>
-                    <button class="btn btn-primary" onclick="saveStats()">💾 Сохранить</button>
+            <!-- ===== ЭТАПЫ ===== -->
+            <div id="tab-steps" class="tab-content">
+                <div class="section">
+                    <h2>📌 Этапы <small>(CRUD)</small></h2>
+                    <div id="adminSteps" class="item-list"></div>
+                    <button class="btn btn-secondary" onclick="addStep()">➕ Добавить этап</button>
                 </div>
             </div>
 
-            <div id="tab-banner" class="tab-content">
-                <div class="section"><h2>🔔 Баннер / Уведомления</h2>
-                    <div class="row"><div><label style="font-size:12px;color:#6a6a72;">Показать баннер</label><div class="toggle-switch" id="bannerToggle" onclick="toggleBanner()"><div class="knob"></div></div></div></div>
-                    <input type="text" id="bannerText" placeholder="Текст баннера">
-                    <input type="text" id="bannerLink" placeholder="Ссылка (опционально)">
-                    <input type="text" id="bannerBg" placeholder="Цвет фона (например: #007aff)">
-                    <input type="number" id="bannerTimer" placeholder="Таймер (сек до скрытия, 0 = без таймера)">
-                    <button class="btn btn-primary" onclick="saveBanner()">💾 Сохранить</button>
+            <!-- ===== FAQ ===== -->
+            <div id="tab-faq" class="tab-content">
+                <div class="section">
+                    <h2>❓ FAQ <small>(CRUD)</small></h2>
+                    <div id="adminFaq" class="item-list"></div>
+                    <button class="btn btn-secondary" onclick="addFaq()">➕ Добавить вопрос</button>
                 </div>
             </div>
 
-            <div id="tab-form" class="tab-content">
-                <div class="section"><h2>📧 Настройка формы заявки</h2>
-                    <input type="text" id="formButtonText" placeholder="Текст кнопки">
-                    <input type="text" id="formEmail" placeholder="Email для уведомлений">
-                    <div class="row"><input type="text" id="formField1" placeholder="Поле 1"><input type="text" id="formField2" placeholder="Поле 2"></div>
-                    <textarea id="formField3" placeholder="Поле 3" rows="2"></textarea>
-                    <div class="row-3"><input type="text" id="formPlaceholder1" placeholder="Плейсхолдер 1"><input type="text" id="formPlaceholder2" placeholder="Плейсхолдер 2"><input type="text" id="formPlaceholder3" placeholder="Плейсхолдер 3"></div>
-                    <button class="btn btn-primary" onclick="saveForm()">💾 Сохранить</button>
+            <!-- ===== СОЦСЕТИ ===== -->
+            <div id="tab-social" class="tab-content">
+                <div class="section">
+                    <h2>🔗 Социальные сети <small>(CRUD)</small></h2>
+                    <div id="adminSocial" class="item-list"></div>
+                    <button class="btn btn-secondary" onclick="addSocial()">➕ Добавить контакт</button>
                 </div>
             </div>
-
-            <!-- ===== CRUD ВКЛАДКИ ===== -->
-            <div id="tab-services" class="tab-content"><div class="section"><h2>🛠️ Услуги <small>(CRUD)</small></h2><div id="adminServices" class="item-list"></div><button class="btn btn-secondary" onclick="addService()">➕ Добавить</button></div></div>
-            <div id="tab-portfolio" class="tab-content"><div class="section"><h2>📂 Портфолио <small>(CRUD)</small></h2><div id="adminPortfolio" class="item-list"></div><button class="btn btn-secondary" onclick="addPortfolio()">➕ Добавить</button></div></div>
-            <div id="tab-pricing" class="tab-content"><div class="section"><h2>💰 Тарифы <small>(CRUD)</small></h2><div id="adminPricing" class="item-list"></div><button class="btn btn-secondary" onclick="addPricing()">➕ Добавить</button></div></div>
-            <div id="tab-features" class="tab-content"><div class="section"><h2>⭐ Особенности <small>(CRUD)</small></h2><div id="adminFeatures" class="item-list"></div><button class="btn btn-secondary" onclick="addFeature()">➕ Добавить</button></div></div>
-            <div id="tab-steps" class="tab-content"><div class="section"><h2>📌 Этапы <small>(CRUD)</small></h2><div id="adminSteps" class="item-list"></div><button class="btn btn-secondary" onclick="addStep()">➕ Добавить</button></div></div>
-            <div id="tab-faq" class="tab-content"><div class="section"><h2>❓ FAQ <small>(CRUD)</small></h2><div id="adminFaq" class="item-list"></div><button class="btn btn-secondary" onclick="addFaq()">➕ Добавить</button></div></div>
-            <div id="tab-social" class="tab-content"><div class="section"><h2>🔗 Соцсети <small>(CRUD)</small></h2><div id="adminSocial" class="item-list"></div><button class="btn btn-secondary" onclick="addSocial()">➕ Добавить</button></div></div>
-            <div id="tab-pages" class="tab-content"><div class="section"><h2>📄 Страницы <small>(CRUD)</small></h2><div id="adminPages" class="item-list"></div><button class="btn btn-secondary" onclick="addPage()">➕ Добавить</button></div></div>
 
             <!-- ===== БЭКАП ===== -->
             <div id="tab-backup" class="tab-content">
-                <div class="section"><h2>💾 Экспорт / Импорт данных</h2>
+                <div class="section">
+                    <h2>💾 Экспорт / Импорт данных</h2>
                     <div class="desc">Полный бэкап всех данных сайта</div>
                     <div class="btn-group">
                         <button class="btn btn-success" onclick="exportData()">📤 Экспорт</button>
@@ -279,8 +217,8 @@
                         <button class="btn btn-danger" onclick="resetAll()">⚠️ Сбросить</button>
                     </div>
                 </div>
-                <div class="section"><h2>🔄 Синхронизация</h2>
-                    <div class="desc">Принудительно обновить сайт после изменений</div>
+                <div class="section">
+                    <h2>🔄 Синхронизация</h2>
                     <button class="btn btn-primary" onclick="syncSite()">🔄 Синхронизировать</button>
                 </div>
             </div>
@@ -288,35 +226,557 @@
         </div>
     </div>
 
-    <!-- ===== ПОДКЛЮЧАЕМ admin.js ===== -->
-    <script src="admin.js"></script>
-    
-    <!-- ===== ДОПОЛНИТЕЛЬНЫЙ КОД ДЛЯ ГАРАНТИИ РАБОТЫ ВКЛАДОК ===== -->
     <script>
-    // Функция переключения вкладок (вызывается из onclick)
+    // ===== ВКЛАДКИ =====
     function switchTab(tabId) {
-        // Скрываем все вкладки
-        document.querySelectorAll('.tab-content').forEach(el => {
-            el.classList.remove('active');
-        });
-        // Показываем нужную
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         const target = document.getElementById('tab-' + tabId);
-        if (target) {
-            target.classList.add('active');
-        }
-        // Обновляем активную кнопку
+        if (target) target.classList.add('active');
         document.querySelectorAll('.tab-btn').forEach(el => {
             el.classList.remove('active');
-            if (el.dataset.tab === tabId) {
+            if (el.textContent.includes(tabId)) {
+                // Простое определение по тексту
+            }
+        });
+        // Находим кнопку по data
+        document.querySelectorAll('.tab-btn').forEach(el => {
+            if (el.onclick && el.onclick.toString().includes(tabId)) {
                 el.classList.add('active');
             }
         });
-        console.log('✅ Переключено на: ' + tabId);
+        // Альтернативный способ
+        document.querySelectorAll('.tab-btn').forEach(el => {
+            if (el.textContent.includes('Дашборд') && tabId === 'dashboard') el.classList.add('active');
+            else if (el.textContent.includes('Услуги') && tabId === 'services') el.classList.add('active');
+            else if (el.textContent.includes('Портфолио') && tabId === 'portfolio') el.classList.add('active');
+            else if (el.textContent.includes('Тарифы') && tabId === 'pricing') el.classList.add('active');
+            else if (el.textContent.includes('Особенности') && tabId === 'features') el.classList.add('active');
+            else if (el.textContent.includes('Этапы') && tabId === 'steps') el.classList.add('active');
+            else if (el.textContent.includes('FAQ') && tabId === 'faq') el.classList.add('active');
+            else if (el.textContent.includes('Соцсети') && tabId === 'social') el.classList.add('active');
+            else if (el.textContent.includes('Бэкап') && tabId === 'backup') el.classList.add('active');
+        });
     }
-    
-    // Дублируем для надёжности — при загрузке страницы
+    </script>
+
+    <script>
+    // ===== ДАННЫЕ =====
+    const STORAGE_KEY = 'webmaster_pro_data';
+    const ADMIN_PASSWORD = 'webmaster2026';
+    let data = null;
+
+    function loadData() {
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) { data = JSON.parse(stored); return data; }
+        } catch(e) {}
+        return null;
+    }
+
+    function saveData() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+    }
+
+    function getDefaultData() {
+        return {
+            stats: { projects: 12, clients: 9, happy: 100 },
+            services: [
+                { icon: '📄', title: 'Лендинг', desc: 'Одностраничный сайт под ваш продукт или услугу.', price: 'от 5 000 ₽' },
+                { icon: '🛍️', title: 'Сайт-витрина', desc: 'Каталог товаров, админ-панель, загрузка фото.', price: 'от 10 000 ₽' },
+                { icon: '📱', title: 'Telegram Web App', desc: 'Мини-приложение внутри бота для продаж.', price: 'от 15 000 ₽' },
+                { icon: '⚡', title: 'Сайт с корзиной', desc: 'Полноценный интернет-магазин с корзиной.', price: 'от 20 000 ₽' }
+            ],
+            portfolio: [
+                { icon: '🏂', title: 'SnowShop', desc: 'Магазин сноубордов. Каталог, админ-панель.', tags: ['витрина'], link: '#', image: '' },
+                { icon: '🚀', title: 'Стартап-лендинг', desc: 'Продающий лендинг для IT-продукта.', tags: ['лендинг'], link: '#', image: '' },
+                { icon: '📱', title: 'Telegram Shop', desc: 'Магазин внутри Telegram-бота.', tags: ['Telegram'], link: '#', image: '' }
+            ],
+            pricing: [
+                { name: 'Старт', price: '5 000 ₽', features: ['Лендинг (1 страница)', 'Адаптив', 'Форма заявки', '1 правка'], popular: false },
+                { name: 'Базовый', price: '10 000 ₽', features: ['Сайт-витрина (до 20 товаров)', 'Админ-панель', 'Загрузка фото', '3 правки'], popular: true },
+                { name: 'Премиум', price: '20 000 ₽', features: ['Полноценный каталог', 'Корзина', 'Telegram Web App', '5 правок'], popular: false }
+            ],
+            features: [
+                { icon: '⚡', title: 'Быстро', desc: 'Сайт готов за 3–7 дней' },
+                { icon: '🎨', title: 'Красиво', desc: 'Современный дизайн, стиль Apple' },
+                { icon: '💰', title: 'Дёшево', desc: 'Цены ниже рыночных' },
+                { icon: '🛠️', title: 'Надёжно', desc: 'Бесплатный хостинг на GitHub' }
+            ],
+            steps: [
+                { number: '01', title: 'Обсуждаем', desc: 'Рассказываете идею, я предлагаю решение' },
+                { number: '02', title: 'Прототип', desc: 'Создаю макет страниц, утверждаем структуру' },
+                { number: '03', title: 'Разрабатываю', desc: 'Пишу код, делаю админ-панель' },
+                { number: '04', title: 'Запускаю', desc: 'Тестирую, деплою на GitHub' }
+            ],
+            faq: [
+                { question: 'Сколько времени занимает создание сайта?', answer: 'От 3 до 7 дней' },
+                { question: 'Нужно ли покупать хостинг?', answer: 'Нет! GitHub Pages — бесплатно' },
+                { question: 'Можно ли посмотреть примеры?', answer: 'Да, в разделе Портфолио' },
+                { question: 'Как я могу оплатить?', answer: 'Предоплата 50%, остальное после запуска' }
+            ],
+            social: [
+                { icon: 'telegram', name: 'Telegram', link: '#' },
+                { icon: 'instagram', name: 'Instagram', link: '#' },
+                { icon: 'email', name: 'Email', link: '#' }
+            ]
+        };
+    }
+
+    // ===== ВХОД =====
+    function login() {
+        const pass = document.getElementById('adminPassword').value;
+        if (pass === ADMIN_PASSWORD) {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            const d = loadData();
+            if (!d) { data = getDefaultData(); saveData(); }
+            else { data = d; }
+            fillAll();
+            renderAll();
+            updateDashboard();
+        } else {
+            showToast('❌ Неверный пароль!');
+        }
+    }
+
+    // ===== ЗАПОЛНЕНИЕ =====
+    function fillAll() {
+        document.getElementById('dashProjects').textContent = data.stats.projects || 0;
+        document.getElementById('dashClients').textContent = data.stats.clients || 0;
+        document.getElementById('dashHappy').textContent = data.stats.happy + '%' || '0%';
+    }
+
+    function updateDashboard() {
+        document.getElementById('dashProjects').textContent = data.stats.projects || 0;
+        document.getElementById('dashClients').textContent = data.stats.clients || 0;
+        document.getElementById('dashHappy').textContent = data.stats.happy + '%' || '0%';
+        document.getElementById('dashServices').textContent = data.services?.length || 0;
+        document.getElementById('dashPortfolio').textContent = data.portfolio?.length || 0;
+    }
+
+    // ===== РЕНДЕРИНГ =====
+    function renderAll() {
+        renderServices();
+        renderPortfolio();
+        renderPricing();
+        renderFeatures();
+        renderSteps();
+        renderFaq();
+        renderSocial();
+        updateDashboard();
+    }
+
+    function renderServices() {
+        const container = document.getElementById('adminServices');
+        if (!container) return;
+        const items = data.services || [];
+        if (items.length === 0) { container.innerHTML = '<div class="empty">Нет услуг</div>'; return; }
+        container.innerHTML = items.map((s, i) => `
+            <div class="item">
+                <span>${s.icon} ${s.title} — <span class="badge">${s.price}</span></span>
+                <div class="item-actions">
+                    <button class="edit" onclick="editService(${i})">✎</button>
+                    <button class="delete" onclick="deleteService(${i})">✕</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderPortfolio() {
+        const container = document.getElementById('adminPortfolio');
+        if (!container) return;
+        const items = data.portfolio || [];
+        if (items.length === 0) { container.innerHTML = '<div class="empty">Нет проектов</div>'; return; }
+        container.innerHTML = items.map((p, i) => `
+            <div class="portfolio-item">
+                ${p.image ? `<img src="${p.image}" alt="${p.title}">` : `<div style="width:80px;height:80px;background:rgba(255,255,255,0.02);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;">${p.icon || '📷'}</div>`}
+                <div class="info">
+                    <div class="title">${p.title}</div>
+                    <div class="desc">${p.desc}</div>
+                    ${p.tags ? p.tags.map(t => `<span class="badge" style="background:rgba(255,255,255,0.04);color:#6a6a72;">${t}</span>`).join(' ') : ''}
+                </div>
+                <div class="item-actions">
+                    <button class="edit" onclick="editPortfolio(${i})">✎</button>
+                    <button class="delete" onclick="deletePortfolio(${i})">✕</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderPricing() {
+        const container = document.getElementById('adminPricing');
+        if (!container) return;
+        const items = data.pricing || [];
+        if (items.length === 0) { container.innerHTML = '<div class="empty">Нет тарифов</div>'; return; }
+        container.innerHTML = items.map((p, i) => `
+            <div class="item">
+                <span>${p.name} — <strong>${p.price}</strong> ${p.popular ? '<span class="badge popular">🔥</span>' : ''}</span>
+                <div class="item-actions">
+                    <button class="edit" onclick="editPricing(${i})">✎</button>
+                    <button class="delete" onclick="deletePricing(${i})">✕</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderFeatures() {
+        const container = document.getElementById('adminFeatures');
+        if (!container) return;
+        const items = data.features || [];
+        if (items.length === 0) { container.innerHTML = '<div class="empty">Нет особенностей</div>'; return; }
+        container.innerHTML = items.map((f, i) => `
+            <div class="item">
+                <span>${f.icon} ${f.title}</span>
+                <div class="item-actions">
+                    <button class="edit" onclick="editFeature(${i})">✎</button>
+                    <button class="delete" onclick="deleteFeature(${i})">✕</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderSteps() {
+        const container = document.getElementById('adminSteps');
+        if (!container) return;
+        const items = data.steps || [];
+        if (items.length === 0) { container.innerHTML = '<div class="empty">Нет этапов</div>'; return; }
+        container.innerHTML = items.map((s, i) => `
+            <div class="item">
+                <span>${s.number} ${s.title}</span>
+                <div class="item-actions">
+                    <button class="edit" onclick="editStep(${i})">✎</button>
+                    <button class="delete" onclick="deleteStep(${i})">✕</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderFaq() {
+        const container = document.getElementById('adminFaq');
+        if (!container) return;
+        const items = data.faq || [];
+        if (items.length === 0) { container.innerHTML = '<div class="empty">Нет вопросов</div>'; return; }
+        container.innerHTML = items.map((f, i) => `
+            <div class="item">
+                <span>${f.question}</span>
+                <div class="item-actions">
+                    <button class="edit" onclick="editFaq(${i})">✎</button>
+                    <button class="delete" onclick="deleteFaq(${i})">✕</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderSocial() {
+        const container = document.getElementById('adminSocial');
+        if (!container) return;
+        const items = data.social || [];
+        if (items.length === 0) { container.innerHTML = '<div class="empty">Нет контактов</div>'; return; }
+        const icons = { telegram: '✈️', instagram: '📷', email: '✉️', default: '🔗' };
+        container.innerHTML = items.map((s, i) => `
+            <div class="item">
+                <span>${icons[s.icon] || icons.default} ${s.name}</span>
+                <div class="item-actions">
+                    <button class="edit" onclick="editSocial(${i})">✎</button>
+                    <button class="delete" onclick="deleteSocial(${i})">✕</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ===== CRUD УСЛУГИ =====
+    function addService() {
+        const icon = prompt('Иконка (эмодзи):', '🛠️');
+        const title = prompt('Название услуги:');
+        if (!title) return;
+        const desc = prompt('Описание:');
+        if (!desc) return;
+        const price = prompt('Цена:');
+        if (!price) return;
+        data.services.push({ icon: icon || '🛠️', title, desc, price });
+        saveData(); renderServices(); updateDashboard(); showToast('✅ Услуга добавлена!');
+    }
+    function editService(i) {
+        const s = data.services[i];
+        const icon = prompt('Иконка:', s.icon);
+        const title = prompt('Название:', s.title);
+        if (!title) return;
+        const desc = prompt('Описание:', s.desc);
+        if (!desc) return;
+        const price = prompt('Цена:', s.price);
+        if (!price) return;
+        data.services[i] = { icon: icon || '🛠️', title, desc, price };
+        saveData(); renderServices(); showToast('✅ Услуга обновлена!');
+    }
+    function deleteService(i) {
+        if (!confirm('Удалить услугу?')) return;
+        data.services.splice(i, 1);
+        saveData(); renderServices(); updateDashboard(); showToast('🗑️ Услуга удалена');
+    }
+
+    // ===== CRUD ПОРТФОЛИО С ФОТО =====
+    function addPortfolio() {
+        const title = prompt('Название проекта:');
+        if (!title) return;
+        const desc = prompt('Описание:');
+        if (!desc) return;
+        const tags = prompt('Теги (через запятую):', '').split(',').map(t=>t.trim()).filter(Boolean);
+        const link = prompt('Ссылка:', '#');
+        
+        // Загрузка фото через input
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const image = ev.target.result;
+                data.portfolio.push({ icon: '📷', title, desc, tags, link, image });
+                saveData(); renderPortfolio(); updateDashboard(); showToast('✅ Проект добавлен с фото!');
+            };
+            reader.readAsDataURL(file);
+        };
+        input.click();
+    }
+
+    function editPortfolio(i) {
+        const p = data.portfolio[i];
+        const title = prompt('Название:', p.title);
+        if (!title) return;
+        const desc = prompt('Описание:', p.desc);
+        if (!desc) return;
+        const tags = prompt('Теги:', p.tags.join(', ')).split(',').map(t=>t.trim()).filter(Boolean);
+        const link = prompt('Ссылка:', p.link);
+        
+        // Можно обновить фото
+        const updatePhoto = confirm('Обновить фото?');
+        if (updatePhoto) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const image = ev.target.result;
+                    data.portfolio[i] = { ...p, title, desc, tags, link, image };
+                    saveData(); renderPortfolio(); showToast('✅ Проект обновлён!');
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        } else {
+            data.portfolio[i] = { ...p, title, desc, tags, link };
+            saveData(); renderPortfolio(); showToast('✅ Проект обновлён без фото!');
+        }
+    }
+
+    function deletePortfolio(i) {
+        if (!confirm('Удалить проект?')) return;
+        data.portfolio.splice(i, 1);
+        saveData(); renderPortfolio(); updateDashboard(); showToast('🗑️ Проект удалён');
+    }
+
+    // ===== CRUD ТАРИФЫ =====
+    function addPricing() {
+        const name = prompt('Название тарифа:');
+        if (!name) return;
+        const price = prompt('Цена:');
+        if (!price) return;
+        const features = prompt('Опции (через запятую):').split(',').map(t=>t.trim()).filter(Boolean);
+        const popular = confirm('Сделать популярным?');
+        data.pricing.push({ name, price, features, popular });
+        saveData(); renderPricing(); showToast('✅ Тариф добавлен!');
+    }
+    function editPricing(i) {
+        const p = data.pricing[i];
+        const name = prompt('Название:', p.name);
+        if (!name) return;
+        const price = prompt('Цена:', p.price);
+        if (!price) return;
+        const features = prompt('Опции:', p.features.join(', ')).split(',').map(t=>t.trim()).filter(Boolean);
+        const popular = confirm('Сделать популярным?');
+        data.pricing[i] = { name, price, features, popular };
+        saveData(); renderPricing(); showToast('✅ Тариф обновлён!');
+    }
+    function deletePricing(i) {
+        if (!confirm('Удалить тариф?')) return;
+        data.pricing.splice(i, 1);
+        saveData(); renderPricing(); showToast('🗑️ Тариф удалён');
+    }
+
+    // ===== CRUD ОСОБЕННОСТИ =====
+    function addFeature() {
+        const icon = prompt('Иконка:', '⚡');
+        const title = prompt('Название:');
+        if (!title) return;
+        const desc = prompt('Описание:');
+        if (!desc) return;
+        data.features.push({ icon: icon || '⚡', title, desc });
+        saveData(); renderFeatures(); showToast('✅ Особенность добавлена!');
+    }
+    function editFeature(i) {
+        const f = data.features[i];
+        const icon = prompt('Иконка:', f.icon);
+        const title = prompt('Название:', f.title);
+        if (!title) return;
+        const desc = prompt('Описание:', f.desc);
+        if (!desc) return;
+        data.features[i] = { icon: icon || '⚡', title, desc };
+        saveData(); renderFeatures(); showToast('✅ Особенность обновлена!');
+    }
+    function deleteFeature(i) {
+        if (!confirm('Удалить особенность?')) return;
+        data.features.splice(i, 1);
+        saveData(); renderFeatures(); showToast('🗑️ Особенность удалена');
+    }
+
+    // ===== CRUD ЭТАПЫ =====
+    function addStep() {
+        const number = prompt('Номер (01):');
+        const title = prompt('Название:');
+        if (!title) return;
+        const desc = prompt('Описание:');
+        if (!desc) return;
+        data.steps.push({ number: number || '0'+(data.steps.length+1), title, desc });
+        saveData(); renderSteps(); showToast('✅ Этап добавлен!');
+    }
+    function editStep(i) {
+        const s = data.steps[i];
+        const number = prompt('Номер:', s.number);
+        const title = prompt('Название:', s.title);
+        if (!title) return;
+        const desc = prompt('Описание:', s.desc);
+        if (!desc) return;
+        data.steps[i] = { number: number || s.number, title, desc };
+        saveData(); renderSteps(); showToast('✅ Этап обновлён!');
+    }
+    function deleteStep(i) {
+        if (!confirm('Удалить этап?')) return;
+        data.steps.splice(i, 1);
+        saveData(); renderSteps(); showToast('🗑️ Этап удалён');
+    }
+
+    // ===== CRUD FAQ =====
+    function addFaq() {
+        const q = prompt('Вопрос:');
+        if (!q) return;
+        const a = prompt('Ответ:');
+        if (!a) return;
+        data.faq.push({ question: q, answer: a });
+        saveData(); renderFaq(); showToast('✅ Вопрос добавлен!');
+    }
+    function editFaq(i) {
+        const f = data.faq[i];
+        const q = prompt('Вопрос:', f.question);
+        if (!q) return;
+        const a = prompt('Ответ:', f.answer);
+        if (!a) return;
+        data.faq[i] = { question: q, answer: a };
+        saveData(); renderFaq(); showToast('✅ Вопрос обновлён!');
+    }
+    function deleteFaq(i) {
+        if (!confirm('Удалить вопрос?')) return;
+        data.faq.splice(i, 1);
+        saveData(); renderFaq(); showToast('🗑️ Вопрос удалён');
+    }
+
+    // ===== CRUD СОЦСЕТИ =====
+    function addSocial() {
+        const icon = prompt('Тип (telegram / instagram / email):', 'telegram');
+        const name = prompt('Название:');
+        if (!name) return;
+        const link = prompt('Ссылка:', '#');
+        data.social.push({ icon, name, link });
+        saveData(); renderSocial(); showToast('✅ Контакт добавлен!');
+    }
+    function editSocial(i) {
+        const s = data.social[i];
+        const icon = prompt('Тип:', s.icon);
+        const name = prompt('Название:', s.name);
+        if (!name) return;
+        const link = prompt('Ссылка:', s.link);
+        data.social[i] = { icon, name, link };
+        saveData(); renderSocial(); showToast('✅ Контакт обновлён!');
+    }
+    function deleteSocial(i) {
+        if (!confirm('Удалить контакт?')) return;
+        data.social.splice(i, 1);
+        saveData(); renderSocial(); showToast('🗑️ Контакт удалён');
+    }
+
+    // ===== ЭКСПОРТ/ИМПОРТ =====
+    function exportData() {
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'webmaster_backup_' + new Date().toISOString().slice(0,10) + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('📤 Данные экспортированы!');
+    }
+
+    function importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                data = JSON.parse(e.target.result);
+                saveData();
+                fillAll();
+                renderAll();
+                showToast('📥 Данные импортированы!');
+            } catch (err) {
+                alert('❌ Ошибка импорта!');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function resetAll() {
+        if (!confirm('⚠️ Удалить все данные?')) return;
+        if (!confirm('Точно?')) return;
+        data = getDefaultData();
+        saveData();
+        fillAll();
+        renderAll();
+        showToast('↺ Все данные сброшены!');
+    }
+
+    function syncSite() {
+        saveData();
+        showToast('🔄 Сайт синхронизирован!');
+    }
+
+    // ===== TOAST =====
+    function showToast(msg) {
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = '0.4s';
+            setTimeout(() => toast.remove(), 400);
+        }, 2500);
+    }
+
+    // ===== ЗАПУСК =====
     document.addEventListener('DOMContentLoaded', function() {
-        // Убеждаемся, что дашборд активен
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored) {
+            data = getDefaultData();
+            saveData();
+        }
+        // Активируем дашборд
         switchTab('dashboard');
     });
     </script>
