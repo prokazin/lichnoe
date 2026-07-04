@@ -152,14 +152,15 @@ function saveAnalytics(analytics) {
 
 function updateAnalytics() {
     const analytics = getAnalytics();
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
     
     // Обновляем просмотры
-    const today = new Date().toISOString().split('T')[0];
     if (!analytics.daily) analytics.daily = {};
     if (!analytics.daily[today]) analytics.daily[today] = { views: 0, leads: 0 };
     analytics.daily[today].views = (analytics.daily[today].views || 0) + 1;
     analytics.views = (analytics.views || 0) + 1;
-    
     saveAnalytics(analytics);
     
     // Обновляем дашборд
@@ -208,7 +209,6 @@ function updateDashboard() {
     // Пик активности
     let peakHour = '--:--';
     let peakCount = 0;
-    // Простая эмуляция пика
     const hours = [10, 12, 15, 18, 20, 22];
     const counts = [5, 12, 8, 15, 10, 6];
     for (let i = 0; i < hours.length; i++) {
@@ -235,10 +235,9 @@ function login() {
         document.getElementById('adminPanel').style.display = 'block';
         const d = loadData();
         if (!d) { data = getDefaultData(); saveData(); }
-        else { data = d; fillAll(); renderAll(); setupTabs(); }
+        else { data = d; fillAll(); renderAll(); }
+        setupTabs();
         updateDashboard();
-        // Обновляем аналитику при входе в админку
-        updateAnalytics();
     } else {
         showToast('❌ Неверный пароль!');
     }
@@ -423,13 +422,29 @@ function renderPages() {
 
 // ===== ВКЛАДКИ =====
 function setupTabs() {
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.onclick = function() {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Убираем активные классы у всех кнопок
+            tabs.forEach(b => b.classList.remove('active'));
+            
+            // Добавляем активный класс текущей кнопке
             this.classList.add('active');
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + this.dataset.tab).classList.add('active');
-        };
+            
+            // Скрываем все контенты
+            contents.forEach(c => c.classList.remove('active'));
+            
+            // Показываем нужный контент
+            const tabId = this.dataset.tab;
+            const target = document.getElementById('tab-' + tabId);
+            if (target) {
+                target.classList.add('active');
+            }
+        });
     });
 }
 
@@ -448,7 +463,6 @@ function saveDesign() {
     };
     saveData();
     showToast('✅ Дизайн сохранён!');
-    syncSite();
 }
 
 function resetDesign() {
@@ -456,21 +470,18 @@ function resetDesign() {
     saveData();
     fillAll();
     showToast('↺ Дизайн сброшен');
-    syncSite();
 }
 
 function saveCustomCss() {
     data.customCss = document.getElementById('customCss').value;
     saveData();
     showToast('✅ CSS сохранён!');
-    syncSite();
 }
 
 function saveVideo() {
     data.videoPath = document.getElementById('videoPath').value;
     saveData();
     showToast('✅ Путь к видео сохранён!');
-    syncSite();
 }
 
 function uploadLogo(e) {
@@ -482,7 +493,6 @@ function uploadLogo(e) {
         saveData();
         document.getElementById('logoPreview').innerHTML = `<img src="${data.logo}" class="preview-img">`;
         showToast('✅ Логотип загружен!');
-        syncSite();
     };
     reader.readAsDataURL(file);
 }
@@ -496,7 +506,6 @@ function uploadFavicon(e) {
         saveData();
         document.getElementById('faviconPreview').innerHTML = `<img src="${data.favicon}" class="preview-img">`;
         showToast('✅ Favicon загружен!');
-        syncSite();
     };
     reader.readAsDataURL(file);
 }
@@ -510,7 +519,6 @@ function saveSeo() {
     };
     saveData();
     showToast('✅ SEO сохранено!');
-    syncSite();
 }
 
 function saveTexts() {
@@ -521,7 +529,6 @@ function saveTexts() {
     data.footerCopyright = document.getElementById('editFooterCopyright').value;
     saveData();
     showToast('✅ Тексты сохранены!');
-    syncSite();
 }
 
 function saveLabels() {
@@ -537,7 +544,6 @@ function saveLabels() {
     };
     saveData();
     showToast('✅ Названия сохранены!');
-    syncSite();
 }
 
 function saveStats() {
@@ -549,7 +555,6 @@ function saveStats() {
     data.stats.labelHappy = document.getElementById('editStatLabelHappy').value || 'довольных';
     saveData();
     showToast('✅ Статистика сохранена!');
-    syncSite();
 }
 
 function toggleBanner() {
@@ -566,7 +571,6 @@ function saveBanner() {
     };
     saveData();
     showToast('✅ Баннер сохранён!');
-    syncSite();
 }
 
 function saveForm() {
@@ -586,7 +590,6 @@ function saveForm() {
     };
     saveData();
     showToast('✅ Форма сохранена!');
-    syncSite();
 }
 
 // ===== CRUD =====
@@ -599,7 +602,6 @@ function addSection() {
     saveData();
     renderSections();
     showToast('✅ Секция добавлена!');
-    syncSite();
 }
 function editSection(i) {
     const s = data.sections[i];
@@ -608,16 +610,16 @@ function editSection(i) {
     const id = prompt('ID:', s.id);
     if (!id) return;
     data.sections[i] = { ...s, title, id };
-    saveData(); renderSections(); showToast('✅ Секция обновлена!'); syncSite();
+    saveData(); renderSections(); showToast('✅ Секция обновлена!');
 }
 function deleteSection(i) {
     if (!confirm('Удалить секцию?')) return;
     data.sections.splice(i, 1);
-    saveData(); renderSections(); showToast('🗑️ Секция удалена'); syncSite();
+    saveData(); renderSections(); showToast('🗑️ Секция удалена');
 }
 function toggleSection(i) {
     data.sections[i].enabled = !data.sections[i].enabled;
-    saveData(); renderSections(); syncSite();
+    saveData(); renderSections();
 }
 
 function addService() {
@@ -629,7 +631,7 @@ function addService() {
     const price = prompt('Цена:');
     if (!price) return;
     data.services.push({ icon, title, desc, price });
-    saveData(); renderServices(); showToast('✅ Услуга добавлена!'); syncSite();
+    saveData(); renderServices(); showToast('✅ Услуга добавлена!');
 }
 function editService(i) {
     const s = data.services[i];
@@ -641,12 +643,12 @@ function editService(i) {
     const price = prompt('Цена:', s.price);
     if (!price) return;
     data.services[i] = { icon, title, desc, price };
-    saveData(); renderServices(); showToast('✅ Услуга обновлена!'); syncSite();
+    saveData(); renderServices(); showToast('✅ Услуга обновлена!');
 }
 function deleteService(i) {
     if (!confirm('Удалить?')) return;
     data.services.splice(i, 1);
-    saveData(); renderServices(); showToast('🗑️ Услуга удалена'); syncSite();
+    saveData(); renderServices(); showToast('🗑️ Услуга удалена');
 }
 
 function addPortfolio() {
@@ -658,7 +660,7 @@ function addPortfolio() {
     const tags = prompt('Теги (через запятую):', '').split(',').map(t=>t.trim()).filter(Boolean);
     const link = prompt('Ссылка:', '#');
     data.portfolio.push({ icon, title, desc, tags, link });
-    saveData(); renderPortfolio(); showToast('✅ Проект добавлен!'); syncSite();
+    saveData(); renderPortfolio(); showToast('✅ Проект добавлен!');
 }
 function editPortfolio(i) {
     const p = data.portfolio[i];
@@ -670,12 +672,12 @@ function editPortfolio(i) {
     const tags = prompt('Теги:', p.tags.join(', ')).split(',').map(t=>t.trim()).filter(Boolean);
     const link = prompt('Ссылка:', p.link);
     data.portfolio[i] = { icon, title, desc, tags, link };
-    saveData(); renderPortfolio(); showToast('✅ Проект обновлён!'); syncSite();
+    saveData(); renderPortfolio(); showToast('✅ Проект обновлён!');
 }
 function deletePortfolio(i) {
     if (!confirm('Удалить?')) return;
     data.portfolio.splice(i, 1);
-    saveData(); renderPortfolio(); showToast('🗑️ Проект удалён'); syncSite();
+    saveData(); renderPortfolio(); showToast('🗑️ Проект удалён');
 }
 
 function addPricing() {
@@ -686,7 +688,7 @@ function addPricing() {
     const features = prompt('Опции (через запятую):').split(',').map(t=>t.trim()).filter(Boolean);
     const popular = confirm('Популярный?');
     data.pricing.push({ name, price, features, popular });
-    saveData(); renderPricing(); showToast('✅ Тариф добавлен!'); syncSite();
+    saveData(); renderPricing(); showToast('✅ Тариф добавлен!');
 }
 function editPricing(i) {
     const p = data.pricing[i];
@@ -697,12 +699,12 @@ function editPricing(i) {
     const features = prompt('Опции:', p.features.join(', ')).split(',').map(t=>t.trim()).filter(Boolean);
     const popular = confirm('Популярный?');
     data.pricing[i] = { name, price, features, popular };
-    saveData(); renderPricing(); showToast('✅ Тариф обновлён!'); syncSite();
+    saveData(); renderPricing(); showToast('✅ Тариф обновлён!');
 }
 function deletePricing(i) {
     if (!confirm('Удалить?')) return;
     data.pricing.splice(i, 1);
-    saveData(); renderPricing(); showToast('🗑️ Тариф удалён'); syncSite();
+    saveData(); renderPricing(); showToast('🗑️ Тариф удалён');
 }
 
 function addFeature() {
@@ -712,7 +714,7 @@ function addFeature() {
     const desc = prompt('Описание:');
     if (!desc) return;
     data.features.push({ icon, title, desc });
-    saveData(); renderFeatures(); showToast('✅ Особенность добавлена!'); syncSite();
+    saveData(); renderFeatures(); showToast('✅ Особенность добавлена!');
 }
 function editFeature(i) {
     const f = data.features[i];
@@ -722,12 +724,12 @@ function editFeature(i) {
     const desc = prompt('Описание:', f.desc);
     if (!desc) return;
     data.features[i] = { icon, title, desc };
-    saveData(); renderFeatures(); showToast('✅ Особенность обновлена!'); syncSite();
+    saveData(); renderFeatures(); showToast('✅ Особенность обновлена!');
 }
 function deleteFeature(i) {
     if (!confirm('Удалить?')) return;
     data.features.splice(i, 1);
-    saveData(); renderFeatures(); showToast('🗑️ Особенность удалена'); syncSite();
+    saveData(); renderFeatures(); showToast('🗑️ Особенность удалена');
 }
 
 function addStep() {
@@ -737,7 +739,7 @@ function addStep() {
     const desc = prompt('Описание:');
     if (!desc) return;
     data.steps.push({ number: number || '0'+(data.steps.length+1), title, desc });
-    saveData(); renderSteps(); showToast('✅ Этап добавлен!'); syncSite();
+    saveData(); renderSteps(); showToast('✅ Этап добавлен!');
 }
 function editStep(i) {
     const s = data.steps[i];
@@ -747,12 +749,12 @@ function editStep(i) {
     const desc = prompt('Описание:', s.desc);
     if (!desc) return;
     data.steps[i] = { number: number || s.number, title, desc };
-    saveData(); renderSteps(); showToast('✅ Этап обновлён!'); syncSite();
+    saveData(); renderSteps(); showToast('✅ Этап обновлён!');
 }
 function deleteStep(i) {
     if (!confirm('Удалить?')) return;
     data.steps.splice(i, 1);
-    saveData(); renderSteps(); showToast('🗑️ Этап удалён'); syncSite();
+    saveData(); renderSteps(); showToast('🗑️ Этап удалён');
 }
 
 function addFaq() {
@@ -761,7 +763,7 @@ function addFaq() {
     const a = prompt('Ответ:');
     if (!a) return;
     data.faq.push({ question: q, answer: a });
-    saveData(); renderFaq(); showToast('✅ Вопрос добавлен!'); syncSite();
+    saveData(); renderFaq(); showToast('✅ Вопрос добавлен!');
 }
 function editFaq(i) {
     const f = data.faq[i];
@@ -770,12 +772,12 @@ function editFaq(i) {
     const a = prompt('Ответ:', f.answer);
     if (!a) return;
     data.faq[i] = { question: q, answer: a };
-    saveData(); renderFaq(); showToast('✅ Вопрос обновлён!'); syncSite();
+    saveData(); renderFaq(); showToast('✅ Вопрос обновлён!');
 }
 function deleteFaq(i) {
     if (!confirm('Удалить?')) return;
     data.faq.splice(i, 1);
-    saveData(); renderFaq(); showToast('🗑️ Вопрос удалён'); syncSite();
+    saveData(); renderFaq(); showToast('🗑️ Вопрос удалён');
 }
 
 function addSocial() {
@@ -784,7 +786,7 @@ function addSocial() {
     if (!name) return;
     const link = prompt('Ссылка:', '#');
     data.social.push({ icon, name, link });
-    saveData(); renderSocial(); showToast('✅ Контакт добавлен!'); syncSite();
+    saveData(); renderSocial(); showToast('✅ Контакт добавлен!');
 }
 function editSocial(i) {
     const s = data.social[i];
@@ -793,12 +795,12 @@ function editSocial(i) {
     if (!name) return;
     const link = prompt('Ссылка:', s.link);
     data.social[i] = { icon, name, link };
-    saveData(); renderSocial(); showToast('✅ Контакт обновлён!'); syncSite();
+    saveData(); renderSocial(); showToast('✅ Контакт обновлён!');
 }
 function deleteSocial(i) {
     if (!confirm('Удалить?')) return;
     data.social.splice(i, 1);
-    saveData(); renderSocial(); showToast('🗑️ Контакт удалён'); syncSite();
+    saveData(); renderSocial(); showToast('🗑️ Контакт удалён');
 }
 
 function addPage() {
@@ -809,7 +811,7 @@ function addPage() {
     const content = prompt('Содержимое страницы (HTML):');
     if (!content) return;
     data.pages.push({ slug, title, content, enabled: true });
-    saveData(); renderPages(); showToast('✅ Страница создана!'); syncSite();
+    saveData(); renderPages(); showToast('✅ Страница создана!');
 }
 function editPage(i) {
     const p = data.pages[i];
@@ -820,16 +822,16 @@ function editPage(i) {
     const content = prompt('Содержимое:', p.content);
     if (!content) return;
     data.pages[i] = { ...p, title, slug, content };
-    saveData(); renderPages(); showToast('✅ Страница обновлена!'); syncSite();
+    saveData(); renderPages(); showToast('✅ Страница обновлена!');
 }
 function deletePage(i) {
     if (!confirm('Удалить страницу?')) return;
     data.pages.splice(i, 1);
-    saveData(); renderPages(); showToast('🗑️ Страница удалена'); syncSite();
+    saveData(); renderPages(); showToast('🗑️ Страница удалена');
 }
 function togglePage(i) {
     data.pages[i].enabled = !data.pages[i].enabled;
-    saveData(); renderPages(); syncSite();
+    saveData(); renderPages();
 }
 
 // ===== ЭКСПОРТ/ИМПОРТ =====
@@ -860,7 +862,6 @@ function importData(event) {
             renderAll();
             updateDashboard();
             showToast('📥 Данные импортированы!');
-            syncSite();
         } catch (err) {
             alert('❌ Ошибка импорта!');
         }
@@ -879,7 +880,6 @@ function resetAll() {
     renderAll();
     updateDashboard();
     showToast('↺ Все данные сброшены!');
-    syncSite();
 }
 
 function syncSite() {
@@ -895,11 +895,19 @@ function showToast(msg) {
     toast.className = 'toast';
     toast.textContent = msg;
     document.body.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = '0.4s'; setTimeout(() => toast.remove(), 400); }, 2500);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = '0.4s';
+        setTimeout(() => toast.remove(), 400);
+    }, 2500);
 }
 
 // ===== ЗАПУСК =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
+    // Проверяем, есть ли данные
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) { data = getDefaultData(); saveData(); }
+    if (!stored) {
+        data = getDefaultData();
+        saveData();
+    }
 });
