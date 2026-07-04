@@ -6,7 +6,6 @@
     <title>Админ-панель WebMaster</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ===== ОСНОВНЫЕ СТИЛИ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -19,10 +18,7 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1100px; margin: 0 auto; }
         .header {
             display: flex;
             justify-content: space-between;
@@ -33,29 +29,10 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        .header h1 {
-            font-size: 28px;
-            font-weight: 800;
-            color: #fff;
-        }
-        .header h1 span {
-            color: #007aff;
-        }
-        .header .sub {
-            color: #6a6a72;
-            font-size: 14px;
-        }
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-        .badge.on { background: rgba(52,199,89,0.12); color: #34c759; }
-        .badge.off { background: rgba(255,59,48,0.12); color: #ff3b30; }
+        .header h1 { font-size: 28px; font-weight: 800; color: #fff; }
+        .header h1 span { color: #007aff; }
+        .header .sub { color: #6a6a72; font-size: 14px; }
 
-        /* ===== ВХОД ===== */
         #loginForm {
             background: rgba(255,255,255,0.03);
             border-radius: 24px;
@@ -95,7 +72,6 @@
 
         #adminPanel { display: none; }
 
-        /* ===== ВКЛАДКИ ===== */
         .tabs {
             display: flex;
             gap: 6px;
@@ -123,7 +99,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* ===== СЕКЦИИ ===== */
         .section {
             background: rgba(255,255,255,0.03);
             border-radius: 24px;
@@ -137,16 +112,8 @@
             margin-bottom: 16px;
             color: #fff;
         }
-        .section h2 small {
-            font-weight: 400;
-            font-size: 14px;
-            color: #6a6a72;
-        }
-        .section .desc {
-            font-size: 13px;
-            color: #6a6a72;
-            margin-bottom: 12px;
-        }
+        .section h2 small { font-weight: 400; font-size: 14px; color: #6a6a72; }
+        .section .desc { font-size: 13px; color: #6a6a72; margin-bottom: 12px; }
 
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
@@ -220,6 +187,17 @@
         .item-actions .toggle.off { background: rgba(255,59,48,0.12); color: #ff3b30; }
         .item-actions button:hover { opacity: 0.7; }
 
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .badge.on { background: rgba(52,199,89,0.12); color: #34c759; }
+        .badge.off { background: rgba(255,59,48,0.12); color: #ff3b30; }
+        .badge.popular { background: rgba(255,215,0,0.12); color: #ffd700; }
+
         .empty { color: #4a4a52; font-size: 14px; padding: 12px 0; }
         .back-link {
             display: inline-block;
@@ -275,7 +253,6 @@
         }
         .toggle-switch.active .knob { left: 20px; }
 
-        /* ===== АНАЛИТИКА ===== */
         .analytics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -288,25 +265,12 @@
             text-align: center;
             border: 0.5px solid rgba(255,255,255,0.04);
         }
-        .analytics-card .number {
-            font-size: 28px;
-            font-weight: 800;
-            color: #fff;
-        }
-        .analytics-card .label {
-            font-size: 12px;
-            color: #6a6a72;
-            margin-top: 4px;
-        }
-        .analytics-card .change {
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: 4px;
-        }
+        .analytics-card .number { font-size: 28px; font-weight: 800; color: #fff; }
+        .analytics-card .label { font-size: 12px; color: #6a6a72; margin-top: 4px; }
+        .analytics-card .change { font-size: 12px; font-weight: 500; margin-top: 4px; }
         .analytics-card .change.up { color: #34c759; }
         .analytics-card .change.down { color: #ff3b30; }
 
-        /* ===== АДАПТИВ ===== */
         @media (max-width: 768px) {
             .row, .row-3, .row-4 { grid-template-columns: 1fr; }
             .header { flex-direction: column; align-items: flex-start; }
@@ -335,7 +299,6 @@
             <a href="index.html" class="btn btn-secondary btn-sm">← На сайт</a>
         </div>
 
-        <!-- ===== ВХОД ===== -->
         <div id="loginForm">
             <h2>🔐 Вход в админ-панель</h2>
             <input type="password" id="adminPassword" placeholder="Введите пароль">
@@ -343,7 +306,6 @@
             <div style="margin-top:12px;font-size:12px;color:#4a4a52;">Пароль: webmaster2026</div>
         </div>
 
-        <!-- ===== АДМИН-ПАНЕЛЬ ===== -->
         <div id="adminPanel">
             <div class="tabs" id="tabs">
                 <button class="tab-btn active" data-tab="dashboard">📊 Дашборд</button>
@@ -372,44 +334,19 @@
                 <div class="section">
                     <h2>📊 Общая статистика</h2>
                     <div class="analytics-grid" id="dashboardStats">
-                        <div class="analytics-card">
-                            <div class="number" id="dashViews">0</div>
-                            <div class="label">Всего просмотров</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="number" id="dashLeads">0</div>
-                            <div class="label">Всего заявок</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="number" id="dashConversion">0%</div>
-                            <div class="label">Конверсия</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="number" id="dashToday">0</div>
-                            <div class="label">Сегодня</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="number" id="dashYesterday">0</div>
-                            <div class="label">Вчера</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="number" id="dashWeek">0</div>
-                            <div class="label">За неделю</div>
-                        </div>
+                        <div class="analytics-card"><div class="number" id="dashViews">0</div><div class="label">Всего просмотров</div></div>
+                        <div class="analytics-card"><div class="number" id="dashLeads">0</div><div class="label">Всего заявок</div></div>
+                        <div class="analytics-card"><div class="number" id="dashConversion">0%</div><div class="label">Конверсия</div></div>
+                        <div class="analytics-card"><div class="number" id="dashToday">0</div><div class="label">Сегодня</div></div>
+                        <div class="analytics-card"><div class="number" id="dashYesterday">0</div><div class="label">Вчера</div></div>
+                        <div class="analytics-card"><div class="number" id="dashWeek">0</div><div class="label">За неделю</div></div>
                     </div>
                 </div>
                 <div class="section">
                     <h2>📈 Активность</h2>
                     <div class="analytics-grid">
-                        <div class="analytics-card">
-                            <div class="number" id="dashPeak">--:--</div>
-                            <div class="label">Пик активности</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="number" id="dashCountries">🌍</div>
-                            <div class="label">Топ-3 страны</div>
-                            <div style="font-size:13px;color:#6a6a72;margin-top:4px;" id="dashCountriesList">Россия, США, Германия</div>
-                        </div>
+                        <div class="analytics-card"><div class="number" id="dashPeak">--:--</div><div class="label">Пик активности</div></div>
+                        <div class="analytics-card"><div class="number">🌍</div><div class="label">Топ-3 страны</div><div style="font-size:13px;color:#6a6a72;margin-top:4px;" id="dashCountriesList">Россия, США, Германия</div></div>
                     </div>
                 </div>
             </div>
@@ -419,42 +356,23 @@
                 <div class="section">
                     <h2>📈 Детальная аналитика</h2>
                     <div class="analytics-grid">
-                        <div class="analytics-card" style="border-color:rgba(0,122,255,0.1);">
-                            <div class="number" style="color:#007aff;" id="analyticsViews">0</div>
-                            <div class="label">Всего просмотров</div>
-                        </div>
-                        <div class="analytics-card" style="border-color:rgba(52,199,89,0.1);">
-                            <div class="number" style="color:#34c759;" id="analyticsLeads">0</div>
-                            <div class="label">Всего заявок</div>
-                        </div>
-                        <div class="analytics-card" style="border-color:rgba(255,215,0,0.1);">
-                            <div class="number" style="color:#ffd700;" id="analyticsConversion">0%</div>
-                            <div class="label">Конверсия</div>
-                        </div>
+                        <div class="analytics-card" style="border-color:rgba(0,122,255,0.1);"><div class="number" style="color:#007aff;" id="analyticsViews">0</div><div class="label">Всего просмотров</div></div>
+                        <div class="analytics-card" style="border-color:rgba(52,199,89,0.1);"><div class="number" style="color:#34c759;" id="analyticsLeads">0</div><div class="label">Всего заявок</div></div>
+                        <div class="analytics-card" style="border-color:rgba(255,215,0,0.1);"><div class="number" style="color:#ffd700;" id="analyticsConversion">0%</div><div class="label">Конверсия</div></div>
                     </div>
                     <div class="analytics-grid" style="margin-top:12px;">
-                        <div class="analytics-card">
-                            <div class="number" id="analyticsToday">0</div>
-                            <div class="label">👥 Сегодня</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="number" id="analyticsYesterday">0</div>
-                            <div class="label">📅 Вчера</div>
-                        </div>
-                        <div class="analytics-card">
-                            <div class="number" id="analyticsWeek">0</div>
-                            <div class="label">📆 За неделю</div>
-                        </div>
+                        <div class="analytics-card"><div class="number" id="analyticsToday">0</div><div class="label">👥 Сегодня</div></div>
+                        <div class="analytics-card"><div class="number" id="analyticsYesterday">0</div><div class="label">📅 Вчера</div></div>
+                        <div class="analytics-card"><div class="number" id="analyticsWeek">0</div><div class="label">📆 За неделю</div></div>
                     </div>
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="resetAnalytics()">↺ Сбросить аналитику</button>
-                    </div>
+                    <button class="btn btn-secondary" onclick="resetAnalytics()">↺ Сбросить аналитику</button>
                 </div>
             </div>
 
-            <!-- ===== ОСТАЛЬНЫЕ ВКЛАДКИ (сокращённо для экономии места) ===== -->
+            <!-- ===== ДИЗАЙН ===== -->
             <div class="tab-content" id="tab-design">
-                <div class="section"><h2>🎨 Цвета и стиль</h2>
+                <div class="section">
+                    <h2>🎨 Цвета и стиль</h2>
                     <div class="row-3">
                         <div><label style="font-size:12px;color:#6a6a72;">Фон</label><input type="color" id="colorBg" value="#0a0a0f"></div>
                         <div><label style="font-size:12px;color:#6a6a72;">Текст</label><input type="color" id="colorText" value="#ffffff"></div>
@@ -480,8 +398,10 @@
                 </div>
             </div>
 
+            <!-- ===== МЕДИА ===== -->
             <div class="tab-content" id="tab-media">
-                <div class="section"><h2>🖼️ Управление медиа</h2>
+                <div class="section">
+                    <h2>🖼️ Управление медиа</h2>
                     <div class="row-3">
                         <div><label style="font-size:12px;color:#6a6a72;">Логотип</label><input type="file" id="logoUpload" accept="image/*" onchange="uploadLogo(event)"><div id="logoPreview"></div></div>
                         <div><label style="font-size:12px;color:#6a6a72;">Favicon</label><input type="file" id="faviconUpload" accept="image/*" onchange="uploadFavicon(event)"><div id="faviconPreview"></div></div>
@@ -490,8 +410,10 @@
                 </div>
             </div>
 
+            <!-- ===== SEO ===== -->
             <div class="tab-content" id="tab-seo">
-                <div class="section"><h2>📱 Meta-теги и SEO</h2>
+                <div class="section">
+                    <h2>📱 Meta-теги и SEO</h2>
                     <input type="text" id="seoTitle" placeholder="Заголовок страницы (Title)">
                     <textarea id="seoDesc" placeholder="Описание (Description)" rows="2"></textarea>
                     <input type="text" id="seoKeywords" placeholder="Ключевые слова (Keywords)">
@@ -500,12 +422,19 @@
                 </div>
             </div>
 
+            <!-- ===== СЕКЦИИ ===== -->
             <div class="tab-content" id="tab-sections">
-                <div class="section"><h2>🧩 Вкл/выкл секции</h2><div id="sectionsList"></div><button class="btn btn-secondary" onclick="addSection()">➕ Добавить секцию</button></div>
+                <div class="section">
+                    <h2>🧩 Вкл/выкл секции</h2>
+                    <div id="sectionsList"></div>
+                    <button class="btn btn-secondary" onclick="addSection()">➕ Добавить секцию</button>
+                </div>
             </div>
 
+            <!-- ===== ТЕКСТЫ ===== -->
             <div class="tab-content" id="tab-texts">
-                <div class="section"><h2>📄 Тексты сайта</h2>
+                <div class="section">
+                    <h2>📄 Тексты сайта</h2>
                     <input type="text" id="editHeroDesc" placeholder="Текст в Hero блоке">
                     <input type="text" id="editAboutText" placeholder="Текст 'Обо мне'">
                     <input type="text" id="editContactsText" placeholder="Текст в контактах">
@@ -513,7 +442,8 @@
                     <input type="text" id="editFooterCopyright" placeholder="Копирайт">
                     <button class="btn btn-primary" onclick="saveTexts()">💾 Сохранить</button>
                 </div>
-                <div class="section"><h2>🏷️ Названия секций</h2>
+                <div class="section">
+                    <h2>🏷️ Названия секций</h2>
                     <div class="row-3">
                         <input type="text" id="editLabelServices" placeholder="Услуги">
                         <input type="text" id="editLabelPortfolio" placeholder="Портфолио">
@@ -532,8 +462,10 @@
                 </div>
             </div>
 
+            <!-- ===== СТАТИСТИКА ===== -->
             <div class="tab-content" id="tab-stats">
-                <div class="section"><h2>📊 Статистика на главной</h2>
+                <div class="section">
+                    <h2>📊 Статистика на главной</h2>
                     <div class="row-3">
                         <input type="number" id="editStatProjects" placeholder="Проектов">
                         <input type="number" id="editStatClients" placeholder="Клиентов">
@@ -548,8 +480,10 @@
                 </div>
             </div>
 
+            <!-- ===== БАННЕР ===== -->
             <div class="tab-content" id="tab-banner">
-                <div class="section"><h2>🔔 Баннер / Уведомления</h2>
+                <div class="section">
+                    <h2>🔔 Баннер / Уведомления</h2>
                     <div class="row"><div><label style="font-size:12px;color:#6a6a72;">Показать баннер</label><div class="toggle-switch" id="bannerToggle" onclick="toggleBanner()"><div class="knob"></div></div></div></div>
                     <input type="text" id="bannerText" placeholder="Текст баннера">
                     <input type="text" id="bannerLink" placeholder="Ссылка (опционально)">
@@ -559,8 +493,10 @@
                 </div>
             </div>
 
+            <!-- ===== ФОРМА ===== -->
             <div class="tab-content" id="tab-form">
-                <div class="section"><h2>📧 Настройка формы заявки</h2>
+                <div class="section">
+                    <h2>📧 Настройка формы заявки</h2>
                     <input type="text" id="formButtonText" placeholder="Текст кнопки">
                     <input type="text" id="formEmail" placeholder="Email для уведомлений">
                     <div class="row">
@@ -577,44 +513,46 @@
                 </div>
             </div>
 
-            <!-- ===== CRUD ВКЛАДКИ ===== -->
+            <!-- ===== CRUD ===== -->
             <div class="tab-content" id="tab-services">
-                <div class="section"><h2>🛠️ Управление услугами <small>(CRUD)</small></h2><div id="adminServices" class="item-list"></div><button class="btn btn-secondary" onclick="addService()">➕ Добавить услугу</button></div>
+                <div class="section"><h2>🛠️ Услуги <small>(CRUD)</small></h2><div id="adminServices" class="item-list"></div><button class="btn btn-secondary" onclick="addService()">➕ Добавить</button></div>
             </div>
             <div class="tab-content" id="tab-portfolio">
-                <div class="section"><h2>📂 Управление портфолио <small>(CRUD)</small></h2><div id="adminPortfolio" class="item-list"></div><button class="btn btn-secondary" onclick="addPortfolio()">➕ Добавить проект</button></div>
+                <div class="section"><h2>📂 Портфолио <small>(CRUD)</small></h2><div id="adminPortfolio" class="item-list"></div><button class="btn btn-secondary" onclick="addPortfolio()">➕ Добавить</button></div>
             </div>
             <div class="tab-content" id="tab-pricing">
-                <div class="section"><h2>💰 Управление тарифами <small>(CRUD)</small></h2><div id="adminPricing" class="item-list"></div><button class="btn btn-secondary" onclick="addPricing()">➕ Добавить тариф</button></div>
+                <div class="section"><h2>💰 Тарифы <small>(CRUD)</small></h2><div id="adminPricing" class="item-list"></div><button class="btn btn-secondary" onclick="addPricing()">➕ Добавить</button></div>
             </div>
             <div class="tab-content" id="tab-features">
-                <div class="section"><h2>⭐ Особенности <small>(CRUD)</small></h2><div id="adminFeatures" class="item-list"></div><button class="btn btn-secondary" onclick="addFeature()">➕ Добавить особенность</button></div>
+                <div class="section"><h2>⭐ Особенности <small>(CRUD)</small></h2><div id="adminFeatures" class="item-list"></div><button class="btn btn-secondary" onclick="addFeature()">➕ Добавить</button></div>
             </div>
             <div class="tab-content" id="tab-steps">
-                <div class="section"><h2>📌 Этапы <small>(CRUD)</small></h2><div id="adminSteps" class="item-list"></div><button class="btn btn-secondary" onclick="addStep()">➕ Добавить этап</button></div>
+                <div class="section"><h2>📌 Этапы <small>(CRUD)</small></h2><div id="adminSteps" class="item-list"></div><button class="btn btn-secondary" onclick="addStep()">➕ Добавить</button></div>
             </div>
             <div class="tab-content" id="tab-faq">
-                <div class="section"><h2>❓ FAQ <small>(CRUD)</small></h2><div id="adminFaq" class="item-list"></div><button class="btn btn-secondary" onclick="addFaq()">➕ Добавить вопрос</button></div>
+                <div class="section"><h2>❓ FAQ <small>(CRUD)</small></h2><div id="adminFaq" class="item-list"></div><button class="btn btn-secondary" onclick="addFaq()">➕ Добавить</button></div>
             </div>
             <div class="tab-content" id="tab-social">
-                <div class="section"><h2>🔗 Социальные сети <small>(CRUD)</small></h2><div id="adminSocial" class="item-list"></div><button class="btn btn-secondary" onclick="addSocial()">➕ Добавить контакт</button></div>
+                <div class="section"><h2>🔗 Соцсети <small>(CRUD)</small></h2><div id="adminSocial" class="item-list"></div><button class="btn btn-secondary" onclick="addSocial()">➕ Добавить</button></div>
             </div>
             <div class="tab-content" id="tab-pages">
-                <div class="section"><h2>📄 Дополнительные страницы <small>(CRUD)</small></h2><div id="adminPages" class="item-list"></div><button class="btn btn-secondary" onclick="addPage()">➕ Создать страницу</button></div>
+                <div class="section"><h2>📄 Страницы <small>(CRUD)</small></h2><div id="adminPages" class="item-list"></div><button class="btn btn-secondary" onclick="addPage()">➕ Добавить</button></div>
             </div>
 
             <!-- ===== БЭКАП ===== -->
             <div class="tab-content" id="tab-backup">
-                <div class="section"><h2>💾 Экспорт / Импорт данных</h2>
+                <div class="section">
+                    <h2>💾 Экспорт / Импорт данных</h2>
                     <div class="desc">Полный бэкап всех данных сайта</div>
                     <div class="btn-group">
-                        <button class="btn btn-success" onclick="exportData()">📤 Экспорт все данные</button>
-                        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 Импорт данные</button>
+                        <button class="btn btn-success" onclick="exportData()">📤 Экспорт</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 Импорт</button>
                         <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-                        <button class="btn btn-danger" onclick="resetAll()">⚠️ Сбросить все данные</button>
+                        <button class="btn btn-danger" onclick="resetAll()">⚠️ Сбросить</button>
                     </div>
                 </div>
-                <div class="section"><h2>🔄 Синхронизация</h2>
+                <div class="section">
+                    <h2>🔄 Синхронизация</h2>
                     <div class="desc">Принудительно обновить сайт после изменений</div>
                     <button class="btn btn-primary" onclick="syncSite()">🔄 Синхронизировать</button>
                 </div>
