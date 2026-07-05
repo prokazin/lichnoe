@@ -139,6 +139,7 @@ function renderSite() {
     document.getElementById('statClients').textContent = data.stats.clients;
     document.getElementById('statHappy').textContent = data.stats.happy + '%';
     
+    // ===== УСЛУГИ =====
     var servicesHtml = '';
     for (var i = 0; i < data.services.length; i++) {
         var s = data.services[i];
@@ -217,6 +218,7 @@ function renderSite() {
     }
     document.getElementById('portfolioGrid').innerHTML = portfolioHtml;
     
+    // ===== ОСОБЕННОСТИ =====
     var featuresHtml2 = '';
     for (var l = 0; l < data.features.length; l++) {
         var ft = data.features[l];
@@ -224,6 +226,7 @@ function renderSite() {
     }
     document.getElementById('aboutFeatures').innerHTML = featuresHtml2;
     
+    // ===== ЭТАПЫ =====
     var stepsHtml = '';
     for (var m = 0; m < data.steps.length; m++) {
         var st = data.steps[m];
@@ -231,6 +234,7 @@ function renderSite() {
     }
     document.getElementById('stepsGrid').innerHTML = stepsHtml;
     
+    // ===== FAQ =====
     var faqHtml = '';
     for (var n = 0; n < data.faq.length; n++) {
         var fa = data.faq[n];
@@ -238,6 +242,7 @@ function renderSite() {
     }
     document.getElementById('faqGrid').innerHTML = faqHtml;
     
+    // ===== СОЦСЕТИ =====
     var socialHtml = '';
     for (var o = 0; o < data.social.length; o++) {
         var so = data.social[o];
@@ -475,7 +480,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (first) first.click();
     }, 500);
     
-    // Запрашиваем разрешение на уведомления
     if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission();
     }
