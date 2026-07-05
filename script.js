@@ -1,5 +1,7 @@
 var STORAGE_KEY = 'webmaster_pro_data';
 var LEADS_KEY = 'webmaster_leads';
+var photoModalImages = [];
+var photoModalCurrentIndex = 0;
 
 function getDefaultData() {
     return {
@@ -98,12 +100,10 @@ function renderSite() {
     }
     document.getElementById('servicesGrid').innerHTML = servicesHtml;
     
-    // ===== ПОРТФОЛИО С КАРУСЕЛЬЮ (несколько фото) =====
+    // ===== ПОРТФОЛИО С КАРУСЕЛЬЮ =====
     var portfolioHtml = '';
     for (var j = 0; j < data.portfolio.length; j++) {
         var p = data.portfolio[j];
-        
-        // Получаем все изображения
         var images = p.images || [];
         if (p.image && images.length === 0) {
             images = [p.image];
@@ -112,32 +112,26 @@ function renderSite() {
             images = [''];
         }
         
-        // Строим карусель
         var carouselHtml = '';
         if (images.length > 0 && images[0]) {
             carouselHtml += '<div class="carousel-slides" style="display:flex;height:100%;transition:transform 0.5s ease;">';
             for (var imgIdx = 0; imgIdx < images.length; imgIdx++) {
                 var imgSrc = images[imgIdx] || '';
                 if (imgSrc) {
-                    carouselHtml += '<div class="carousel-slide" style="min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;">';
-                    carouselHtml += '<img src="' + imgSrc + '" alt="' + p.title + '" style="width:100%;height:100%;object-fit:cover;">';
+                    carouselHtml += '<div class="carousel-slide" style="min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;" onclick="openPhotoModal(' + j + ', ' + imgIdx + ')">';
+                    carouselHtml += '<img src="' + imgSrc + '" alt="' + p.title + '" style="width:100%;height:100%;object-fit:cover;cursor:pointer;">';
                     carouselHtml += '</div>';
                 }
             }
             carouselHtml += '</div>';
             
-            // Кнопки навигации
             if (images.length > 1) {
-                carouselHtml += '<button class="carousel-btn prev" onclick="event.stopPropagation();changeSlide(this, -1)" style="position:absolute;top:50%;left:8px;transform:translateY(-50%);background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;">‹</button>';
-                carouselHtml += '<button class="carousel-btn next" onclick="event.stopPropagation();changeSlide(this, 1)" style="position:absolute;top:50%;right:8px;transform:translateY(-50%);background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;">›</button>';
-            }
-            
-            // Точки (индикаторы)
-            if (images.length > 1) {
-                carouselHtml += '<div class="carousel-dots" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2;">';
+                carouselHtml += '<button class="carousel-btn prev" onclick="event.stopPropagation();changeSlide(this, -1)">‹</button>';
+                carouselHtml += '<button class="carousel-btn next" onclick="event.stopPropagation();changeSlide(this, 1)">›</button>';
+                carouselHtml += '<div class="carousel-dots">';
                 for (var dotIdx = 0; dotIdx < images.length; dotIdx++) {
                     var activeClass = dotIdx === 0 ? 'active' : '';
-                    carouselHtml += '<span class="' + activeClass + '" onclick="event.stopPropagation();goToSlide(this, ' + dotIdx + ')" style="width:8px;height:8px;border-radius:50%;background:' + (dotIdx === 0 ? '#fff' : 'rgba(255,255,255,0.3)') + ';cursor:pointer;transition:0.3s;"></span>';
+                    carouselHtml += '<span class="' + activeClass + '" onclick="event.stopPropagation();goToSlide(this, ' + dotIdx + ')"></span>';
                 }
                 carouselHtml += '</div>';
             }
@@ -231,11 +225,9 @@ function changeSlide(btn, direction) {
     container.dataset.current = current;
     slides.style.transform = 'translateX(-' + (current * 100) + '%)';
     
-    // Обновляем точки
-    if (dots.length > 0) {
-        for (var i = 0; i < dots.length; i++) {
-            dots[i].style.background = i === current ? '#fff' : 'rgba(255,255,255,0.3)';
-        }
+    for (var i = 0; i < dots.length; i++) {
+        dots[i].style.background = i === current ? '#fff' : 'rgba(255,255,255,0.3)';
+        dots[i].className = i === current ? 'active' : '';
     }
 }
 
@@ -252,8 +244,54 @@ function goToSlide(dot, index) {
     var dots = container.querySelectorAll('.carousel-dots span');
     for (var i = 0; i < dots.length; i++) {
         dots[i].style.background = i === index ? '#fff' : 'rgba(255,255,255,0.3)';
+        dots[i].className = i === index ? 'active' : '';
     }
 }
+
+// ===== ФОТО МОДАЛЬНОЕ ОКНО =====
+function openPhotoModal(projectIndex, imageIndex) {
+    var project = data.portfolio[projectIndex];
+    if (!project) return;
+    var images = project.images || [];
+    if (project.image && images.length === 0) {
+        images = [project.image];
+    }
+    if (images.length === 0 || !images[0]) {
+        showToast('❌ Нет фото для просмотра');
+        return;
+    }
+    
+    photoModalImages = images;
+    photoModalCurrentIndex = imageIndex || 0;
+    updatePhotoModal();
+    document.getElementById('photoModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePhotoModal() {
+    document.getElementById('photoModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function changePhoto(direction) {
+    var total = photoModalImages.length;
+    if (total <= 1) return;
+    photoModalCurrentIndex = (photoModalCurrentIndex + direction + total) % total;
+    updatePhotoModal();
+}
+
+function updatePhotoModal() {
+    var img = document.getElementById('photoModalImg');
+    var counter = document.getElementById('photoModalCounter');
+    img.src = photoModalImages[photoModalCurrentIndex] || '';
+    counter.textContent = (photoModalCurrentIndex + 1) + ' / ' + photoModalImages.length;
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePhotoModal();
+    if (e.key === 'ArrowLeft') changePhoto(-1);
+    if (e.key === 'ArrowRight') changePhoto(1);
+});
 
 function toggleFaq(btn) {
     var answer = btn.nextElementSibling;
@@ -272,7 +310,65 @@ function toggleFaq(btn) {
     }
 }
 
-// ===== ОТПРАВКА ЗАЯВКИ В ЛОКАЛЬНОЕ ХРАНИЛИЩЕ =====
+// ===== ОПОВЕЩЕНИЕ О ЗАЯВКЕ =====
+function playNotificationSound() {
+    try {
+        var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var oscillator = audioCtx.createOscillator();
+        var gainNode = audioCtx.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        gainNode.gain.value = 0.3;
+        
+        oscillator.start();
+        
+        setTimeout(function() {
+            oscillator.frequency.value = 1000;
+        }, 150);
+        
+        setTimeout(function() {
+            oscillator.frequency.value = 1200;
+        }, 300);
+        
+        setTimeout(function() {
+            oscillator.stop();
+        }, 500);
+    } catch (e) {
+        console.log('Звук не поддерживается');
+    }
+}
+
+function showBrowserNotification(name, contact) {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'granted') {
+        new Notification('📩 Новая заявка!', {
+            body: 'От: ' + name + '\nКонтакт: ' + contact,
+            icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext y=".9em" font-size="90"%3E📩%3C/text%3E%3C/svg%3E'
+        });
+    } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission();
+    }
+}
+
+function showToast(msg) {
+    var existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+    var toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transition = '0.4s';
+        setTimeout(function() { toast.remove(); }, 400);
+    }, 2500);
+}
+
+// ===== ОТПРАВКА ЗАЯВКИ =====
 function sendForm(e) {
     e.preventDefault();
     var form = e.target;
@@ -302,6 +398,11 @@ function sendForm(e) {
     btn.style.background = '#34c759';
     form.reset();
     
+    // ===== ОПОВЕЩЕНИЕ =====
+    playNotificationSound();
+    showBrowserNotification(name, contact);
+    showToast('🔔 Новая заявка от ' + name + '!');
+    
     setTimeout(function() {
         btn.textContent = originalText;
         btn.style.background = '';
@@ -326,4 +427,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var first = document.querySelector('.faq-question');
         if (first) first.click();
     }, 500);
+    
+    // Запрашиваем разрешение на уведомления
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
 });
