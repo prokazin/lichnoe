@@ -533,9 +533,19 @@
                 data.portfolio.push(newItem);
             }
         } else if (modalType === 'pricing') {
-            var item2 = { name: title, price: price, features: tags ? tags.split(',').map(function(t){ return t.trim(); }).filter(function(t){ return t; }) : [], popular: popular };
-            if (editIndex !== null) { data.pricing[editIndex] = item2; }
-            else { data.pricing.push(item2); }
+            var featuresRaw = document.getElementById('modalFeatures').value;
+            var featuresArray = featuresRaw ? featuresRaw.split(',').map(function(t) { return t.trim(); }).filter(function(t) { return t; }) : [];
+            var item2 = { 
+                name: title, 
+                price: price, 
+                features: featuresArray, 
+                popular: popular 
+            };
+            if (editIndex !== null) { 
+                data.pricing[editIndex] = item2; 
+            } else { 
+                data.pricing.push(item2); 
+            }
         } else if (modalType === 'feature') {
             var item3 = { icon: icon, title: title, desc: desc };
             if (editIndex !== null) { data.features[editIndex] = item3; }
@@ -714,6 +724,7 @@
         for (var i = 0; i < items.length; i++) {
             var p = items[i];
             var popularBadge = p.popular ? '<span class="badge popular">🔥</span>' : '';
+            var featuresHtml = p.features && p.features.length > 0 ? p.features.map(function(f) { return '✅ ' + f; }).join('<br>') : '<span style="color:#6a6a72;">Опции не указаны</span>';
             html += '<div class="item"><span>' + p.name + ' — <strong>' + p.price + '</strong> ' + popularBadge + '</span>';
             html += '<div class="item-actions"><button class="edit" onclick="openModal(\'pricing\', ' + i + ')">✎</button>';
             html += '<button class="delete" onclick="deleteItem(\'pricing\', ' + i + ')">✕</button></div></div>';
@@ -812,7 +823,7 @@
     }
 
     function exportData() {
-        var fullData = { ...data, leads: JSON.parse(localStorage.getItem(LEADS_KEY) || '[]') };
+        var fullData = Object.assign({}, data, { leads: JSON.parse(localStorage.getItem(LEADS_KEY) || '[]') });
         var blob = new Blob([JSON.stringify(fullData, null, 2)], { type: 'application/json' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
