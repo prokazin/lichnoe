@@ -245,7 +245,6 @@ section {
 }
 
 .services-grid,
-.pricing-grid,
 .steps-grid {
     display: grid;
     gap: 24px;
@@ -253,11 +252,7 @@ section {
 }
 
 .services-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-
-.pricing-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .steps-grid {
@@ -265,7 +260,6 @@ section {
 }
 
 .service-card,
-.pricing-card,
 .step-card,
 .faq-item {
     background: rgba(255, 255, 255, 0.03);
@@ -275,14 +269,12 @@ section {
     transition: all 0.4s;
 }
 
-.service-card:hover,
-.pricing-card:hover {
+.service-card:hover {
     transform: translateY(-6px);
     background: rgba(255, 255, 255, 0.06);
 }
 
 .service-card h3,
-.pricing-card h3,
 .step-card h3 {
     color: #fff;
     font-size: 20px;
@@ -301,7 +293,7 @@ section {
     margin-bottom: 12px;
 }
 
-.service-tag {
+.service-price {
     display: inline-block;
     background: rgba(0, 122, 255, 0.12);
     color: #007aff;
@@ -309,49 +301,25 @@ section {
     border-radius: 30px;
     font-size: 13px;
     font-weight: 600;
+    margin-top: 8px;
 }
 
-.pricing-card.popular {
-    border: 1px solid #007aff;
-    transform: scale(1.02);
+.service-features {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 0.5px solid rgba(255,255,255,0.04);
 }
 
-.pricing-card.popular:hover {
-    transform: scale(1.02) translateY(-6px);
-}
-
-.pricing-badge {
-    display: inline-block;
-    background: #007aff;
-    color: #fff;
-    padding: 4px 16px;
-    border-radius: 30px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 12px;
-}
-
-.pricing-price {
-    font-size: 32px;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 16px;
-}
-
-.pricing-features {
-    list-style: none;
-    text-align: left;
-    margin-bottom: 24px;
-}
-
-.pricing-features li {
-    padding: 6px 0;
-    font-size: 14px;
+.service-features li {
     color: #b0b0b8;
+    font-size: 13px;
+    padding: 3px 0;
+    list-style: none;
 }
 
-.pricing-card .btn {
-    width: 100%;
+.service-features li::before {
+    content: "✅ ";
+    color: #34c759;
 }
 
 .about-grid {
@@ -730,12 +698,6 @@ section {
         grid-template-columns: 1fr;
         gap: 30px;
     }
-    .pricing-card.popular {
-        transform: scale(1);
-    }
-    .pricing-card.popular:hover {
-        transform: translateY(-6px);
-    }
     .footer-content {
         flex-direction: column;
         text-align: center;
@@ -756,8 +718,7 @@ section {
         flex-wrap: wrap;
         justify-content: center;
     }
-    .services-grid,
-    .pricing-grid {
+    .services-grid {
         grid-template-columns: 1fr;
     }
     .about-features {
