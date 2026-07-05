@@ -4,8 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>WebMaster — создание сайтов на GitHub</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .portfolio-carousel {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .portfolio-carousel .portfolio-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            padding: 20px;
+            border: 0.5px solid rgba(255,255,255,0.04);
+            transition: all 0.4s;
+        }
+        .portfolio-carousel .portfolio-card:hover {
+            transform: translateY(-6px);
+            background: rgba(255,255,255,0.06);
+        }
+        .portfolio-carousel .portfolio-image {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .portfolio-carousel .portfolio-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .portfolio-carousel .portfolio-image .no-image {
+            font-size: 48px;
+            opacity: 0.3;
+        }
+        .portfolio-carousel .portfolio-info h3 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 16px 0 8px;
+        }
+        .portfolio-carousel .portfolio-info p {
+            color: #b0b0b8;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+        .portfolio-carousel .portfolio-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .portfolio-carousel .portfolio-tags span {
+            background: rgba(255,255,255,0.04);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #6a6a72;
+        }
+        .portfolio-carousel .btn-outline {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1.5px solid #007aff;
+            color: #007aff;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .portfolio-carousel .btn-outline:hover {
+            background: #007aff;
+            color: #fff;
+        }
+        @media (max-width: 480px) {
+            .portfolio-carousel {
+                grid-template-columns: 1fr;
+            }
+            .portfolio-carousel .portfolio-image {
+                height: 180px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="main-content">
@@ -60,7 +145,7 @@
             <div class="container">
                 <div class="section-label">Мои работы</div>
                 <h2 class="section-title">Примеры <span class="highlight">сайтов</span></h2>
-                <div class="portfolio-grid" id="portfolioGrid"></div>
+                <div class="portfolio-carousel" id="portfolioGrid"></div>
             </div>
         </section>
 
@@ -149,7 +234,7 @@
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
         (function() {
-            emailjs.init("abc123def456..."); // 🔥 ЗАМЕНИТЕ НА ВАШ Public Key
+            emailjs.init("abc123def456...");
         })();
     </script>
     <script src="script.js"></script>
