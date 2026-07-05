@@ -12,20 +12,66 @@ function getDefaultData() {
         footerCopyright: '© 2025 WebMaster. Все права защищены.',
         stats: { projects: 12, clients: 9, happy: 100 },
         services: [
-            { icon: '📄', title: 'Лендинг', desc: 'Одностраничный сайт под ваш продукт или услугу. Быстрый запуск.', price: 'от 5 000 ₽' },
-            { icon: '🛍️', title: 'Сайт-витрина', desc: 'Каталог товаров, админ-панель, загрузка фото, фильтры, характеристики.', price: 'от 10 000 ₽' },
-            { icon: '📱', title: 'Telegram Web App', desc: 'Мини-приложение внутри бота для продаж, каталога или сервиса.', price: 'от 15 000 ₽' },
-            { icon: '⚡', title: 'Сайт с корзиной', desc: 'Полноценный интернет-магазин с корзиной, заказами и админкой.', price: 'от 20 000 ₽' }
+            { 
+                icon: '📄', 
+                title: 'Лендинг', 
+                desc: 'Одностраничный сайт под ваш продукт или услугу. Быстрый запуск, максимальная конверсия.', 
+                price: 'от 5 000 ₽',
+                features: [
+                    '1 страница (лендинг)',
+                    'Адаптив под все устройства',
+                    'Форма заявки',
+                    'Деплой на GitHub Pages',
+                    'Бесплатный хостинг',
+                    '1 правка бесплатно'
+                ]
+            },
+            { 
+                icon: '🛍️', 
+                title: 'Сайт-витрина', 
+                desc: 'Каталог товаров с админ-панелью. Идеально для небольших магазинов и портфолио.', 
+                price: 'от 10 000 ₽',
+                features: [
+                    'До 20 товаров',
+                    'Админ-панель (CRUD)',
+                    'Загрузка фото с телефона',
+                    'Фильтры и характеристики',
+                    'Деплой на GitHub Pages',
+                    '3 правки бесплатно'
+                ]
+            },
+            { 
+                icon: '📱', 
+                title: 'Telegram Mini App', 
+                desc: 'Сайт внутри Telegram-бота. Каталог, корзина, заявки — всё в мессенджере.', 
+                price: 'от 15 000 ₽',
+                features: [
+                    'Полноценный сайт в Telegram',
+                    'Каталог товаров/услуг',
+                    'Корзина и заказы',
+                    'Админ-панель',
+                    'Деплой на GitHub Pages'
+                ]
+            },
+            { 
+                icon: '⚡', 
+                title: 'Сайт с корзиной', 
+                desc: 'Полноценный интернет-магазин с корзиной, заказами и админ-панелью для менеджеров.', 
+                price: 'от 20 000 ₽',
+                features: [
+                    'Полноценный каталог',
+                    'Корзина и оформление заказа',
+                    'Админ-панель + CRM',
+                    'Экспорт заказов',
+                    'Деплой на GitHub Pages',
+                    '5 правок бесплатно'
+                ]
+            }
         ],
         portfolio: [
             { icon: '🏂', title: 'SnowShop', desc: 'Магазин сноубордов. Каталог, админ-панель, фильтры, характеристики.', tags: ['витрина', 'админ-панель', 'адаптив'], link: '#', images: [], image: '' },
             { icon: '🚀', title: 'Стартап-лендинг', desc: 'Продающий лендинг для IT-продукта. Конверсия, аналитика, форма заявки.', tags: ['лендинг', 'конверсия', 'форма'], link: '#', images: [], image: '' },
             { icon: '📱', title: 'Telegram Shop', desc: 'Магазин внутри Telegram-бота. Каталог, корзина, оформление заказа.', tags: ['Telegram', 'корзина', 'бот'], link: '#', images: [], image: '' }
-        ],
-        pricing: [
-            { name: 'Старт', price: '5 000 ₽', features: ['Лендинг (1 страница)', 'Адаптив под все устройства', 'Форма заявки', '1 правка бесплатно', 'Деплой на GitHub'], popular: false },
-            { name: 'Базовый', price: '10 000 ₽', features: ['Сайт-витрина (до 20 товаров)', 'Админ-панель', 'Загрузка фото', 'Фильтры и характеристики', '3 правки бесплатно', 'Деплой на GitHub'], popular: true },
-            { name: 'Премиум', price: '20 000 ₽', features: ['Полноценный каталог', 'Корзина и оформление', '5 правок бесплатно', 'Деплой на GitHub'], popular: false }
         ],
         features: [
             { icon: '⚡', title: 'Быстро', desc: 'Сайт готов за 3–7 дней' },
@@ -96,7 +142,21 @@ function renderSite() {
     var servicesHtml = '';
     for (var i = 0; i < data.services.length; i++) {
         var s = data.services[i];
-        servicesHtml += '<div class="service-card"><div class="service-icon">' + s.icon + '</div><h3>' + s.title + '</h3><p>' + s.desc + '</p><div class="service-tag">' + s.price + '</div></div>';
+        var featuresHtml = '';
+        if (s.features && s.features.length > 0) {
+            featuresHtml = '<ul class="service-features">';
+            for (var f = 0; f < s.features.length; f++) {
+                featuresHtml += '<li>' + s.features[f] + '</li>';
+            }
+            featuresHtml += '</ul>';
+        }
+        servicesHtml += '<div class="service-card">' +
+            '<div class="service-icon">' + s.icon + '</div>' +
+            '<h3>' + s.title + '</h3>' +
+            '<p>' + s.desc + '</p>' +
+            '<div class="service-price">' + s.price + '</div>' +
+            featuresHtml +
+            '</div>';
     }
     document.getElementById('servicesGrid').innerHTML = servicesHtml;
     
@@ -156,19 +216,6 @@ function renderSite() {
         portfolioHtml += '</div></div>';
     }
     document.getElementById('portfolioGrid').innerHTML = portfolioHtml;
-    
-    var pricingHtml = '';
-    for (var k = 0; k < data.pricing.length; k++) {
-        var pr = data.pricing[k];
-        var featuresHtml = '';
-        for (var f = 0; f < pr.features.length; f++) {
-            featuresHtml += '<li>✅ ' + pr.features[f] + '</li>';
-        }
-        var popularBadge = pr.popular ? '<div class="pricing-badge">🔥 Популярный</div>' : '';
-        var popularClass = pr.popular ? ' popular' : '';
-        pricingHtml += '<div class="pricing-card' + popularClass + '">' + popularBadge + '<div class="pricing-name">' + pr.name + '</div><div class="pricing-price">' + pr.price + '</div><ul class="pricing-features">' + featuresHtml + '</ul><a href="#contacts" class="btn btn-primary">Заказать</a></div>';
-    }
-    document.getElementById('pricingGrid').innerHTML = pricingHtml;
     
     var featuresHtml2 = '';
     for (var l = 0; l < data.features.length; l++) {
