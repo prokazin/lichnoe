@@ -186,6 +186,7 @@ function toggleFaq(btn) {
     }
 }
 
+// ===== ОТПРАВКА ЗАЯВКИ В TELEGRAM =====
 function sendForm(e) {
     e.preventDefault();
     var form = e.target;
@@ -200,35 +201,47 @@ function sendForm(e) {
     var contact = contactInput ? contactInput.value : 'Не указано';
     var message = messageInput ? messageInput.value : 'Не указано';
 
+    var text = '📩 <b>НОВАЯ ЗАЯВКА!</b>\n\n';
+    text += '👤 <b>Имя:</b> ' + name + '\n';
+    text += '📱 <b>Контакт:</b> ' + contact + '\n';
+    text += '📝 <b>Сообщение:</b> ' + message + '\n\n';
+    text += '⏰ ' + new Date().toLocaleString('ru-RU');
+
+    var token = '8921481171:AAFqQqmXZDa1dcHahE-xYdI1Nv0R6kKJZ74';
+    var chatId = '8380652624';   // ВАШ CHAT ID
+
     btn.textContent = '⏳ Отправка...';
     btn.disabled = true;
 
-    emailjs.send(
-        'service_abc123',
-        'template_xyz789',
-        {
-            from_name: name,
-            from_contact: contact,
-            message: message,
-            current_date: new Date().toLocaleString('ru-RU')
-        },
-        'abc123def456...'
-    )
-    .then(function() {
-        btn.textContent = '✅ Отправлено!';
-        btn.style.background = '#34c759';
-        form.reset();
-        var analytics = JSON.parse(localStorage.getItem('webmaster_analytics') || '{"leads":0,"views":0}');
-        analytics.leads = (analytics.leads || 0) + 1;
-        localStorage.setItem('webmaster_analytics', JSON.stringify(analytics));
-        setTimeout(function() {
-            btn.textContent = originalText;
-            btn.style.background = '';
-            btn.disabled = false;
-        }, 3000);
+    fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: chatId,
+            text: text,
+            parse_mode: 'HTML',
+            disable_web_page_preview: true
+        })
     })
-    .catch(function(error) {
-        console.error('Ошибка:', error);
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data.ok) {
+            btn.textContent = '✅ Отправлено!';
+            btn.style.background = '#34c759';
+            form.reset();
+            var analytics = JSON.parse(localStorage.getItem('webmaster_analytics') || '{"leads":0,"views":0}');
+            analytics.leads = (analytics.leads || 0) + 1;
+            localStorage.setItem('webmaster_analytics', JSON.stringify(analytics));
+            setTimeout(function() {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                btn.disabled = false;
+            }, 3000);
+        } else {
+            throw new Error('Ошибка отправки');
+        }
+    })
+    .catch(function() {
         btn.textContent = '❌ Ошибка';
         btn.style.background = '#ff3b30';
         setTimeout(function() {
