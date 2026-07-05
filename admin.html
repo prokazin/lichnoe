@@ -81,7 +81,8 @@
         @keyframes toastIn { 0%{opacity:0;transform:translateX(-50%) translateY(20px);}100%{opacity:1;transform:translateX(-50%) translateY(0);} }
 
         .portfolio-item { display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:0.5px solid rgba(255,255,255,0.02); flex-wrap:wrap; }
-        .portfolio-item img { width:80px; height:80px; object-fit:cover; border-radius:12px; border:0.5px solid rgba(255,255,255,0.04); }
+        .portfolio-item .images-preview { display:flex; gap:6px; flex-wrap:wrap; }
+        .portfolio-item .images-preview img { width:60px; height:60px; object-fit:cover; border-radius:8px; border:0.5px solid rgba(255,255,255,0.04); }
         .portfolio-item .info { flex:1; }
         .portfolio-item .info .title { font-weight:600; color:#fff; }
         .portfolio-item .info .desc { font-size:13px; color:#6a6a72; }
@@ -124,8 +125,14 @@
         .modal-box input:focus, .modal-box textarea:focus, .modal-box select:focus { outline:none; border-color:#007aff; }
         .modal-box .btn-group { display:flex; gap:10px; margin-top:16px; }
         .modal-box .btn-group .btn { flex:1; }
+        .modal-box .images-preview-grid { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+        .modal-box .images-preview-grid .img-wrap { position:relative; display:inline-block; }
+        .modal-box .images-preview-grid .img-wrap img { width:80px; height:80px; object-fit:cover; border-radius:12px; border:0.5px solid rgba(255,255,255,0.04); }
+        .modal-box .images-preview-grid .img-wrap .remove-img {
+            position:absolute; top:-6px; right:-6px; background:#ff3b30; color:#fff; border:none; border-radius:50%; width:20px; height:20px; font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+        }
 
-        @media (max-width:768px) { .row,.row-3 { grid-template-columns:1fr; } .header { flex-direction:column; align-items:flex-start; } .tabs { gap:4px; } .tab-btn { padding:6px 12px; font-size:11px; } .section { padding:16px; } #loginForm { padding:24px; margin:30px 16px; } .item { flex-direction:column; align-items:flex-start; gap:6px; } .item-actions { width:100%; } .analytics-grid { grid-template-columns:1fr 1fr; } .portfolio-item { flex-direction:column; align-items:flex-start; } .portfolio-item img { width:100%; height:auto; max-height:200px; } }
+        @media (max-width:768px) { .row,.row-3 { grid-template-columns:1fr; } .header { flex-direction:column; align-items:flex-start; } .tabs { gap:4px; } .tab-btn { padding:6px 12px; font-size:11px; } .section { padding:16px; } #loginForm { padding:24px; margin:30px 16px; } .item { flex-direction:column; align-items:flex-start; gap:6px; } .item-actions { width:100%; } .analytics-grid { grid-template-columns:1fr 1fr; } .portfolio-item { flex-direction:column; align-items:flex-start; } .portfolio-item .images-preview img { width:50px; height:50px; } }
         @media (max-width:480px) { .tab-btn { font-size:10px; padding:4px 8px; } .section h2 { font-size:16px; } .analytics-grid { grid-template-columns:1fr; } .modal-box { padding:20px; } }
     </style>
 </head>
@@ -195,7 +202,7 @@
 
             <div id="tab-portfolio" class="tab-content">
                 <div class="section">
-                    <h2>📂 Портфолио <small>(с фото, карусель на сайте)</small></h2>
+                    <h2>📂 Портфолио <small>(несколько фото, карусель на сайте)</small></h2>
                     <div id="adminPortfolio" class="item-list"></div>
                     <button class="btn btn-secondary" onclick="openModal('portfolio')">➕ Добавить проект с фото</button>
                 </div>
@@ -276,6 +283,7 @@
     var data = null;
     var modalType = '';
     var editIndex = null;
+    var tempPortfolioImages = [];
 
     function switchTab(tabId) {
         var contents = document.querySelectorAll('.tab-content');
@@ -310,6 +318,7 @@
         }
     }
 
+    // ===== ЗАЯВКИ =====
     function loadLeads() {
         var container = document.getElementById('leadsList');
         if (!container) return;
@@ -357,9 +366,51 @@
         showToast('📤 Заявки экспортированы!');
     }
 
+    // ===== ПОРТФОЛИО — НЕСКОЛЬКО ФОТО =====
+    function previewPortfolioImages(event) {
+        var files = event.target.files;
+        var container = document.getElementById('portfolioImagesPreview');
+        if (!container) return;
+        
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('❌ Файл слишком большой (макс. 5MB)');
+                continue;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                tempPortfolioImages.push(e.target.result);
+                renderPortfolioPreviews();
+            };
+            reader.readAsDataURL(file);
+        }
+        event.target.value = '';
+    }
+
+    function renderPortfolioPreviews() {
+        var container = document.getElementById('portfolioImagesPreview');
+        if (!container) return;
+        var html = '';
+        for (var i = 0; i < tempPortfolioImages.length; i++) {
+            html += '<div class="img-wrap">';
+            html += '<img src="' + tempPortfolioImages[i] + '">';
+            html += '<button class="remove-img" onclick="removePortfolioImage(' + i + ')">✕</button>';
+            html += '</div>';
+        }
+        container.innerHTML = html;
+    }
+
+    function removePortfolioImage(index) {
+        tempPortfolioImages.splice(index, 1);
+        renderPortfolioPreviews();
+    }
+
+    // ===== МОДАЛЬНОЕ ОКНО =====
     function openModal(type, index) {
         modalType = type;
         editIndex = (index !== undefined) ? index : null;
+        tempPortfolioImages = [];
         var overlay = document.getElementById('modalOverlay');
         var title = document.getElementById('modalTitle');
         var body = document.getElementById('modalBody');
@@ -388,6 +439,9 @@
                 social: 'social'
             };
             item = data[listNames[type]][index];
+            if (type === 'portfolio' && item && item.images) {
+                tempPortfolioImages = item.images.slice();
+            }
         }
 
         if (type === 'service') {
@@ -398,16 +452,21 @@
         } else if (type === 'portfolio') {
             html = '<label>Название проекта</label><input type="text" id="modalTitleInput" value="' + (item ? item.title : '') + '">';
             html += '<label>Описание</label><textarea id="modalDesc" rows="3">' + (item ? item.desc : '') + '</textarea>';
-            html += '<label>Теги (через запятую)</label><input type="text" id="modalTags" value="' + (item ? item.tags.join(', ') : '') + '">';
+            html += '<label>Теги (через запятую)</label><input type="text" id="modalTags" value="' + (item && item.tags ? item.tags.join(', ') : '') + '">';
             html += '<label>Ссылка</label><input type="text" id="modalLink" value="' + (item ? item.link : '#') + '">';
-            html += '<label>Фото (нажмите для загрузки)</label><input type="file" id="modalImage" accept="image/*">';
-            if (item && item.image) {
-                html += '<img src="' + item.image + '" style="max-width:100%;max-height:100px;border-radius:12px;margin-top:8px;">';
+            html += '<label>Фотографии (можно выбрать несколько)</label>';
+            html += '<input type="file" id="modalImages" accept="image/*" multiple onchange="previewPortfolioImages(event)">';
+            html += '<div class="images-preview-grid" id="portfolioImagesPreview">';
+            if (tempPortfolioImages.length > 0) {
+                for (var pi = 0; pi < tempPortfolioImages.length; pi++) {
+                    html += '<div class="img-wrap"><img src="' + tempPortfolioImages[pi] + '"><button class="remove-img" onclick="removePortfolioImage(' + pi + ')">✕</button></div>';
+                }
             }
+            html += '</div>';
         } else if (type === 'pricing') {
             html = '<label>Название тарифа</label><input type="text" id="modalTitleInput" value="' + (item ? item.name : '') + '">';
             html += '<label>Цена</label><input type="text" id="modalPrice" value="' + (item ? item.price : '') + '">';
-            html += '<label>Опции (через запятую)</label><input type="text" id="modalFeatures" value="' + (item ? item.features.join(', ') : '') + '">';
+            html += '<label>Опции (через запятую)</label><input type="text" id="modalFeatures" value="' + (item && item.features ? item.features.join(', ') : '') + '">';
             html += '<label>Популярный?</label><select id="modalPopular"><option value="false"' + (item && item.popular ? '' : ' selected') + '>Нет</option><option value="true"' + (item && item.popular ? ' selected' : '') + '>Да</option></select>';
         } else if (type === 'feature') {
             html = '<label>Иконка (эмодзи)</label><input type="text" id="modalIcon" value="' + (item ? item.icon : '⚡') + '">';
@@ -434,16 +493,12 @@
     function closeModal() {
         document.getElementById('modalOverlay').classList.remove('active');
         editIndex = null;
+        tempPortfolioImages = [];
     }
 
     function getVal(id) {
         var el = document.getElementById(id);
         return el ? el.value : '';
-    }
-
-    function getFile(id) {
-        var el = document.getElementById(id);
-        return el ? el.files[0] : null;
     }
 
     function saveModal() {
@@ -455,7 +510,6 @@
         var link = getVal('modalLink') || '#';
         var number = getVal('modalNumber') || '0' + (data.steps.length + 1);
         var popular = getVal('modalPopular') === 'true';
-        var file = getFile('modalImage');
 
         if (!title) { showToast('❌ Введите название!'); return; }
 
@@ -471,38 +525,12 @@
                 desc: desc,
                 tags: tags ? tags.split(',').map(function(t){ return t.trim(); }).filter(function(t){ return t; }) : [],
                 link: link,
-                image: oldItem ? oldItem.image : ''
+                images: tempPortfolioImages.length > 0 ? tempPortfolioImages : (oldItem && oldItem.images ? oldItem.images : [])
             };
             if (editIndex !== null) {
                 data.portfolio[editIndex] = newItem;
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        data.portfolio[editIndex].image = e.target.result;
-                        saveData();
-                        renderAll();
-                        updateDashboard();
-                        showToast('✅ Проект обновлён с фото!');
-                    };
-                    reader.readAsDataURL(file);
-                    closeModal();
-                    return;
-                }
             } else {
                 data.portfolio.push(newItem);
-                if (file) {
-                    var reader2 = new FileReader();
-                    reader2.onload = function(e) {
-                        data.portfolio[data.portfolio.length - 1].image = e.target.result;
-                        saveData();
-                        renderAll();
-                        updateDashboard();
-                        showToast('✅ Проект добавлен с фото!');
-                    };
-                    reader2.readAsDataURL(file);
-                    closeModal();
-                    return;
-                }
             }
         } else if (modalType === 'pricing') {
             var item2 = { name: title, price: price, features: tags ? tags.split(',').map(function(t){ return t.trim(); }).filter(function(t){ return t; }) : [], popular: popular };
@@ -560,9 +588,9 @@
                 { icon: '⚡', title: 'Сайт с корзиной', desc: 'Полноценный интернет-магазин с корзиной.', price: 'от 20 000 ₽' }
             ],
             portfolio: [
-                { icon: '🏂', title: 'SnowShop', desc: 'Магазин сноубордов. Каталог, админ-панель.', tags: ['витрина'], link: '#', image: '' },
-                { icon: '🚀', title: 'Стартап-лендинг', desc: 'Продающий лендинг для IT-продукта.', tags: ['лендинг'], link: '#', image: '' },
-                { icon: '📱', title: 'Telegram Shop', desc: 'Магазин внутри Telegram-бота.', tags: ['Telegram'], link: '#', image: '' }
+                { icon: '🏂', title: 'SnowShop', desc: 'Магазин сноубордов. Каталог, админ-панель.', tags: ['витрина'], link: '#', images: [] },
+                { icon: '🚀', title: 'Стартап-лендинг', desc: 'Продающий лендинг для IT-продукта.', tags: ['лендинг'], link: '#', images: [] },
+                { icon: '📱', title: 'Telegram Shop', desc: 'Магазин внутри Telegram-бота.', tags: ['Telegram'], link: '#', images: [] }
             ],
             pricing: [
                 { name: 'Старт', price: '5 000 ₽', features: ['Лендинг (1 страница)', 'Адаптив', 'Форма заявки', '1 правка'], popular: false },
@@ -647,11 +675,20 @@
         var html = '';
         for (var i = 0; i < items.length; i++) {
             var p = items[i];
-            var imgHtml = '';
-            if (p.image && p.image.indexOf('data:image') === 0) {
-                imgHtml = '<img src="' + p.image + '" alt="' + p.title + '">';
+            var images = p.images || [];
+            if (p.image && images.length === 0) {
+                images = [p.image];
+            }
+            var imagesHtml = '';
+            if (images.length > 0 && images[0]) {
+                for (var imgIdx = 0; imgIdx < Math.min(images.length, 4); imgIdx++) {
+                    imagesHtml += '<img src="' + images[imgIdx] + '">';
+                }
+                if (images.length > 4) {
+                    imagesHtml += '<span style="color:#6a6a72;font-size:12px;display:flex;align-items:center;">+' + (images.length - 4) + '</span>';
+                }
             } else {
-                imgHtml = '<div style="width:80px;height:80px;background:rgba(255,255,255,0.02);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;">' + (p.icon || '📷') + '</div>';
+                imagesHtml = '<span style="color:#6a6a72;font-size:24px;">📷</span>';
             }
             var tagsHtml = '';
             if (p.tags) {
@@ -660,7 +697,7 @@
                 }
             }
             html += '<div class="portfolio-item">';
-            html += imgHtml;
+            html += '<div class="images-preview">' + imagesHtml + '</div>';
             html += '<div class="info"><div class="title">' + p.title + '</div><div class="desc">' + p.desc + '</div>' + tagsHtml + '</div>';
             html += '<div class="item-actions"><button class="edit" onclick="openModal(\'portfolio\', ' + i + ')">✎</button>';
             html += '<button class="delete" onclick="deleteItem(\'portfolio\', ' + i + ')">✕</button></div></div>';
@@ -770,7 +807,6 @@
         document.getElementById('dashHappy').textContent = (data.stats ? data.stats.happy : 0) + '%';
         document.getElementById('dashServices').textContent = data.services ? data.services.length : 0;
         document.getElementById('dashPortfolio').textContent = data.portfolio ? data.portfolio.length : 0;
-        
         var leads = JSON.parse(localStorage.getItem(LEADS_KEY) || '[]');
         document.getElementById('dashLeads').textContent = leads.length;
     }
