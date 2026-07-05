@@ -25,7 +25,7 @@ function getDefaultData() {
         pricing: [
             { name: 'Старт', price: '5 000 ₽', features: ['Лендинг (1 страница)', 'Адаптив под все устройства', 'Форма заявки', '1 правка бесплатно', 'Деплой на GitHub'], popular: false },
             { name: 'Базовый', price: '10 000 ₽', features: ['Сайт-витрина (до 20 товаров)', 'Админ-панель', 'Загрузка фото', 'Фильтры и характеристики', '3 правки бесплатно', 'Деплой на GitHub'], popular: true },
-            { name: 'Премиум', price: '20 000 ₽', features: ['Полноценный каталог', 'Корзина и оформление', 'Telegram Web App', 'Админ-панель + аналитика', '5 правок бесплатно', 'Деплой на GitHub'], popular: false }
+            { name: 'Премиум', price: '20 000 ₽', features: ['Полноценный каталог', 'Корзина и оформление', '5 правок бесплатно', 'Деплой на GitHub'], popular: false }
         ],
         features: [
             { icon: '⚡', title: 'Быстро', desc: 'Сайт готов за 3–7 дней' },
@@ -376,7 +376,7 @@ function sendForm(e) {
     var originalText = btn.textContent;
 
     var nameInput = form.querySelector('input[placeholder="Ваше имя"]');
-    var contactInput = form.querySelector('input[placeholder="Telegram или Instagram"]');
+    var contactInput = form.querySelector('input[placeholder="Email или мессенджер"]');
     var messageInput = form.querySelector('textarea');
 
     var name = nameInput ? nameInput.value : 'Не указано';
