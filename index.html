@@ -231,38 +231,10 @@
             min-width: 50px;
             text-align: center;
         }
-
-        /* ===== TELEGRAM WEB APP ===== */
-        .tg-main {
-            padding-top: 44px;
-        }
-        @supports (padding: max(0px)) {
-            .tg-main {
-                padding-top: max(44px, env(safe-area-inset-top));
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- ===== TELEGRAM WEB APP ===== -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-        try {
-            var tg = window.Telegram.WebApp;
-            if (tg) {
-                tg.expand();
-                tg.ready();
-                console.log('✅ Telegram Web App запущен');
-                console.log('👤 Пользователь:', tg.initDataUnsafe?.user?.username || 'не авторизован');
-            } else {
-                console.log('ℹ️ Сайт открыт вне Telegram');
-            }
-        } catch (e) {
-            console.log('ℹ️ Сайт открыт вне Telegram');
-        }
-    </script>
-
-    <div class="main-content tg-main">
+    <div class="main-content">
         <nav class="navbar">
             <div class="nav-container">
                 <a href="#" class="nav-logo">⚡ WebMaster</a>
