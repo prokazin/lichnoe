@@ -149,6 +149,7 @@
         <div id="adminPanel">
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Дашборд</button>
+                <button class="tab-btn" onclick="switchTab('leads')">📋 Заявки</button>
                 <button class="tab-btn" onclick="switchTab('services')">🛠️ Услуги</button>
                 <button class="tab-btn" onclick="switchTab('portfolio')">📂 Портфолио</button>
                 <button class="tab-btn" onclick="switchTab('pricing')">💰 Тарифы</button>
@@ -168,6 +169,18 @@
                         <div class="analytics-card"><div class="number" id="dashHappy">0%</div><div class="label">Довольных</div></div>
                         <div class="analytics-card"><div class="number" id="dashServices">0</div><div class="label">Услуг</div></div>
                         <div class="analytics-card"><div class="number" id="dashPortfolio">0</div><div class="label">Проектов в портфолио</div></div>
+                        <div class="analytics-card"><div class="number" id="dashLeads">0</div><div class="label">📋 Заявок</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-leads" class="tab-content">
+                <div class="section">
+                    <h2>📋 Все заявки <small>(сохраняются в браузере)</small></h2>
+                    <div id="leadsList"></div>
+                    <div class="btn-group">
+                        <button class="btn btn-danger" onclick="clearLeads()">🗑️ Очистить все заявки</button>
+                        <button class="btn btn-secondary" onclick="exportLeads()">📤 Экспортировать заявки</button>
                     </div>
                 </div>
             </div>
@@ -258,6 +271,7 @@
 
     <script>
     var STORAGE_KEY = 'webmaster_pro_data';
+    var LEADS_KEY = 'webmaster_leads';
     var ADMIN_PASSWORD = 'webmaster2026';
     var data = null;
     var modalType = '';
@@ -276,6 +290,7 @@
         }
         var btnMap = {
             'dashboard': 'Дашборд',
+            'leads': 'Заявки',
             'services': 'Услуги',
             'portfolio': 'Портфолио',
             'pricing': 'Тарифы',
@@ -290,6 +305,56 @@
                 btns[k].classList.add('active');
             }
         }
+        if (tabId === 'leads') {
+            loadLeads();
+        }
+    }
+
+    function loadLeads() {
+        var container = document.getElementById('leadsList');
+        if (!container) return;
+        var leads = JSON.parse(localStorage.getItem(LEADS_KEY) || '[]');
+        if (leads.length === 0) {
+            container.innerHTML = '<div class="empty">📭 Заявок пока нет</div>';
+            return;
+        }
+        var html = '<div style="display:flex;flex-direction:column;gap:10px;">';
+        for (var i = leads.length - 1; i >= 0; i--) {
+            var l = leads[i];
+            html += '<div style="background:rgba(255,255,255,0.02);padding:12px 16px;border-radius:16px;border:0.5px solid rgba(255,255,255,0.04);">';
+            html += '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">';
+            html += '<div><strong style="color:#fff;">' + l.name + '</strong> <span style="color:#6a6a72;">—</span> <span style="color:#b0b0b8;">' + l.contact + '</span></div>';
+            html += '<span style="color:#6a6a72;font-size:12px;">' + l.date + '</span>';
+            html += '</div>';
+            html += '<div style="color:#6a6a72;font-size:14px;margin-top:4px;">' + l.message + '</div>';
+            html += '</div>';
+        }
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    function clearLeads() {
+        if (!confirm('🗑️ Удалить все заявки?')) return;
+        localStorage.setItem(LEADS_KEY, '[]');
+        loadLeads();
+        updateDashboard();
+        showToast('🗑️ Все заявки удалены');
+    }
+
+    function exportLeads() {
+        var leads = JSON.parse(localStorage.getItem(LEADS_KEY) || '[]');
+        if (leads.length === 0) {
+            showToast('📭 Нет заявок для экспорта');
+            return;
+        }
+        var blob = new Blob([JSON.stringify(leads, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'zayavki_' + new Date().toISOString().slice(0,10) + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('📤 Заявки экспортированы!');
     }
 
     function openModal(type, index) {
@@ -705,10 +770,14 @@
         document.getElementById('dashHappy').textContent = (data.stats ? data.stats.happy : 0) + '%';
         document.getElementById('dashServices').textContent = data.services ? data.services.length : 0;
         document.getElementById('dashPortfolio').textContent = data.portfolio ? data.portfolio.length : 0;
+        
+        var leads = JSON.parse(localStorage.getItem(LEADS_KEY) || '[]');
+        document.getElementById('dashLeads').textContent = leads.length;
     }
 
     function exportData() {
-        var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        var fullData = { ...data, leads: JSON.parse(localStorage.getItem(LEADS_KEY) || '[]') };
+        var blob = new Blob([JSON.stringify(fullData, null, 2)], { type: 'application/json' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
@@ -724,7 +793,12 @@
         var reader = new FileReader();
         reader.onload = function(e) {
             try {
-                data = JSON.parse(e.target.result);
+                var imported = JSON.parse(e.target.result);
+                if (imported.leads) {
+                    localStorage.setItem(LEADS_KEY, JSON.stringify(imported.leads));
+                    delete imported.leads;
+                }
+                data = imported;
                 saveData();
                 renderAll();
                 updateDashboard();
@@ -742,6 +816,7 @@
         if (!confirm('Точно?')) return;
         data = getDefaultData();
         saveData();
+        localStorage.setItem(LEADS_KEY, '[]');
         renderAll();
         updateDashboard();
         showToast('↺ Все данные сброшены!');
