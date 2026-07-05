@@ -100,12 +100,21 @@ function renderSite() {
     var portfolioHtml = '';
     for (var j = 0; j < data.portfolio.length; j++) {
         var p = data.portfolio[j];
-        var imageHtml = (p.image && p.image.indexOf('data:image') === 0) ? '<img src="' + p.image + '" alt="' + p.title + '">' : '<span style="font-size:48px;">' + (p.icon || '📷') + '</span>';
+        var imageHtml = (p.image && p.image.indexOf('data:image') === 0) ? '<img src="' + p.image + '" alt="' + p.title + '">' : '<span class="no-image">' + (p.icon || '📷') + '</span>';
         var tagsHtml = '';
-        for (var t = 0; t < p.tags.length; t++) {
-            tagsHtml += '<span>' + p.tags[t] + '</span>';
+        if (p.tags) {
+            for (var t = 0; t < p.tags.length; t++) {
+                tagsHtml += '<span>' + p.tags[t] + '</span>';
+            }
         }
-        portfolioHtml += '<div class="portfolio-card"><div class="portfolio-image">' + imageHtml + '</div><div class="portfolio-info"><h3>' + p.title + '</h3><p>' + p.desc + '</p><div class="portfolio-tags">' + tagsHtml + '</div><a href="' + p.link + '" class="btn btn-outline" target="_blank">Смотреть</a></div></div>';
+        portfolioHtml += '<div class="portfolio-card">';
+        portfolioHtml += '<div class="portfolio-image">' + imageHtml + '</div>';
+        portfolioHtml += '<div class="portfolio-info">';
+        portfolioHtml += '<h3>' + p.title + '</h3>';
+        portfolioHtml += '<p>' + p.desc + '</p>';
+        portfolioHtml += '<div class="portfolio-tags">' + tagsHtml + '</div>';
+        portfolioHtml += '<a href="' + (p.link || '#') + '" class="btn-outline" target="_blank">Смотреть</a>';
+        portfolioHtml += '</div></div>';
     }
     document.getElementById('portfolioGrid').innerHTML = portfolioHtml;
     
