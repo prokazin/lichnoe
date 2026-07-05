@@ -159,7 +159,6 @@
                 <button class="tab-btn" onclick="switchTab('leads')">📋 Заявки</button>
                 <button class="tab-btn" onclick="switchTab('services')">🛠️ Услуги</button>
                 <button class="tab-btn" onclick="switchTab('portfolio')">📂 Портфолио</button>
-                <button class="tab-btn" onclick="switchTab('pricing')">💰 Тарифы</button>
                 <button class="tab-btn" onclick="switchTab('features')">⭐ Особенности</button>
                 <button class="tab-btn" onclick="switchTab('steps')">📌 Этапы</button>
                 <button class="tab-btn" onclick="switchTab('faq')">❓ FAQ</button>
@@ -205,14 +204,6 @@
                     <h2>📂 Портфолио <small>(несколько фото, карусель на сайте)</small></h2>
                     <div id="adminPortfolio" class="item-list"></div>
                     <button class="btn btn-secondary" onclick="openModal('portfolio')">➕ Добавить проект с фото</button>
-                </div>
-            </div>
-
-            <div id="tab-pricing" class="tab-content">
-                <div class="section">
-                    <h2>💰 Тарифы <small>(CRUD)</small></h2>
-                    <div id="adminPricing" class="item-list"></div>
-                    <button class="btn btn-secondary" onclick="openModal('pricing')">➕ Добавить тариф</button>
                 </div>
             </div>
 
@@ -301,7 +292,6 @@
             'leads': 'Заявки',
             'services': 'Услуги',
             'portfolio': 'Портфолио',
-            'pricing': 'Тарифы',
             'features': 'Особенности',
             'steps': 'Этапы',
             'faq': 'FAQ',
@@ -418,7 +408,6 @@
         var typeNames = {
             service: 'Услугу',
             portfolio: 'Проект',
-            pricing: 'Тариф',
             feature: 'Особенность',
             step: 'Этап',
             faq: 'Вопрос',
@@ -432,7 +421,6 @@
             var listNames = {
                 service: 'services',
                 portfolio: 'portfolio',
-                pricing: 'pricing',
                 feature: 'features',
                 step: 'steps',
                 faq: 'faq',
@@ -449,6 +437,7 @@
             html += '<label>Название</label><input type="text" id="modalTitleInput" value="' + (item ? item.title : '') + '">';
             html += '<label>Описание</label><textarea id="modalDesc" rows="3">' + (item ? item.desc : '') + '</textarea>';
             html += '<label>Цена</label><input type="text" id="modalPrice" value="' + (item ? item.price : '') + '">';
+            html += '<label>Возможности (через запятую)</label><input type="text" id="modalFeatures" value="' + (item && item.features ? item.features.join(', ') : '') + '">';
         } else if (type === 'portfolio') {
             html = '<label>Название проекта</label><input type="text" id="modalTitleInput" value="' + (item ? item.title : '') + '">';
             html += '<label>Описание</label><textarea id="modalDesc" rows="3">' + (item ? item.desc : '') + '</textarea>';
@@ -463,11 +452,6 @@
                 }
             }
             html += '</div>';
-        } else if (type === 'pricing') {
-            html = '<label>Название тарифа</label><input type="text" id="modalTitleInput" value="' + (item ? item.name : '') + '">';
-            html += '<label>Цена</label><input type="text" id="modalPrice" value="' + (item ? item.price : '') + '">';
-            html += '<label>Опции (через запятую)</label><input type="text" id="modalFeatures" value="' + (item && item.features ? item.features.join(', ') : '') + '">';
-            html += '<label>Популярный?</label><select id="modalPopular"><option value="false"' + (item && item.popular ? '' : ' selected') + '>Нет</option><option value="true"' + (item && item.popular ? ' selected' : '') + '>Да</option></select>';
         } else if (type === 'feature') {
             html = '<label>Иконка (эмодзи)</label><input type="text" id="modalIcon" value="' + (item ? item.icon : '⚡') + '">';
             html += '<label>Название</label><input type="text" id="modalTitleInput" value="' + (item ? item.title : '') + '">';
@@ -509,12 +493,13 @@
         var tags = getVal('modalTags');
         var link = getVal('modalLink') || '#';
         var number = getVal('modalNumber') || '0' + (data.steps.length + 1);
-        var popular = getVal('modalPopular') === 'true';
+        var featuresRaw = getVal('modalFeatures');
+        var featuresArray = featuresRaw ? featuresRaw.split(',').map(function(t) { return t.trim(); }).filter(function(t) { return t; }) : [];
 
         if (!title) { showToast('❌ Введите название!'); return; }
 
         if (modalType === 'service') {
-            var item = { icon: icon, title: title, desc: desc, price: price };
+            var item = { icon: icon, title: title, desc: desc, price: price, features: featuresArray };
             if (editIndex !== null) { data.services[editIndex] = item; }
             else { data.services.push(item); }
         } else if (modalType === 'portfolio') {
@@ -531,20 +516,6 @@
                 data.portfolio[editIndex] = newItem;
             } else {
                 data.portfolio.push(newItem);
-            }
-        } else if (modalType === 'pricing') {
-            var featuresRaw = document.getElementById('modalFeatures').value;
-            var featuresArray = featuresRaw ? featuresRaw.split(',').map(function(t) { return t.trim(); }).filter(function(t) { return t; }) : [];
-            var item2 = { 
-                name: title, 
-                price: price, 
-                features: featuresArray, 
-                popular: popular 
-            };
-            if (editIndex !== null) { 
-                data.pricing[editIndex] = item2; 
-            } else { 
-                data.pricing.push(item2); 
             }
         } else if (modalType === 'feature') {
             var item3 = { icon: icon, title: title, desc: desc };
@@ -592,20 +563,15 @@
         return {
             stats: { projects: 12, clients: 9, happy: 100 },
             services: [
-                { icon: '📄', title: 'Лендинг', desc: 'Одностраничный сайт под ваш продукт или услугу.', price: 'от 5 000 ₽' },
-                { icon: '🛍️', title: 'Сайт-витрина', desc: 'Каталог товаров, админ-панель, загрузка фото.', price: 'от 10 000 ₽' },
-                { icon: '📱', title: 'Telegram Web App', desc: 'Мини-приложение внутри бота для продаж.', price: 'от 15 000 ₽' },
-                { icon: '⚡', title: 'Сайт с корзиной', desc: 'Полноценный интернет-магазин с корзиной.', price: 'от 20 000 ₽' }
+                { icon: '📄', title: 'Лендинг', desc: 'Одностраничный сайт под ваш продукт или услугу.', price: 'от 5 000 ₽', features: ['1 страница', 'Адаптив', 'Форма заявки', 'Деплой на GitHub'] },
+                { icon: '🛍️', title: 'Сайт-витрина', desc: 'Каталог товаров, админ-панель, загрузка фото.', price: 'от 10 000 ₽', features: ['До 20 товаров', 'Админ-панель', 'Загрузка фото', 'Фильтры'] },
+                { icon: '📱', title: 'Telegram Web App', desc: 'Мини-приложение внутри бота для продаж.', price: 'от 15 000 ₽', features: ['Сайт в Telegram', 'Каталог', 'Корзина', 'Админ-панель'] },
+                { icon: '⚡', title: 'Сайт с корзиной', desc: 'Полноценный интернет-магазин с корзиной.', price: 'от 20 000 ₽', features: ['Полноценный каталог', 'Корзина', 'Админ-панель', 'Экспорт заказов'] }
             ],
             portfolio: [
                 { icon: '🏂', title: 'SnowShop', desc: 'Магазин сноубордов. Каталог, админ-панель.', tags: ['витрина'], link: '#', images: [] },
                 { icon: '🚀', title: 'Стартап-лендинг', desc: 'Продающий лендинг для IT-продукта.', tags: ['лендинг'], link: '#', images: [] },
                 { icon: '📱', title: 'Telegram Shop', desc: 'Магазин внутри Telegram-бота.', tags: ['Telegram'], link: '#', images: [] }
-            ],
-            pricing: [
-                { name: 'Старт', price: '5 000 ₽', features: ['Лендинг (1 страница)', 'Адаптив', 'Форма заявки', '1 правка'], popular: false },
-                { name: 'Базовый', price: '10 000 ₽', features: ['Сайт-витрина (до 20 товаров)', 'Админ-панель', 'Загрузка фото', '3 правки'], popular: true },
-                { name: 'Премиум', price: '20 000 ₽', features: ['Полноценный каталог', 'Корзина', 'Telegram Web App', '5 правок'], popular: false }
             ],
             features: [
                 { icon: '⚡', title: 'Быстро', desc: 'Сайт готов за 3–7 дней' },
@@ -655,7 +621,6 @@
     function renderAll() {
         renderServices();
         renderPortfolio();
-        renderPricing();
         renderFeatures();
         renderSteps();
         renderFaq();
@@ -670,7 +635,8 @@
         var html = '';
         for (var i = 0; i < items.length; i++) {
             var s = items[i];
-            html += '<div class="item"><span>' + s.icon + ' ' + s.title + ' — <span class="badge">' + s.price + '</span></span>';
+            var featuresHtml = s.features && s.features.length > 0 ? s.features.map(function(f) { return '✅ ' + f; }).join(' ') : '';
+            html += '<div class="item"><span>' + s.icon + ' ' + s.title + ' — <span class="badge">' + s.price + '</span> ' + featuresHtml + '</span>';
             html += '<div class="item-actions"><button class="edit" onclick="openModal(\'service\', ' + i + ')">✎</button>';
             html += '<button class="delete" onclick="deleteItem(\'service\', ' + i + ')">✕</button></div></div>';
         }
@@ -711,23 +677,6 @@
             html += '<div class="info"><div class="title">' + p.title + '</div><div class="desc">' + p.desc + '</div>' + tagsHtml + '</div>';
             html += '<div class="item-actions"><button class="edit" onclick="openModal(\'portfolio\', ' + i + ')">✎</button>';
             html += '<button class="delete" onclick="deleteItem(\'portfolio\', ' + i + ')">✕</button></div></div>';
-        }
-        container.innerHTML = html;
-    }
-
-    function renderPricing() {
-        var container = document.getElementById('adminPricing');
-        if (!container) return;
-        var items = data.pricing || [];
-        if (items.length === 0) { container.innerHTML = '<div class="empty">Нет тарифов</div>'; return; }
-        var html = '';
-        for (var i = 0; i < items.length; i++) {
-            var p = items[i];
-            var popularBadge = p.popular ? '<span class="badge popular">🔥</span>' : '';
-            var featuresHtml = p.features && p.features.length > 0 ? p.features.map(function(f) { return '✅ ' + f; }).join('<br>') : '<span style="color:#6a6a72;">Опции не указаны</span>';
-            html += '<div class="item"><span>' + p.name + ' — <strong>' + p.price + '</strong> ' + popularBadge + '</span>';
-            html += '<div class="item-actions"><button class="edit" onclick="openModal(\'pricing\', ' + i + ')">✎</button>';
-            html += '<button class="delete" onclick="deleteItem(\'pricing\', ' + i + ')">✕</button></div></div>';
         }
         container.innerHTML = html;
     }
@@ -799,7 +748,6 @@
         var lists = {
             service: 'services',
             portfolio: 'portfolio',
-            pricing: 'pricing',
             feature: 'features',
             step: 'steps',
             faq: 'faq',
