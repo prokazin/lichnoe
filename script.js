@@ -16,9 +16,9 @@ function getDefaultData() {
             { icon: '⚡', title: 'Сайт с корзиной', desc: 'Полноценный интернет-магазин с корзиной, заказами и админкой.', price: 'от 20 000 ₽' }
         ],
         portfolio: [
-            { icon: '🏂', title: 'SnowShop', desc: 'Магазин сноубордов. Каталог, админ-панель, фильтры, характеристики.', tags: ['витрина', 'админ-панель', 'адаптив'], link: '#', image: '' },
-            { icon: '🚀', title: 'Стартап-лендинг', desc: 'Продающий лендинг для IT-продукта. Конверсия, аналитика, форма заявки.', tags: ['лендинг', 'конверсия', 'форма'], link: '#', image: '' },
-            { icon: '📱', title: 'Telegram Shop', desc: 'Магазин внутри Telegram-бота. Каталог, корзина, оформление заказа.', tags: ['Telegram', 'корзина', 'бот'], link: '#', image: '' }
+            { icon: '🏂', title: 'SnowShop', desc: 'Магазин сноубордов. Каталог, админ-панель, фильтры, характеристики.', tags: ['витрина', 'админ-панель', 'адаптив'], link: '#', images: [], image: '' },
+            { icon: '🚀', title: 'Стартап-лендинг', desc: 'Продающий лендинг для IT-продукта. Конверсия, аналитика, форма заявки.', tags: ['лендинг', 'конверсия', 'форма'], link: '#', images: [], image: '' },
+            { icon: '📱', title: 'Telegram Shop', desc: 'Магазин внутри Telegram-бота. Каталог, корзина, оформление заказа.', tags: ['Telegram', 'корзина', 'бот'], link: '#', images: [], image: '' }
         ],
         pricing: [
             { name: 'Старт', price: '5 000 ₽', features: ['Лендинг (1 страница)', 'Адаптив под все устройства', 'Форма заявки', '1 правка бесплатно', 'Деплой на GitHub'], popular: false },
@@ -98,18 +98,62 @@ function renderSite() {
     }
     document.getElementById('servicesGrid').innerHTML = servicesHtml;
     
+    // ===== ПОРТФОЛИО С КАРУСЕЛЬЮ (несколько фото) =====
     var portfolioHtml = '';
     for (var j = 0; j < data.portfolio.length; j++) {
         var p = data.portfolio[j];
-        var imageHtml = (p.image && p.image.indexOf('data:image') === 0) ? '<img src="' + p.image + '" alt="' + p.title + '">' : '<span class="no-image">' + (p.icon || '📷') + '</span>';
+        
+        // Получаем все изображения
+        var images = p.images || [];
+        if (p.image && images.length === 0) {
+            images = [p.image];
+        }
+        if (images.length === 0) {
+            images = [''];
+        }
+        
+        // Строим карусель
+        var carouselHtml = '';
+        if (images.length > 0 && images[0]) {
+            carouselHtml += '<div class="carousel-slides" style="display:flex;height:100%;transition:transform 0.5s ease;">';
+            for (var imgIdx = 0; imgIdx < images.length; imgIdx++) {
+                var imgSrc = images[imgIdx] || '';
+                if (imgSrc) {
+                    carouselHtml += '<div class="carousel-slide" style="min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;">';
+                    carouselHtml += '<img src="' + imgSrc + '" alt="' + p.title + '" style="width:100%;height:100%;object-fit:cover;">';
+                    carouselHtml += '</div>';
+                }
+            }
+            carouselHtml += '</div>';
+            
+            // Кнопки навигации
+            if (images.length > 1) {
+                carouselHtml += '<button class="carousel-btn prev" onclick="event.stopPropagation();changeSlide(this, -1)" style="position:absolute;top:50%;left:8px;transform:translateY(-50%);background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;">‹</button>';
+                carouselHtml += '<button class="carousel-btn next" onclick="event.stopPropagation();changeSlide(this, 1)" style="position:absolute;top:50%;right:8px;transform:translateY(-50%);background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;">›</button>';
+            }
+            
+            // Точки (индикаторы)
+            if (images.length > 1) {
+                carouselHtml += '<div class="carousel-dots" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2;">';
+                for (var dotIdx = 0; dotIdx < images.length; dotIdx++) {
+                    var activeClass = dotIdx === 0 ? 'active' : '';
+                    carouselHtml += '<span class="' + activeClass + '" onclick="event.stopPropagation();goToSlide(this, ' + dotIdx + ')" style="width:8px;height:8px;border-radius:50%;background:' + (dotIdx === 0 ? '#fff' : 'rgba(255,255,255,0.3)') + ';cursor:pointer;transition:0.3s;"></span>';
+                }
+                carouselHtml += '</div>';
+            }
+        } else {
+            carouselHtml += '<span class="no-image">' + (p.icon || '📷') + '</span>';
+        }
+        
         var tagsHtml = '';
         if (p.tags) {
             for (var t = 0; t < p.tags.length; t++) {
                 tagsHtml += '<span>' + p.tags[t] + '</span>';
             }
         }
+        
         portfolioHtml += '<div class="portfolio-card">';
-        portfolioHtml += '<div class="portfolio-image">' + imageHtml + '</div>';
+        portfolioHtml += '<div class="portfolio-image" data-current="0">' + carouselHtml + '</div>';
         portfolioHtml += '<div class="portfolio-info">';
         portfolioHtml += '<h3>' + p.title + '</h3>';
         portfolioHtml += '<p>' + p.desc + '</p>';
@@ -170,6 +214,47 @@ function renderSite() {
     document.getElementById('footerSocial').innerHTML = footerHtml;
 }
 
+// ===== УПРАВЛЕНИЕ КАРУСЕЛЬЮ =====
+function changeSlide(btn, direction) {
+    var container = btn.closest('.portfolio-image');
+    if (!container) return;
+    var slides = container.querySelector('.carousel-slides');
+    var dots = container.querySelectorAll('.carousel-dots span');
+    var totalSlides = slides ? slides.children.length : 0;
+    if (totalSlides <= 1) return;
+    
+    var current = parseInt(container.dataset.current) || 0;
+    current = current + direction;
+    if (current < 0) current = totalSlides - 1;
+    if (current >= totalSlides) current = 0;
+    
+    container.dataset.current = current;
+    slides.style.transform = 'translateX(-' + (current * 100) + '%)';
+    
+    // Обновляем точки
+    if (dots.length > 0) {
+        for (var i = 0; i < dots.length; i++) {
+            dots[i].style.background = i === current ? '#fff' : 'rgba(255,255,255,0.3)';
+        }
+    }
+}
+
+function goToSlide(dot, index) {
+    var container = dot.closest('.portfolio-image');
+    if (!container) return;
+    var slides = container.querySelector('.carousel-slides');
+    var totalSlides = slides ? slides.children.length : 0;
+    if (index >= totalSlides) return;
+    
+    container.dataset.current = index;
+    slides.style.transform = 'translateX(-' + (index * 100) + '%)';
+    
+    var dots = container.querySelectorAll('.carousel-dots span');
+    for (var i = 0; i < dots.length; i++) {
+        dots[i].style.background = i === index ? '#fff' : 'rgba(255,255,255,0.3)';
+    }
+}
+
 function toggleFaq(btn) {
     var answer = btn.nextElementSibling;
     var isOpen = answer.style.maxHeight;
@@ -202,7 +287,6 @@ function sendForm(e) {
     var contact = contactInput ? contactInput.value : 'Не указано';
     var message = messageInput ? messageInput.value : 'Не указано';
 
-    // Сохраняем заявку в localStorage
     var leads = JSON.parse(localStorage.getItem(LEADS_KEY) || '[]');
     leads.push({
         id: Date.now(),
@@ -217,11 +301,6 @@ function sendForm(e) {
     btn.textContent = '✅ Сохранено!';
     btn.style.background = '#34c759';
     form.reset();
-    
-    // Увеличиваем счётчик заявок
-    var analytics = JSON.parse(localStorage.getItem('webmaster_analytics') || '{"leads":0,"views":0}');
-    analytics.leads = (analytics.leads || 0) + 1;
-    localStorage.setItem('webmaster_analytics', JSON.stringify(analytics));
     
     setTimeout(function() {
         btn.textContent = originalText;
